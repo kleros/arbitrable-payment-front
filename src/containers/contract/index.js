@@ -18,9 +18,10 @@ import Button from '../../components/button'
 
 import './contract.css'
 
-class Balance extends PureComponent {
+class Contract extends PureComponent {
   static propTypes = {
     balance: walletSelectors.balanceShape.isRequired,
+    contract: contractSelectors.contractShape.isRequired,
     fetchBalance: PropTypes.func.isRequired
   }
 
@@ -58,7 +59,6 @@ class Balance extends PureComponent {
         <div className="Balance-message">
           {renderIf(
             [balance.loading],
-            [contract.data],
             [balance.failedLoading],
             {
               loading: 'Loading...',
@@ -98,4 +98,4 @@ export default connect(
     createContract: contractActions.createContract,
     submitCreateContract,
   }
-)(Balance)
+)(Contract)

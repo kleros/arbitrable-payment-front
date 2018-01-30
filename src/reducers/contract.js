@@ -13,7 +13,7 @@ export default createReducer({
 })
 
 // Selectors
-export const createContract = state => state.contract.data
+export const createContract = state => state.contract.contract.data
 
 // Shapes
 export const contractShape = PropTypes.shape({
