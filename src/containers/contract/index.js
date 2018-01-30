@@ -59,6 +59,7 @@ class Contract extends PureComponent {
         <div className="Balance-message">
           {renderIf(
             [balance.loading],
+            [balance.data],
             [balance.failedLoading],
             {
               loading: 'Loading...',
