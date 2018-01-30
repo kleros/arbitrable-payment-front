@@ -1,15 +1,18 @@
 import Eth from 'ethjs'
 
-let eth
+import { Kleros } from 'kleros-api'
+
+let ethInstance
 if (process.env.NODE_ENV === 'test')
-  eth = new Eth(require('ethereumjs-testrpc').provider())
+  ethInstance = new Eth(require('ethInstanceereumjs-testrpc').provider())
 else if (window.web3 && window.web3.currentProvider)
-  eth = new Eth(window.web3.currentProvider)
+  ethInstance = new Eth(window.web3.currentProvider)
 else
-  eth = new Eth.HttpProvider(
+  ethInstance = new Eth.HttpProvider(
     process.env.NODE_ENV === 'production'
       ? process.env.REACT_APP_PROD_ETHEREUM_PROVIDER
       : process.env.REACT_APP_DEV_ETHEREUM_PROVIDER
   )
 
-export { eth }
+export const eth = ethInstance
+export default new Kleros(ethInstance.currentProvider, process.env.STORE_PROVIDER)
