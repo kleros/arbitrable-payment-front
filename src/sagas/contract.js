@@ -13,7 +13,8 @@ import { ETH_NO_ACCOUNTS } from '../constants/errors'
  * @param {object} { payload: contract } - The contract to create.
  */
 function* createContract({ payload: { contract } }) {
-  const accounts = yield call(eth.getAccounts)
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
   let newContract = null
   if (accounts[0])
