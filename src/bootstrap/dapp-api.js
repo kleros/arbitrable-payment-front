@@ -15,4 +15,7 @@ else
   )
 
 export const eth = ethInstance
-export default new Kleros(ethInstance.currentProvider, process.env.STORE_PROVIDER)
+export default new Kleros(
+  ethInstance.currentProvider,
+  process.env.REACT_APP_STORE_PROVIDER
+)

@@ -12,9 +12,6 @@
 # Docs
 /docs/
 
-# Env Vars
-/.env
-
 # Misc
 /.DS_Store
 
