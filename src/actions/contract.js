@@ -16,5 +16,5 @@ export const receiveContract = contract => ({
 })
 export const createContract = contract => ({
   type: CREATE_CONTRACT,
-  payload: contract
+  payload: { contract }
 })
