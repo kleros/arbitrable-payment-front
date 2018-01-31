@@ -1,6 +1,6 @@
 import unit from 'ethjs-unit'
-
 import { takeLatest, call, put, select } from 'redux-saga/effects'
+import { push } from 'react-router-redux'
 
 import kleros, { eth } from '../bootstrap/dapp-api'
 import * as contractActions from '../actions/contract'
@@ -15,6 +15,8 @@ import { ETH_NO_ACCOUNTS } from '../constants/errors'
 function* createContract({type, payload: { contract }}) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  yield put(push('/'))
 
   let newContract = null
 

@@ -3,7 +3,9 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import * as walletActions from '../../actions/wallet'
+import * as contractActions from '../../actions/contract'
 import * as walletSelectors from '../../reducers/wallet'
+import * as contractSelectors from '../../reducers/contract'
 import { renderIf } from '../../utils/react-redux'
 import Identicon from '../../components/identicon'
 
@@ -12,6 +14,7 @@ import './balance.css'
 class Balance extends PureComponent {
   static propTypes = {
     balance: walletSelectors.balanceShape.isRequired,
+    contract: contractSelectors.contractShape.isRequired,
     fetchBalance: PropTypes.func.isRequired
   }
 
@@ -21,7 +24,10 @@ class Balance extends PureComponent {
   }
 
   render() {
-    const { balance } = this.props
+    const {
+      balance,
+      contract
+     } = this.props
 
     return (
       <div className="Balance">
@@ -32,29 +38,23 @@ class Balance extends PureComponent {
         <br />
         <div className="Balance-message">
           {renderIf(
-            [balance.loading],
-            [balance.data],
-            [balance.failedLoading],
+            [contract.creating],
+            [contract.data],
+            [contract.failedLoading],
             {
-              loading: 'Loading...',
-              done: (
+              loading: (
                 <span>
-                  Welcome <Identicon seed="Placeholder" />, You have{' '}
-                  {balance.data && balance.data.toString()} ETH.
+                  loading
                 </span>
               ),
-              failed: (
+              done: contract.data && (
                 <span>
-                  There was an error fetching your balance. Make sure{' '}
-                  <a
-                    className="Balance-message-link"
-                    href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en"
-                  >
-                    MetaMask
-                  </a>{' '}
-                  is unlocked and refresh the page.
+                  address: {contract.data.address}
+                  partyB: {contract.data.partyB}
+                  status: {contract.data.status}
                 </span>
-              )
+              ),
+              failed: contract.data && 'failedLoading'
             }
           )}
         </div>
@@ -65,7 +65,8 @@ class Balance extends PureComponent {
 
 export default connect(
   state => ({
-    balance: state.wallet.balance
+    balance: state.wallet.balance,
+    contract: state.contract.contract
   }),
   {
     fetchBalance: walletActions.fetchBalance
