@@ -37,30 +37,53 @@ class Home extends PureComponent {
   }
 
   render() {
-    const { balance, contract, loadingContract } = this.props
+    const {
+      balance,
+      contract,
+      loadingContract,
+      contracts
+    } = this.props
 
     return (
       <div className="container">
-        {renderIf([balance.loading], [balance.data], [balance.failedLoading], {
-          loading: <span>loading</span>,
-          done: (
-            <div className="flex-container">
-              <div className="flex-item wide contract grow">
-                <div className="type">Profile</div>
-                <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff" />
-                <div className="content">
-                  <div className="address">{'0x4d010...87f'}</div>
-                  <div className="balance">0 PNK</div>
-                  <div className="activate_pnk">Activate</div>
+        {renderIf(
+          [balance.loading],
+          [balance.data && contracts.data],
+          [balance.failedLoading],
+          {
+            loading: <span>loading</span>,
+            done: contracts.data && (
+              <div className="flex-container">
+                <div className="flex-item wide contract grow">
+                  <div className="type">Profile</div>
+                  <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff" />
+                  <div className="content">
+                    <div className="address">{'0x4d010...87f'}</div>
+                    <div className="balance">{balance.data} ETH</div>
+                    <div className="activate_pnk">Activate</div>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex-item wide grow newContract">
-                <Link to="/new-contract">New Contract</Link>
+
+                <div className="flex-item wide grow newContract">
+                  <Link to="/new-contract">New Contract</Link>
+                </div>
+
+                {
+                  contracts.data.map((contract, i) =>
+                    <div className="flex-item wide contract grow">
+                      <Blockies seed={contract.address} size={10} scale={14} bgColor="#fff" />
+                      <div className="content">
+                        <div className="address">{'0x4d010...87f'}</div>
+                        <div className="balance">{balance.data} ETH</div>
+                        <div className="activate_pnk">Activate</div>
+                      </div>
+                    </div>
+                  )
+                }
               </div>
-            </div>
-          ),
-          failed: contract.failedLoading && 'failedLoading'
+            ),
+            failed: contract.failedLoading && 'failedLoading'
         })}
         <div className="footer" />
       </div>
@@ -71,7 +94,8 @@ class Home extends PureComponent {
 export default connect(
   state => ({
     balance: state.wallet.balance,
-    contract: state.contract.contract
+    contract: state.contract.contract,
+    contracts: state.contract.contracts
   }),
   {
     fetchBalance: walletActions.fetchBalance,

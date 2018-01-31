@@ -1,7 +1,6 @@
 @import '../../styles/colors.scss';
 
 .container {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   font-family: 'Open Sans Condensed', sans-serif;
@@ -14,14 +13,14 @@
   flex-wrap: wrap;
   box-sizing: border-box;
   background: $background;
-  border: 7px solid #f4f4f4;
+  border: 20px solid #f4f4f4;
 }
 
 .flex-item {
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
-  margin: 7px;
+  margin: 14px;
   position: relative;
   border-radius: 10px;
   background: #fff;
@@ -53,7 +52,7 @@
   -moz-transition: all 200ms ease-in;
   -moz-transform: scale(1.02);
   transition: all 200ms ease-in;
-  transform: scale(1.02);
+  transform: scale(1.04);
 }
 
 .type {
