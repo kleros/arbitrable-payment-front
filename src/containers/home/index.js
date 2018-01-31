@@ -2,6 +2,8 @@ import _ from 'lodash'
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+import Blockies from 'react-blockies'
 
 import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
@@ -11,15 +13,15 @@ import { objMap } from '../../utils/functional'
 import { renderIf } from '../../utils/react-redux'
 import Identicon from '../../components/identicon'
 
-import './balance.css'
+import './home.css'
 
-class Balance extends PureComponent {
+class Home extends PureComponent {
   static propTypes = {
     loadingContracts: PropTypes.bool,
     contract: contractSelectors.contractShape.isRequired,
     creatingContract: PropTypes.bool,
     fetchContracts: PropTypes.func.isRequired,
-    
+
     balance: walletSelectors.balanceShape.isRequired,
     fetchBalance: PropTypes.func.isRequired
   }
@@ -29,52 +31,38 @@ class Balance extends PureComponent {
   }
 
   componentDidMount() {
-    const {
-      fetchBalance,
-      fetchContracts
-    } = this.props
+    const { fetchBalance, fetchContracts } = this.props
     fetchBalance()
     fetchContracts()
   }
 
   render() {
-    const {
-      balance,
-      contract,
-      loadingContract
-     } = this.props
+    const { balance, contract, loadingContract } = this.props
 
     return (
-      <div className="Balance">
-        <div className="Balance-message">
-          <b>Hello CryptoWorld</b>
-        </div>
-        <br />
-        <br />
-        <div className="Balance-message">
-          {renderIf(
-            [contract.creating],
-            [contract.data],
-            [contract.failedLoading],
-            {
-              loading: (
-                <span>
-                  loading
-                </span>
-              ),
-              done: contract.data && (
-                <span>
-                  {objMap(contract.data, (value, key) => (
-                    <div key={key}>
-                      {key}: {JSON.stringify(value)}
-                    </div>
-                  ))}
-                </span>
-              ),
-              failed: contract.failedLoading && 'failedLoading'
-            }
-          )}
-        </div>
+      <div className="container">
+        {renderIf([balance.loading], [balance.data], [balance.failedLoading], {
+          loading: <span>loading</span>,
+          done: (
+            <div className="flex-container">
+              <div className="flex-item wide contract grow">
+                <div className="type">Profile</div>
+                <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff" />
+                <div className="content">
+                  <div className="address">{'0x4d010...87f'}</div>
+                  <div className="balance">0 PNK</div>
+                  <div className="activate_pnk">Activate</div>
+                </div>
+              </div>
+
+              <div className="flex-item wide grow newContract">
+                <Link to="/new-contract">New Contract</Link>
+              </div>
+            </div>
+          ),
+          failed: contract.failedLoading && 'failedLoading'
+        })}
+        <div className="footer" />
       </div>
     )
   }
@@ -89,4 +77,4 @@ export default connect(
     fetchBalance: walletActions.fetchBalance,
     fetchContracts: contractActions.fetchContracts
   }
-)(Balance)
+)(Home)

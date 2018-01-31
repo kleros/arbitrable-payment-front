@@ -15,7 +15,6 @@ import {
 import Identicon from '../../components/identicon'
 import Button from '../../components/button'
 
-
 import './contract.css'
 
 class Contract extends PureComponent {
@@ -45,44 +44,10 @@ class Contract extends PureComponent {
     return (
       <div className="Balance">
         <div className="Balance-message">
-          <b>Hello CryptoWorld</b>
           <CreateContractForm onSubmit={createContract} />
-            <Button
-              label="Create"
-              onClick={submitCreateContract}
-            >
-              Create
-            </Button>
-        </div>
-        <br />
-        <br />
-        <div className="Balance-message">
-          {renderIf(
-            [balance.loading],
-            [balance.data],
-            [balance.failedLoading],
-            {
-              loading: 'Loading...',
-              done: (
-                <span>
-                  Welcome <Identicon seed="Placeholder" />, You have{' '}
-                  {balance.data && balance.data.toString()} ETH.
-                </span>
-              ),
-              failed: (
-                <span>
-                  There was an error fetching your balance. Make sure{' '}
-                  <a
-                    className="Balance-message-link"
-                    href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en"
-                  >
-                    MetaMask
-                  </a>{' '}
-                  is unlocked and refresh the page.
-                </span>
-              )
-            }
-          )}
+          <Button label="Create" onClick={submitCreateContract}>
+            Create
+          </Button>
         </div>
       </div>
     )
@@ -97,6 +62,6 @@ export default connect(
   {
     fetchBalance: walletActions.fetchBalance,
     createContract: contractActions.createContract,
-    submitCreateContract,
+    submitCreateContract
   }
 )(Contract)

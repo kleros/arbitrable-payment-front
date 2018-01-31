@@ -2,7 +2,7 @@ import setupIntegrationTest, {
   flushPromises
 } from '../../bootstrap/setup-integration-test'
 
-import Balance from '.'
+import Home from '.'
 
 let integration = {
   store: null,
@@ -19,7 +19,7 @@ it('Renders and loads balance correctly.', async () => {
   const app = integration.mountApp()
   await flushPromises()
   app.update()
-  expect(app.find(Balance).text()).toBe(
+  expect(app.find(Home).text()).toBe(
     'Hello CryptoWorldWelcome [Blockies], You have 100 ETH.'
   )
 })
