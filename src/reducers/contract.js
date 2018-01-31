@@ -9,6 +9,11 @@ export default createReducer({
     loading: false,
     data: null,
     failedLoading: false
+  },
+  contracts: {
+    loading: false,
+    data: null,
+    failedLoading: false
   }
 })
 

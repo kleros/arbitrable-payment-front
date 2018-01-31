@@ -20,25 +20,41 @@ function* createContract({type, payload: { contract }}) {
 
   let newContract = null
 
-  if (accounts[0])
-    try {
-      newContract = yield call(
-        kleros.arbitrableContract.deployContract,
-        accounts[0].toLowerCase(),
-        unit.toWei(contract.payment, 'ether'),
-        contract.description,
-        process.env.ARBITRATOR_ADDRESS,
-        contract.timeout,
-        contract.partyB.toLowerCase(),
-        contract.arbitratorExtraData,
-        contract.email,
-        contract.description
-      )
-    } catch (err) {
-      console.log(err)
-    }
+  try {
+    newContract = yield call(
+      kleros.arbitrableContract.deployContract,
+      accounts[0].toLowerCase(),
+      unit.toWei(contract.payment, 'ether'),
+      contract.description,
+      process.env.ARBITRATOR_ADDRESS,
+      contract.timeout,
+      contract.partyB.toLowerCase(),
+      contract.arbitratorExtraData,
+      contract.email,
+      contract.description
+    )
+  } catch (err) {
+    console.log(err)
+  }
 
   yield put(contractActions.receiveContract(newContract))
+}
+
+/**
+ * Fetches contracts for the current user and puts them in the store.
+ */
+function* fetchContracts() {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  let contracts = []
+
+  contracts = yield call(
+    kleros.arbitrator.getContractsForUser,
+    accounts[0].toLowerCase()
+  )
+
+  yield put(contractActions.receiveContracts(contracts))
 }
 
 /**
@@ -46,5 +62,6 @@ function* createContract({type, payload: { contract }}) {
  * @export default walletSaga
  */
 export default function* walletSaga() {
-  yield takeLatest(contractActions.CREATE_CONTRACT, createContract)
+  yield takeLatest(contractActions.CREATE_CONTRACT, createContract),
+  yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
 }

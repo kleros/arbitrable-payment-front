@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -6,6 +7,7 @@ import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
 import * as walletSelectors from '../../reducers/wallet'
 import * as contractSelectors from '../../reducers/contract'
+import { objMap } from '../../utils/functional'
 import { renderIf } from '../../utils/react-redux'
 import Identicon from '../../components/identicon'
 
@@ -13,20 +15,33 @@ import './balance.css'
 
 class Balance extends PureComponent {
   static propTypes = {
-    balance: walletSelectors.balanceShape.isRequired,
+    loadingContracts: PropTypes.bool,
     contract: contractSelectors.contractShape.isRequired,
+    creatingContract: PropTypes.bool,
+    fetchContracts: PropTypes.func.isRequired,
+    
+    balance: walletSelectors.balanceShape.isRequired,
     fetchBalance: PropTypes.func.isRequired
   }
 
+  static defaultProps = {
+    loadingContracts: false
+  }
+
   componentDidMount() {
-    const { fetchBalance } = this.props
+    const {
+      fetchBalance,
+      fetchContracts
+    } = this.props
     fetchBalance()
+    fetchContracts()
   }
 
   render() {
     const {
       balance,
-      contract
+      contract,
+      loadingContract
      } = this.props
 
     return (
@@ -49,12 +64,14 @@ class Balance extends PureComponent {
               ),
               done: contract.data && (
                 <span>
-                  address: {contract.data.address}
-                  partyB: {contract.data.partyB}
-                  status: {contract.data.status}
+                  {objMap(contract.data, (value, key) => (
+                    <div key={key}>
+                      {key}: {JSON.stringify(value)}
+                    </div>
+                  ))}
                 </span>
               ),
-              failed: contract.data && 'failedLoading'
+              failed: contract.failedLoading && 'failedLoading'
             }
           )}
         </div>
@@ -69,6 +86,7 @@ export default connect(
     contract: state.contract.contract
   }),
   {
-    fetchBalance: walletActions.fetchBalance
+    fetchBalance: walletActions.fetchBalance,
+    fetchContracts: contractActions.fetchContracts
   }
 )(Balance)
