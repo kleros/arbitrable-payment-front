@@ -38,11 +38,8 @@ class Contract extends PureComponent {
       createContractIsInvalid,
       fetchContracts,
       submitCreateContract,
-      createContract,
-      onSubmit
+      createContract
     } = this.props
-
-    const { page } = this.state
 
     return (
       <div className="Balance">
