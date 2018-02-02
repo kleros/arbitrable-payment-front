@@ -14,13 +14,16 @@ Button.propTypes = {
   children: PropTypes.string.isRequired,
 
   // Handlers
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
 
   // Modifiers
   className: PropTypes.string
 }
 
 Button.defaultProps = {
+  // Handlers
+  onClick: null,
+
   // Modifiers
   className: ''
 }
