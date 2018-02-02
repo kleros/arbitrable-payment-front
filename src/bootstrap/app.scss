@@ -18,3 +18,55 @@ body,
   flex-direction: column;
   font-family: sans-serif;
 }
+
+/* Placeload */
+
+
+@keyframes placeHolderShimmer{
+  0%{
+    background-position: -468px 0
+  }
+  100%{
+    background-position: 468px 0
+  }
+}
+
+.linear-background-100 {
+  width: 100%;
+  height: 24px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 14px;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background: #f6f7f8;
+  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+  background-size: 1000px 104px;
+  border-radius: 4px;
+}
+
+.linear-background-90 {
+  width: 90%;
+  height: 24px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 14px;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background: #f6f7f8;
+  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+  background-size: 1000px 104px;
+  border-radius: 4px;
+}
+
+.divider {
+  height: 1px;
+  width: 100%;
+  background-color: rgba(216, 216, 216, 0.38);
+}

@@ -16,6 +16,16 @@ import Identicon from '../../components/identicon'
 import './home.css'
 
 class Home extends PureComponent {
+  state = {
+    randomSeed: ""
+  }
+
+  timer = () => (this.setState({randomSeed: Math.random().toString(36).substring(6).toString()}))
+
+  componentWillUnmount(){
+    clearInterval(this.intervalId);
+  }
+
   static propTypes = {
     loadingContracts: PropTypes.bool,
     contract: contractSelectors.contractShape.isRequired,
@@ -31,6 +41,7 @@ class Home extends PureComponent {
   }
 
   componentDidMount() {
+    this.intervalId = setInterval(this.timer, 100);
     const { fetchBalance, fetchContracts } = this.props
     fetchBalance()
     fetchContracts()
@@ -81,6 +92,15 @@ class Home extends PureComponent {
                     </div>
                   )
                 }
+
+                <div className="flex-item wide grow" onClick={window.location.href='https://etherscan.io/'}>
+                  <Blockies seed={this.state.randomSeed} size={10} scale={14} bgColor="#fff" />
+                  <div className="creationContentContract">
+                    <div>
+                      Contract creation
+                    </div>
+                  </div>
+                </div>
               </div>
             ),
             failed: contract.failedLoading && 'failedLoading'
