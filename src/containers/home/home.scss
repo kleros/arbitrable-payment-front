@@ -102,3 +102,14 @@
   bottom: 50px;
   width: 60px;
 }
+
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+  .flex-container {
+    border: none;
+  }
+
+  .wide {
+    flex:1;
+    min-width: 280px;
+  }
+}
