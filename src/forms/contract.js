@@ -17,6 +17,7 @@ export const {
     timeout: {
       type: 'number',
       visibleIf: 'payment',
+      placeholder: 'Timeout',
       validate: [required, number]
     }
   },
@@ -24,7 +25,8 @@ export const {
     partyB: {
       type: 'text',
       formValues: 'arbitratorExtraData',
-      visibleIf: 'email'
+      visibleIf: 'email',
+      placeholder: 'Timeout',
     }
   },
   step4: {

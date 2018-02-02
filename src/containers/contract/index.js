@@ -18,6 +18,10 @@ import Button from '../../components/button'
 import './contract.css'
 
 class Contract extends PureComponent {
+  state = {
+    page: 1
+  }
+
   static propTypes = {
     balance: walletSelectors.balanceShape.isRequired,
     contract: contractSelectors.contractShape.isRequired,
@@ -29,6 +33,14 @@ class Contract extends PureComponent {
     fetchBalance()
   }
 
+  nextPage = () => {
+    this.setState({ page: this.state.page + 1 })
+  }
+
+  previousPage = () => {
+    this.setState({ page: this.state.page - 1 })
+  }
+
   render() {
     const {
       balance,
@@ -38,13 +50,38 @@ class Contract extends PureComponent {
       createContractIsInvalid,
       fetchContracts,
       submitCreateContract,
-      createContract
+      createContract,
+      onSubmit
     } = this.props
+
+    const { page } = this.state
 
     return (
       <div className="Balance">
         <div className="Balance-message">
-          <CreateContractForm onSubmit={submitCreateContract} />
+          <div>
+            {page === 1 &&
+              <CreateContractForm onSubmit={this.nextPage} />
+            }
+            {page === 2 && (
+              <CreateContractForm onSubmit={this.nextPage} />
+            )}
+            {page === 3 && (
+              <CreateContractForm onSubmit={this.nextPage} />
+            )}
+            {page === 4 && (
+              <CreateContractForm onSubmit={this.nextPage} />
+            )}
+            {page === 5 && (
+              <CreateContractForm onSubmit={this.nextPage} />
+            )}
+            {page === 6 && (
+              <CreateContractForm
+                previousPage={this.previousPage}
+                onSubmit={onSubmit}
+              />
+            )}
+          </div>
         </div>
       </div>
     )
