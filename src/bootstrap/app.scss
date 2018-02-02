@@ -1,5 +1,6 @@
 @import '~normalize.css';
 @import '../styles/_colors.scss';
+@import '../styles/_animations.scss';
 
 html,
 body,
@@ -19,15 +20,18 @@ body,
   font-family: sans-serif;
 }
 
+fieldset {
+  border: none;
+}
+
 /* Placeload */
 
-
-@keyframes placeHolderShimmer{
-  0%{
-    background-position: -468px 0
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -468px 0;
   }
-  100%{
-    background-position: 468px 0
+  100% {
+    background-position: 468px 0;
   }
 }
 

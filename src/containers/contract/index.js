@@ -2,86 +2,64 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import * as walletActions from '../../actions/wallet'
-import * as contractActions from '../../actions/contract'
 import * as walletSelectors from '../../reducers/wallet'
+import * as walletActions from '../../actions/wallet'
 import * as contractSelectors from '../../reducers/contract'
-import { renderIf } from '../../utils/react-redux'
+import * as contractActions from '../../actions/contract'
 import {
   CreateContractForm,
-  getCreateContractIsInvalid,
-  submitCreateContract
+  getCreateContractFormIsInvalid,
+  submitCreateContractForm
 } from '../../forms/contract'
-import Identicon from '../../components/identicon'
 import Button from '../../components/button'
 
 import './contract.css'
 
 class Contract extends PureComponent {
-  state = {
-    page: 1
-  }
-
   static propTypes = {
     balance: walletSelectors.balanceShape.isRequired,
     contract: contractSelectors.contractShape.isRequired,
-    fetchBalance: PropTypes.func.isRequired
+    createContractFormIsInvalid: PropTypes.bool.isRequired,
+    fetchBalance: PropTypes.func.isRequired,
+    submitCreateContractForm: PropTypes.func.isRequired,
+    createContract: PropTypes.func.isRequired
   }
+
+  state = { hasPrevPage: null, hasNextPage: null }
 
   componentDidMount() {
     const { fetchBalance } = this.props
     fetchBalance()
   }
 
-  nextPage = () => {
-    this.setState({ page: this.state.page + 1 })
-  }
+  getBackHandlerRef = ref => (this.backHandler = ref)
 
-  previousPage = () => {
-    this.setState({ page: this.state.page - 1 })
-  }
+  handlePageChange = ({ hasPrevPage, hasNextPage }) =>
+    this.setState({ hasPrevPage, hasNextPage })
 
   render() {
     const {
-      balance,
-      loadingContracts,
-      creatingContract,
-      contract,
-      createContractIsInvalid,
-      fetchContracts,
-      submitCreateContract,
-      createContract,
-      onSubmit
+      createContractFormIsInvalid,
+      submitCreateContractForm,
+      createContract
     } = this.props
-
-    const { page } = this.state
+    const { hasPrevPage, hasNextPage } = this.state
 
     return (
       <div className="Balance">
         <div className="Balance-message">
-          <div>
-            {page === 1 &&
-              <CreateContractForm onSubmit={this.nextPage} />
-            }
-            {page === 2 && (
-              <CreateContractForm onSubmit={this.nextPage} />
-            )}
-            {page === 3 && (
-              <CreateContractForm onSubmit={this.nextPage} />
-            )}
-            {page === 4 && (
-              <CreateContractForm onSubmit={this.nextPage} />
-            )}
-            {page === 5 && (
-              <CreateContractForm onSubmit={this.nextPage} />
-            )}
-            {page === 6 && (
-              <CreateContractForm
-                previousPage={this.previousPage}
-                onSubmit={onSubmit}
-              />
-            )}
-          </div>
+          <CreateContractForm
+            backHandlerRef={this.getBackHandlerRef}
+            onPageChange={this.handlePageChange}
+            onSubmit={createContract}
+          />
+          {hasPrevPage && <Button onClick={this.backHandler}>Back</Button>}
+          <Button
+            onClick={submitCreateContractForm}
+            disabled={createContractFormIsInvalid}
+          >
+            {hasNextPage ? 'Next' : 'Submit'}
+          </Button>
         </div>
       </div>
     )
@@ -91,11 +69,12 @@ class Contract extends PureComponent {
 export default connect(
   state => ({
     balance: state.wallet.balance,
-    contract: state.contract.contract
+    contract: state.contract.contract,
+    createContractFormIsInvalid: getCreateContractFormIsInvalid(state)
   }),
   {
     fetchBalance: walletActions.fetchBalance,
-    createContract: contractActions.createContract,
-    submitCreateContract
+    submitCreateContractForm,
+    createContract: contractActions.createContract
   }
 )(Contract)

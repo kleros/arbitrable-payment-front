@@ -1,10 +1,10 @@
-import { wizardForm, form } from '../utils/form-generator'
+import { wizardForm } from '../utils/form-generator'
 import { required, number } from '../utils/validation'
 
 export const {
   Form: CreateContractForm,
-  isInvalid: getCreateContractIsInvalid,
-  submit: submitCreateContract
+  isInvalid: getCreateContractFormIsInvalid,
+  submit: submitCreateContractForm
 } = wizardForm('createContractFormKey', {
   step1: {
     payment: {
@@ -25,14 +25,12 @@ export const {
     partyB: {
       type: 'text',
       formValues: 'arbitratorExtraData',
-      visibleIf: 'email',
-      placeholder: 'Timeout',
+      placeholder: 'Timeout'
     }
   },
   step4: {
     arbitratorExtraData: {
-      type: 'text',
-      visibleIf: '!payment'
+      type: 'text'
     }
   },
   step5: {
