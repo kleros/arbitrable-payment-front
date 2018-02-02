@@ -37,6 +37,14 @@ class Contract extends PureComponent {
   handlePageChange = ({ hasPrevPage, hasNextPage }) =>
     this.setState({ hasPrevPage, hasNextPage })
 
+  handleKeyPress = event => {
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      const { submitCreateContractForm } = this.props
+      submitCreateContractForm()
+    }
+  }
+
   render() {
     const {
       createContractFormIsInvalid,
@@ -47,7 +55,7 @@ class Contract extends PureComponent {
 
     return (
       <div className="Balance">
-        <div className="Balance-message">
+        <div className="Balance-message" onKeyPress={this.handleKeyPress}>
           <CreateContractForm
             backHandlerRef={this.getBackHandlerRef}
             onPageChange={this.handlePageChange}
@@ -56,6 +64,7 @@ class Contract extends PureComponent {
           {hasPrevPage && <Button onClick={this.backHandler}>Back</Button>}
           <Button
             onClick={submitCreateContractForm}
+            type="submit"
             disabled={createContractFormIsInvalid}
           >
             {hasNextPage ? 'Next' : 'Submit'}
