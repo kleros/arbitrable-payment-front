@@ -17,10 +17,11 @@ import './home.css'
 
 class Home extends PureComponent {
   state = {
-    randomSeed: ""
+    randomSeed: "",
+    totalContracts: 0
   }
 
-  timer = () => (this.setState({randomSeed: Math.random().toString(36).substring(6).toString()}))
+  randomSeed = () => (this.setState({randomSeed: Math.random().toString(36).substring(6).toString()}))
 
   componentWillUnmount(){
     clearInterval(this.intervalId);
@@ -41,7 +42,7 @@ class Home extends PureComponent {
   }
 
   componentDidMount() {
-    this.intervalId = setInterval(this.timer, 100);
+    this.intervalId = setInterval(this.randomSeed, 100);
     const { fetchBalance, fetchContracts } = this.props
     fetchBalance()
     fetchContracts()
@@ -54,7 +55,11 @@ class Home extends PureComponent {
     return `${startAddress}...${endAddress}`
   }
 
+  getTotalContracts = totalContracts => {
+    this.setState({totalContracts})
 
+    return totalContracts
+  }
 
   render() {
     const {
@@ -64,6 +69,7 @@ class Home extends PureComponent {
       contracts,
       accounts
     } = this.props
+
 
     return (
       <div className="container">
@@ -81,7 +87,10 @@ class Home extends PureComponent {
                   <div className="content">
                     <div className="address">{this.shortAddress(accounts.data[0])}</div>
                     <div className="balanceETH">{Number(balance.data).toFixed(3)} ETH</div>
-                    <div className="nbContracts">{contracts.data.length} contracts</div>
+                    <div className="nbContracts">
+                      {contract.data && contracts.data.length+1}
+                      {!contract.data && contracts.data.length} contracts
+                    </div>
                   </div>
                 </div>
 

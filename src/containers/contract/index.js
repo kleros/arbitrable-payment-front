@@ -54,21 +54,13 @@ class Contract extends PureComponent {
     const { hasPrevPage, hasNextPage } = this.state
 
     return (
-      <div className="Balance">
-        <div className="Balance-message" onKeyPress={this.handleKeyPress}>
+      <div className="Contract">
+        <div className="Contract-form" onKeyPress={this.handleKeyPress}>
           <CreateContractForm
             backHandlerRef={this.getBackHandlerRef}
             onPageChange={this.handlePageChange}
             onSubmit={createContract}
           />
-          {hasPrevPage && <Button onClick={this.backHandler}>Back</Button>}
-          <Button
-            onClick={submitCreateContractForm}
-            type="submit"
-            disabled={createContractFormIsInvalid}
-          >
-            {hasNextPage ? 'Next' : 'Submit'}
-          </Button>
         </div>
       </div>
     )
