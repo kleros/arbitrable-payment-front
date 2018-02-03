@@ -90,9 +90,49 @@ class Home extends PureComponent {
                   <Link to="/new-contract">New Contract</Link>
                 </div>
 
+                {contract.creating &&
+                  <div className="flex-item wide grow" onClick={v => v}>
+                    <Blockies seed={this.state.randomSeed} size={10} scale={14} bgColor="#fff" />
+                    <div className="creationContentContract">
+                      <div>
+                        Contract creation
+                      </div>
+                    </div>
+                  </div>
+                }
+
+                {contract.data &&
+                  <div className="flex-item wide contract grow">
+                    <Blockies seed={contract.data.address} size={10} scale={14} bgColor="#fff" />
+                    <div className="content">
+                      <div className="address">{this.shortAddress(contract.data.address)}</div>
+                      <div className="partyB">
+                        <div className="identicon">
+                          <Blockies seed={contract.data.partyA} size={5} scale={4} bgColor="#f5f5f5" />
+                        </div>
+                        <div className="content">
+                          {this.shortAddress(contract.data.partyA)}
+                        </div>
+
+                        <div>&nbsp;&nbsp;</div>
+
+                        <div className="identicon">
+                          <Blockies seed={contract.data.partyB} size={5} scale={4} bgColor="#f5f5f5" />
+                        </div>
+
+                        <div className="content">
+                          {this.shortAddress(contract.data.partyB)}
+                        </div>
+
+                      </div>
+                      <div className="description">{contract.data.description.slice(0, 50)}</div>
+                    </div>
+                  </div>
+                }
+
                 {
                   contracts.data.map((contract, i) =>
-                    <div className="flex-item wide contract grow" key={i}>
+                    <div className="flex-item wide contract grow" key={contract._id}>
                       <Blockies seed={contract.address} size={10} scale={14} bgColor="#fff" />
                       <div className="content">
                         <div className="address">{this.shortAddress(contract.address)}</div>
@@ -120,30 +160,6 @@ class Home extends PureComponent {
                     </div>
                   )
                 }
-
-                {contract.creating &&
-                  <div className="flex-item wide grow" onClick={v => v}>
-                    <Blockies seed={this.state.randomSeed} size={10} scale={14} bgColor="#fff" />
-                    <div className="creationContentContract">
-                      <div>
-                        Contract creation
-                      </div>
-                    </div>
-                  </div>
-                }
-
-                {contract.data &&
-                  <div className="flex-item wide contract grow">
-                    <div className="type">Dispute created</div>
-                    <Blockies seed={contract.address} size={10} scale={14} bgColor="#fff" />
-                    <div className="content">
-                      <div className="address">{'0x4d...8d7f'}</div>
-                      <div className="balance"><i class="em em-bust_in_silhouette"></i>{contract.data.partyA}</div>
-                      <div className="balance">B: {contract.data.partyB}</div>
-                      <div className="activate_pnk">Activate</div>
-                    </div>
-                  </div>
-                }
               </div>
             ),
             failed: contract.failedLoading && 'failedLoading'
@@ -158,7 +174,7 @@ export default connect(
   state => ({
     balance: state.wallet.balance,
     contract: state.contract.contract,
-    contracts: state.contract.contracts,
+    contracts: state.contract.contracts ,
     accounts: state.wallet.accounts
   }),
   {

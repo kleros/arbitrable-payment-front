@@ -54,7 +54,7 @@ function* fetchContracts() {
     accounts[0].toLowerCase()
   )
 
-  yield put(contractActions.receiveContracts(contracts))
+  yield put(contractActions.receiveContracts(contracts.reverse()))
 }
 
 /**
