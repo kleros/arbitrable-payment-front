@@ -80,8 +80,8 @@ class Home extends PureComponent {
                   <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff" />
                   <div className="content">
                     <div className="address">{this.shortAddress(accounts.data[0])}</div>
-                    <div className="balance">{balance.data} ETH</div>
-                    <div className="activate_pnk">Activate</div>
+                    <div className="balanceETH">{Number(balance.data).toFixed(3)} ETH</div>
+                    <div className="nbContracts">{contracts.data.length} contracts | 0 ongoing disputes</div>
                   </div>
                 </div>
 
@@ -92,7 +92,7 @@ class Home extends PureComponent {
 
                 {
                   contracts.data.map((contract, i) =>
-                    <div className="flex-item wide contract grow">
+                    <div className="flex-item wide contract grow" key={i}>
                       <Blockies seed={contract.address} size={10} scale={14} bgColor="#fff" />
                       <div className="content">
                         <div className="address">{'0x4d010...87f'}</div>
