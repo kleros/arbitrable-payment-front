@@ -47,6 +47,13 @@ class Home extends PureComponent {
     fetchContracts()
   }
 
+  shortAddress = address => {
+    const startAddress = address.substr(0, address.length-37)
+    const endAddress = address.substr(38)
+
+    return `${startAddress}...${endAddress}`
+  }
+
 
 
   render() {
@@ -54,7 +61,8 @@ class Home extends PureComponent {
       balance,
       contract,
       loadingContract,
-      contracts
+      contracts,
+      accounts
     } = this.props
 
     return (
@@ -66,12 +74,12 @@ class Home extends PureComponent {
           {
             loading: <span>loading</span>,
             done: contracts.data && (
-              <div className="flex-container">
+              <div className="flex-container" key={contract._id}>
                 <div className="flex-item wide contract grow">
                   <div className="type">Profile</div>
                   <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff" />
                   <div className="content">
-                    <div className="address">{'0x4d010...87f'}</div>
+                    <div className="address">{this.shortAddress(accounts.data[0])}</div>
                     <div className="balance">{balance.data} ETH</div>
                     <div className="activate_pnk">Activate</div>
                   </div>
@@ -81,8 +89,6 @@ class Home extends PureComponent {
                 <div className="flex-item wide grow newContract">
                   <Link to="/new-contract">New Contract</Link>
                 </div>
-
-                {console.log(contracts.data)}
 
                 {
                   contracts.data.map((contract, i) =>
@@ -141,10 +147,12 @@ export default connect(
   state => ({
     balance: state.wallet.balance,
     contract: state.contract.contract,
-    contracts: state.contract.contracts
+    contracts: state.contract.contracts,
+    accounts: state.wallet.accounts
   }),
   {
     fetchBalance: walletActions.fetchBalance,
+    fetchAccounts: walletActions.fetchAccounts,
     fetchContracts: contractActions.fetchContracts
   }
 )(Home)
