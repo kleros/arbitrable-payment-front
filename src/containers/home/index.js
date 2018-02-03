@@ -48,8 +48,8 @@ class Home extends PureComponent {
   }
 
   shortAddress = address => {
-    const startAddress = address.substr(0, address.length-37)
-    const endAddress = address.substr(38)
+    const startAddress = address.substr(0, address.length-36)
+    const endAddress = address.substr(37)
 
     return `${startAddress}...${endAddress}`
   }
@@ -81,7 +81,7 @@ class Home extends PureComponent {
                   <div className="content">
                     <div className="address">{this.shortAddress(accounts.data[0])}</div>
                     <div className="balanceETH">{Number(balance.data).toFixed(3)} ETH</div>
-                    <div className="nbContracts">{contracts.data.length} contracts | 0 ongoing disputes</div>
+                    <div className="nbContracts">{contracts.data.length} contracts</div>
                   </div>
                 </div>
 
@@ -95,16 +95,25 @@ class Home extends PureComponent {
                     <div className="flex-item wide contract grow" key={i}>
                       <Blockies seed={contract.address} size={10} scale={14} bgColor="#fff" />
                       <div className="content">
-                        <div className="address">{'0x4d010...87f'}</div>
+                        <div className="address">{this.shortAddress(contract.address)}</div>
                         <div className="partyB">
-                          <div>
-                            <Blockies seed={contract.address} size={5} scale={4} bgColor="#f5f5f5" />
+                          <div className="identicon-left">
+                            <Blockies seed={contract.partyA} size={5} scale={4} bgColor="#f5f5f5" />
                           </div>
-                          <div className="content">
-                            0xeb3ddf7e...2badddd071d6
+                          <div className="content content-left">
+                            {this.shortAddress(contract.partyA)}
+                          </div>
+
+                          <div>&nbsp;&nbsp;</div>
+
+                          <div className="content content-right">
+                            {this.shortAddress(contract.partyB)}
+                          </div>
+                          <div className="identicon-right">
+                            <Blockies seed={contract.partyB} size={5} scale={4} bgColor="#f5f5f5" />
                           </div>
                         </div>
-                        <div className="description">Contract description wddwe f wefewfewfe fewew fweffew</div>
+                        <div className="description">{contract.description.slice(0, 50)}</div>
                       </div>
                     </div>
                   )

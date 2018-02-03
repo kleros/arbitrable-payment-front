@@ -176,21 +176,38 @@
   flex-direction: row;
   box-sizing: border-box;
   padding-top: 10px;
-
   .content {
     height: 20px;
     line-height: 20px;
     padding: 0 5px 0 5px;
     font-size: 15px;
     background: #f5f5f5;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
-
   }
 
-  .identicon {
+  .content-left {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+
+  .content-right {
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
+  }
+
+  .identicon-right {
+    .identicon {
+      border-top-left-radius: 0px;
+      border-bottom-left-radius: 0px;
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px;
+    }
+  }
+
+  .identicon-left {
+    .identicon {
+      border-top-left-radius: 3px;
+      border-bottom-left-radius: 3px;
+    }
   }
 }
 
