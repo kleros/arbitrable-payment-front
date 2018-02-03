@@ -97,21 +97,23 @@ class Home extends PureComponent {
                       <div className="content">
                         <div className="address">{this.shortAddress(contract.address)}</div>
                         <div className="partyB">
-                          <div className="identicon-left">
+                          <div className="identicon">
                             <Blockies seed={contract.partyA} size={5} scale={4} bgColor="#f5f5f5" />
                           </div>
-                          <div className="content content-left">
+                          <div className="content">
                             {this.shortAddress(contract.partyA)}
                           </div>
 
                           <div>&nbsp;&nbsp;</div>
 
-                          <div className="content content-right">
-                            {this.shortAddress(contract.partyB)}
-                          </div>
-                          <div className="identicon-right">
+                          <div className="identicon">
                             <Blockies seed={contract.partyB} size={5} scale={4} bgColor="#f5f5f5" />
                           </div>
+
+                          <div className="content">
+                            {this.shortAddress(contract.partyB)}
+                          </div>
+
                         </div>
                         <div className="description">{contract.description.slice(0, 50)}</div>
                       </div>
