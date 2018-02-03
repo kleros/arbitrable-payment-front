@@ -47,6 +47,8 @@ class Home extends PureComponent {
     fetchContracts()
   }
 
+
+
   render() {
     const {
       balance,
@@ -80,27 +82,51 @@ class Home extends PureComponent {
                   <Link to="/new-contract">New Contract</Link>
                 </div>
 
+                {console.log(contracts.data)}
+
                 {
                   contracts.data.map((contract, i) =>
                     <div className="flex-item wide contract grow">
                       <Blockies seed={contract.address} size={10} scale={14} bgColor="#fff" />
                       <div className="content">
                         <div className="address">{'0x4d010...87f'}</div>
-                        <div className="balance">{balance.data} ETH</div>
-                        <div className="activate_pnk">Activate</div>
+                        <div className="partyB">
+                          <div>
+                            <Blockies seed={contract.address} size={5} scale={4} bgColor="#f5f5f5" />
+                          </div>
+                          <div className="content">
+                            0xeb3ddf7e...2badddd071d6
+                          </div>
+                        </div>
+                        <div className="description">Contract description wddwe f wefewfewfe fewew fweffew</div>
                       </div>
                     </div>
                   )
                 }
 
-                <div className="flex-item wide grow" onClick={window.location.href='https://etherscan.io/'}>
-                  <Blockies seed={this.state.randomSeed} size={10} scale={14} bgColor="#fff" />
-                  <div className="creationContentContract">
-                    <div>
-                      Contract creation
+                {contract.creating &&
+                  <div className="flex-item wide grow" onClick={v => v}>
+                    <Blockies seed={this.state.randomSeed} size={10} scale={14} bgColor="#fff" />
+                    <div className="creationContentContract">
+                      <div>
+                        Contract creation
+                      </div>
                     </div>
                   </div>
-                </div>
+                }
+
+                {contract.data &&
+                  <div className="flex-item wide contract grow">
+                    <div className="type">Dispute created</div>
+                    <Blockies seed={contract.address} size={10} scale={14} bgColor="#fff" />
+                    <div className="content">
+                      <div className="address">{'0x4d...8d7f'}</div>
+                      <div className="balance"><i class="em em-bust_in_silhouette"></i>{contract.data.partyA}</div>
+                      <div className="balance">B: {contract.data.partyB}</div>
+                      <div className="activate_pnk">Activate</div>
+                    </div>
+                  </div>
+                }
               </div>
             ),
             failed: contract.failedLoading && 'failedLoading'
