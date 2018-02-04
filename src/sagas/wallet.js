@@ -41,10 +41,29 @@ export function* fetchBalance() {
 }
 
 /**
+ * Fetches the current ethereum net version.
+ * See https://github.com/ethereum/wiki/wiki/JSON-RPC#net_version
+ */
+export function* fetchVersion() {
+  try {
+    const version = yield call(eth.net_version)
+
+    yield put(
+      receiveAction(walletActions.RECEIVE_VERSION, {
+        version: version
+      })
+    )
+  } catch (err) {
+    yield put(errorAction(walletActions.FAIL_FETCH_VERSION, err))
+  }
+}
+
+/**
  * The root of the wallet saga.
  * @export default walletSaga
  */
 export default function* walletSaga() {
   yield takeLatest(walletActions.FETCH_ACCOUNTS, fetchAccounts)
-  yield takeLatest(walletActions.FETCH_BALANCE, fetchBalance)
+  yield takeLatest(walletActions.FETCH_BALANCE, fetchBalance),
+  yield takeLatest(walletActions.FETCH_VERSION, fetchVersion)
 }

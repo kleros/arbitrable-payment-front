@@ -2,66 +2,52 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import * as walletSelectors from '../../reducers/wallet'
-import * as walletActions from '../../actions/wallet'
+import { objMap } from '../../utils/functional'
 import * as contractSelectors from '../../reducers/contract'
 import * as contractActions from '../../actions/contract'
-import {
-  CreateContractForm,
-  getCreateContractFormIsInvalid,
-  submitCreateContractForm
-} from '../../forms/contract'
-import Button from '../../components/button'
+import { renderIf } from '../../utils/react-redux'
 
 import './contract.css'
 
 class Contract extends PureComponent {
   static propTypes = {
-    balance: walletSelectors.balanceShape.isRequired,
     contract: contractSelectors.contractShape.isRequired,
-    createContractFormIsInvalid: PropTypes.bool.isRequired,
-    fetchBalance: PropTypes.func.isRequired,
-    submitCreateContractForm: PropTypes.func.isRequired,
-    createContract: PropTypes.func.isRequired
-  }
+    fetchContract: PropTypes.func.isRequired,
 
-  state = { hasPrevPage: null, hasNextPage: null }
+    // Router
+    match: PropTypes.shape({
+      params: PropTypes.shape({ contractAddress: PropTypes.string.isRequired })
+        .isRequired
+    }).isRequired
+  }
 
   componentDidMount() {
-    const { fetchBalance } = this.props
-    fetchBalance()
-  }
-
-  getBackHandlerRef = ref => (this.backHandler = ref)
-
-  handlePageChange = ({ hasPrevPage, hasNextPage }) =>
-    this.setState({ hasPrevPage, hasNextPage })
-
-  handleKeyPress = event => {
-    if (event.key === 'Enter') {
-      event.preventDefault()
-      const { submitCreateContractForm } = this.props
-      submitCreateContractForm()
-    }
+    const { match, fetchContract } = this.props
+    fetchContract(match.params.contractAddress)
   }
 
   render() {
-    const {
-      createContractFormIsInvalid,
-      submitCreateContractForm,
-      createContract
-    } = this.props
-    const { hasPrevPage, hasNextPage } = this.state
+    const { loadingContract, contract } = this.props
 
     return (
-      <div className="Contract">
-        <div className="Contract-form" onKeyPress={this.handleKeyPress}>
-          <CreateContractForm
-            backHandlerRef={this.getBackHandlerRef}
-            onPageChange={this.handlePageChange}
-            onSubmit={createContract}
-          />
-        </div>
+      <div className="container">
+        {renderIf(
+          [contract.loading],
+          [contract.data],
+          [contract.failedLoading],
+          {
+            loading: <span>loading</span>,
+            done: (
+              <div>
+                {objMap(contract, (value, key) => (
+                  <div key={key}>
+                    {key}: {JSON.stringify(value)}
+                  </div>
+                ))}
+              </div>
+            ),
+            failed: contract.failedLoading && 'failedLoading contract'
+        })}
       </div>
     )
   }
@@ -69,13 +55,9 @@ class Contract extends PureComponent {
 
 export default connect(
   state => ({
-    balance: state.wallet.balance,
     contract: state.contract.contract,
-    createContractFormIsInvalid: getCreateContractFormIsInvalid(state)
   }),
   {
-    fetchBalance: walletActions.fetchBalance,
-    submitCreateContractForm,
-    createContract: contractActions.createContract
+    fetchContract: contractActions.fetchContract
   }
 )(Contract)

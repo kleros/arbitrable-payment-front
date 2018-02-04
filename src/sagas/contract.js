@@ -58,10 +58,34 @@ function* fetchContracts() {
 }
 
 /**
+ * Fetches contract details.
+ * @param {object} { payload: contractAddress } - The address of the contract to fetch details for.
+ */
+function* fetchContract({ payload: { contractAddress } }) {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  let contract = null
+
+  try {
+    contract = yield call(
+      kleros.arbitrableContract.getData,
+      contractAddress,
+      accounts[0].toLowerCase()
+    )
+  } catch (err) {
+    console.log(err)
+  }
+
+  yield put(contractActions.receiveContract(contract))
+}
+
+/**
  * The root of the wallet saga.
  * @export default walletSaga
  */
 export default function* walletSaga() {
   yield takeLatest(contractActions.CREATE_CONTRACT, createContract),
-  yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
+  yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts),
+  yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract)
 }

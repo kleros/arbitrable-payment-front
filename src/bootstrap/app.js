@@ -6,6 +6,7 @@ import { ConnectedRouter } from 'react-router-redux'
 import { Switch, Route } from 'react-router-dom'
 
 import Home from '../containers/home'
+import NewContract from '../containers/contract/form'
 import Contract from '../containers/contract'
 
 import Initializer from './initializer'
@@ -22,7 +23,12 @@ const App = ({ store, history, testElement }) => (
           </Helmet>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/new-contract" component={Contract} />
+            <Route
+              exact
+              path="/contracts/:contractAddress"
+              component={Contract}
+            />
+          <Route exact path="/contracts/new" component={NewContract} />
           </Switch>
           {testElement}
         </div>

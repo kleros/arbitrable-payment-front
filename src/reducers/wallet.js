@@ -14,6 +14,11 @@ export default createReducer({
     loading: false,
     data: null,
     failedLoading: false
+  },
+  version: {
+    loading: false,
+    data: null,
+    failedLoading: false
   }
 })
 
@@ -24,3 +29,4 @@ export const getAccount = state =>
 // Shapes
 export const accountsShape = createShape(PropTypes.arrayOf(PropTypes.string))
 export const balanceShape = createShape(PropTypes.string)
+export const versionShape = createShape(PropTypes.string)
