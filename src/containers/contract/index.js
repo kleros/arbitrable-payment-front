@@ -12,7 +12,9 @@ import './contract.css'
 class Contract extends PureComponent {
   static propTypes = {
     contract: contractSelectors.contractShape.isRequired,
+    dispute: contractSelectors.disputeShape.isRequired,
     fetchContract: PropTypes.func.isRequired,
+    createDispute: PropTypes.func.isRequired,
 
     // Router
     match: PropTypes.shape({
@@ -22,7 +24,7 @@ class Contract extends PureComponent {
   }
 
   componentDidMount() {
-    const { match, fetchContract } = this.props
+    const { match, fetchContract, createDispute } = this.props
     fetchContract(match.params.contractAddress)
   }
 
@@ -44,6 +46,7 @@ class Contract extends PureComponent {
                     {key}: {JSON.stringify(value)}
                   </div>
                 ))}
+                <button onClick={v => v}>Create dispute</button>
               </div>
             ),
             failed: contract.failedLoading && 'failedLoading contract'
@@ -56,8 +59,10 @@ class Contract extends PureComponent {
 export default connect(
   state => ({
     contract: state.contract.contract,
+    dispute: state.contract.dispute
   }),
   {
-    fetchContract: contractActions.fetchContract
+    fetchContract: contractActions.fetchContract,
+    createDispute: contractActions.createDispute
   }
 )(Contract)

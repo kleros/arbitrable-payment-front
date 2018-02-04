@@ -24,7 +24,6 @@ export const {
   step3: {
     partyB: {
       type: 'text',
-      formValues: 'arbitratorExtraData',
       placeholder: 'Timeout'
     }
   },

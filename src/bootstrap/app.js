@@ -23,12 +23,12 @@ const App = ({ store, history, testElement }) => (
           </Helmet>
           <Switch>
             <Route exact path="/" component={Home} />
+            <Route exact path="/contracts/new" component={NewContract} />
             <Route
               exact
               path="/contracts/:contractAddress"
               component={Contract}
             />
-          <Route exact path="/contracts/new" component={NewContract} />
           </Switch>
           {testElement}
         </div>

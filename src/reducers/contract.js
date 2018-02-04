@@ -10,6 +10,11 @@ export default createReducer({
     data: null,
     failedLoading: false
   },
+  dispute: {
+    loading: false,
+    data: null,
+    failedLoading: false
+  },
   contracts: {
     loading: false,
     data: null,
@@ -19,6 +24,7 @@ export default createReducer({
 
 // Selectors
 export const createContract = state => state.contract.contract.data
+export const createDispute = state => state.contract.dispute.data
 
 // Shapes
 export const contractShape = PropTypes.shape({
@@ -36,3 +42,4 @@ export const contractShape = PropTypes.shape({
   timeout: PropTypes.number,
   _id: PropTypes.string
 })
+export const disputeShape = createShape(PropTypes.string)

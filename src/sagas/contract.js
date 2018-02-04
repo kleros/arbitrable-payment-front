@@ -16,9 +16,11 @@ function* createContract({type, payload: { contract }}) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
+  let newContract = null
+
   yield put(push('/'))
 
-  let newContract = null
+  console.log(contract)
 
   try {
     newContract = yield call(
@@ -26,7 +28,7 @@ function* createContract({type, payload: { contract }}) {
       accounts[0].toLowerCase(),
       unit.toWei(contract.payment, 'ether'),
       contract.description,
-      process.env.ARBITRATOR_ADDRESS,
+      process.env.REACT_APP_ARBITRATOR_ADDRESS,
       contract.timeout,
       contract.partyB.toLowerCase(),
       contract.arbitratorExtraData,
@@ -81,11 +83,71 @@ function* fetchContract({ payload: { contractAddress } }) {
 }
 
 /**
+ * Raises dispute.
+ * @param {object} { payload: contractAddress } - The address of the contract.
+ */
+function* createDispute({ payload: { contractAddress } }) {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  let {contract, disputeTx} = null
+
+  try {
+    contract = yield call(
+      kleros.arbitrableContract.load,
+      contractAddress
+    )
+
+    let fee
+    if (contract.partyA === accounts[0])
+      fee = yield call(contract.partyAFee())
+    if (contract.partyB === accounts[0])
+      fee = yield call(contract.partyBFee())
+
+    const extraDataContract = yield call(
+      contract.arbitratorExtraData
+    )
+
+    const court = yield call(
+      kleros.klerosPOC.load,
+      process.env.REACT_APP_ARBITRATOR_ADDRESS
+    )
+
+    const arbitrationCost = yield call(
+      court.arbitrationCost.extraDataContract
+    )
+
+    const cost = unit.fromWei(arbitrationCost.toNumber() - fee.toNumber(), 'ether')
+
+    if (accounts[0] === contract.partyA) {
+      disputeTx = yield call(
+        kleros.disputes.raiseDisputePartyA,
+        accounts[0],
+        contractAddress,
+        cost
+      )
+    } else if (accounts[0] === contract.partyB) {
+      disputeTx = yield call(
+        kleros.disputes.raiseDisputePartyB,
+        accounts[0],
+        contractAddress,
+        cost
+      )
+    }
+  } catch (err) {
+    console.log(err)
+  }
+
+  yield put(contractActions.receiveDispute(disputeTx))
+}
+
+/**
  * The root of the wallet saga.
  * @export default walletSaga
  */
 export default function* walletSaga() {
   yield takeLatest(contractActions.CREATE_CONTRACT, createContract),
-  yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts),
-  yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract)
+  yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
+  yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract),
+  yield takeLatest(contractActions.CREATE_DISPUTE, createDispute)
 }

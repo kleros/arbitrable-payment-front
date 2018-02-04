@@ -87,7 +87,6 @@ class Home extends PureComponent {
       version
     } = this.props
 
-
     return (
       <div className="container">
         {renderIf(
@@ -132,6 +131,7 @@ class Home extends PureComponent {
 
                 {contract.data &&
                   <div className="flex-item wide contract grow">
+                    <div className="type">Owner</div>
                     <Blockies seed={contract.data.address} size={10} scale={14} bgColor="#fff" />
                     <div className="content">
                       <div className="address">{this.shortAddress(contract.data.address)}</div>
@@ -162,6 +162,7 @@ class Home extends PureComponent {
                 {
                   contracts.data.map((contract, i) =>
                     <div className="flex-item wide contract grow" key={contract._id} onClick={() => this.redirect(`/contracts/${contract.address}`)}>
+                      {contract.partyA === accounts.data[0] && <div className="type">Owner</div>}
                       <Blockies seed={contract.address} size={10} scale={14} bgColor="#fff" />
                       <div className="content">
                         <div className="address">{this.shortAddress(contract.address)}</div>
