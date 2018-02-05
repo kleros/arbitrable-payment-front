@@ -16,11 +16,9 @@ function* createContract({type, payload: { contract }}) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
-  let newContract = null
-
   yield put(push('/'))
 
-  console.log(contract)
+  let newContract = null
 
   try {
     newContract = yield call(
@@ -90,13 +88,25 @@ function* createPay({type, payload: { contractAddress }}) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
+  yield put(push('/'))
+
   let payTx = null
 
   try {
-    payTx = yield call(kleros.arbitrableContract.pay)
+    const arbitrableContract = yield call(
+      kleros.arbitrableContract._ArbitrableContract.load,
+      contractAddress
+    )
+
+    const payTx = yield call(arbitrableContract.pay, {from: accounts[0]})
+
+    // notification pay in waiting
+
   } catch (err) {
     console.log(err)
   }
+
+  // notification pay done
 
   yield put(contractActions.receivePay(payTx))
 }

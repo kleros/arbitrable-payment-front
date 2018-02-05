@@ -64,7 +64,6 @@ class Contract extends PureComponent {
                     <div><Blockies seed={contract.data.address} size={6} scale={10} bgColor="#f5f5f5" /></div>
                     <div className="Contract-content-address-address">{this.shortAddress(contract.data.address)}</div>
                   </div>
-                  {console.log(contract.data)}
                   <div className="partyB">
                     <div className="identicon">
                       <Blockies seed={contract.data.partyA} size={5} scale={4} bgColor="#f5f5f5" />
@@ -85,9 +84,8 @@ class Contract extends PureComponent {
 
                   </div>
 
-                  <div>Status: {contract.data.status}</div>
-                  <div>Mail: {contract.data.email}</div>
-                  <div className="description">{contract.data.description}</div>
+                  <div className=" Contract-content-item Contract-content-item-mail">{contract.data.email}</div>
+                  <div className="description Contract-content-item">{contract.data.description}</div>
 
                   {!contract.data.partyAFee && !contract.data.partyBFee ?
                     <div className="Contract-actions">
@@ -95,7 +93,7 @@ class Contract extends PureComponent {
                       <div className="Contract-actions-button Contract-actions-button-right" onClick={this.createPay}>Pay</div>
                     </div>
                     :
-                    <div>
+                    <div className="Contract-waiting">
                       Waiting pay from the other party
                     </div>
                   }
