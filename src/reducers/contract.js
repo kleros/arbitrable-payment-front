@@ -15,6 +15,11 @@ export default createReducer({
     data: null,
     failedLoading: false
   },
+  pay: {
+    loading: false,
+    data: null,
+    failedLoading: false
+  },
   contracts: {
     loading: false,
     data: null,
@@ -25,6 +30,7 @@ export default createReducer({
 // Selectors
 export const createContract = state => state.contract.contract.data
 export const createDispute = state => state.contract.dispute.data
+export const createPay = state => state.contract.pay.data
 
 // Shapes
 export const contractShape = PropTypes.shape({

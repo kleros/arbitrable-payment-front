@@ -14,6 +14,7 @@ class Contract extends PureComponent {
     contract: contractSelectors.contractShape.isRequired,
     fetchContract: PropTypes.func.isRequired,
     createDispute: PropTypes.func.isRequired,
+    createPay: PropTypes.func.isRequired,
 
     // Router
     match: PropTypes.shape({
@@ -30,6 +31,11 @@ class Contract extends PureComponent {
   createDispute = () => {
     const { createDispute, match } = this.props
     createDispute(match.params.contractAddress)
+  }
+
+  createPay = () => {
+    const { createPay, match } = this.props
+    createPay(match.params.contractAddress)
   }
 
   render() {
@@ -51,6 +57,7 @@ class Contract extends PureComponent {
                   </div>
                 ))}
                 <button onClick={this.createDispute}>Create dispute</button>
+                <button onClick={this.createPay}>Pay</button>
               </div>
             ),
             failed: contract.failedLoading && 'failedLoading contract'
@@ -63,10 +70,12 @@ class Contract extends PureComponent {
 export default connect(
   state => ({
     contract: state.contract.contract,
-    dispute: state.contract.dispute
+    dispute: state.contract.dispute,
+    pay: state.contract.pay
   }),
   {
     fetchContract: contractActions.fetchContract,
-    createDispute: contractActions.createDispute
+    createDispute: contractActions.createDispute,
+    createPay: contractActions.createPay
   }
 )(Contract)

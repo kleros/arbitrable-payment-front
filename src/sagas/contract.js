@@ -83,6 +83,25 @@ function* fetchContract({ payload: { contractAddress } }) {
 }
 
 /**
+ * Pay the party B. To be called when the good is delivered or the service rendered.
+ * @param {object} { payload: contractAddress } - The address of the contract.
+ */
+function* createPay({type, payload: { contractAddress }}) {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  let payTx = null
+
+  try {
+    payTx = yield call(kleros.arbitrableContract.pay)
+  } catch (err) {
+    console.log(err)
+  }
+
+  yield put(contractActions.receivePay(payTx))
+}
+
+/**
  * Raises dispute.
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
@@ -146,5 +165,6 @@ export default function* walletSaga() {
   yield takeLatest(contractActions.CREATE_CONTRACT, createContract),
   yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
   yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract),
-  yield takeLatest(contractActions.CREATE_DISPUTE, createDispute)
+  yield takeLatest(contractActions.CREATE_DISPUTE, createDispute),
+  yield takeLatest(contractActions.CREATE_PAY, createPay)
 }
