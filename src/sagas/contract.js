@@ -164,6 +164,10 @@ function* createDispute({type, payload: { contractAddress }}) {
     console.log(err)
   }
 
+  yield put(push('/'))
+
+  // add notification
+
   yield put(contractActions.receiveDispute(disputeTx))
 }
 
