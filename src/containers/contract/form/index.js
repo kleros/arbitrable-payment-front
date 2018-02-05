@@ -54,7 +54,7 @@ class NewContract extends PureComponent {
     const { hasPrevPage, hasNextPage } = this.state
 
     return (
-      <div className="Contract">
+      <div className="NewContract">
         <div className="Contract-form" onKeyPress={this.handleKeyPress}>
           <CreateContractForm
             backHandlerRef={this.getBackHandlerRef}
