@@ -87,6 +87,8 @@ class Home extends PureComponent {
       version
     } = this.props
 
+    console.log(this.props)
+
     return (
       <div className="container">
         {renderIf(
@@ -129,7 +131,7 @@ class Home extends PureComponent {
                   </div>
                 }
 
-                {contract.data &&
+                {contract.data && contract.data.address != contracts.data[0].address &&
                   <div className="flex-item wide contract grow">
                     <div className="type">Owner</div>
                     <Blockies seed={contract.data.address} size={10} scale={14} bgColor="#fff" />
