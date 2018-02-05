@@ -45,19 +45,27 @@ class Contract extends PureComponent {
       <div className="container">
         {renderIf(
           [contract.loading],
-          [contract.data],
+          [contract.data && contract.data.partyAFee],
           [contract.failedLoading],
           {
             loading: <span>loading</span>,
-            done: (
+            done: contract.data && (
               <div>
                 {objMap(contract, (value, key) => (
                   <div key={key}>
                     {key}: {JSON.stringify(value)}
                   </div>
                 ))}
-                <button onClick={this.createDispute}>Create dispute</button>
-                <button onClick={this.createPay}>Pay</button>
+                {!contract.data.partyAFee && !contract.data.partyBFee ?
+                  <div>
+                    <button onClick={this.createDispute}>Create dispute</button>
+                    <button onClick={this.createPay}>Pay</button>
+                  </div>
+                  :
+                  <div>
+                    Waiting pay from the other party
+                  </div>
+                }
               </div>
             ),
             failed: contract.failedLoading && 'failedLoading contract'

@@ -121,7 +121,7 @@ class Home extends PureComponent {
                 </div>
 
                 {contract.creating &&
-                  <div className="flex-item wide grow" onClick={v => v}>
+                  <div className="flex-item wide grow" onClick={() => this.redirect(`/contracts/${contract.address}`)}>
                     <Blockies seed={this.state.randomSeed} size={10} scale={14} bgColor="#fff" />
                     <div className="creationContentContract">
                       <div>
@@ -131,8 +131,8 @@ class Home extends PureComponent {
                   </div>
                 }
 
-                {contract.data && contract.data.address != contracts.data[0].address &&
-                  <div className="flex-item wide contract grow">
+                {contract.data && contracts.address && contract.data.address != contracts.data[0].address && 
+                  <div className="flex-item wide contract grow" onClick={() => this.redirect(`/contracts/${contract.address}`)}>
                     <div className="type">Owner</div>
                     <Blockies seed={contract.data.address} size={10} scale={14} bgColor="#fff" />
                     <div className="content">
