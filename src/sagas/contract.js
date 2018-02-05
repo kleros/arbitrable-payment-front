@@ -86,27 +86,23 @@ function* fetchContract({ payload: { contractAddress } }) {
  * Raises dispute.
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
-function* createDispute({ payload: { contractAddress } }) {
+function* createDispute({type, payload: { contractAddress }}) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
-  let {contract, disputeTx} = null
+  let contract, disputeTx = null
 
   try {
     contract = yield call(
-      kleros.arbitrableContract.load,
+      kleros.arbitrableContract.getData,
       contractAddress
     )
 
     let fee
     if (contract.partyA === accounts[0])
-      fee = yield call(contract.partyAFee())
+      fee = contract.partyAFee
     if (contract.partyB === accounts[0])
-      fee = yield call(contract.partyBFee())
-
-    const extraDataContract = yield call(
-      contract.arbitratorExtraData
-    )
+      fee = contract.partyBFee
 
     const court = yield call(
       kleros.klerosPOC.load,
@@ -114,10 +110,11 @@ function* createDispute({ payload: { contractAddress } }) {
     )
 
     const arbitrationCost = yield call(
-      court.arbitrationCost.extraDataContract
+      court.arbitrationCost,
+      contract.arbitratorExtraData
     )
 
-    const cost = unit.fromWei(arbitrationCost.toNumber() - fee.toNumber(), 'ether')
+    const cost = unit.fromWei(arbitrationCost.toNumber() - fee, 'ether')
 
     if (accounts[0] === contract.partyA) {
       disputeTx = yield call(

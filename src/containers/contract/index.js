@@ -12,7 +12,6 @@ import './contract.css'
 class Contract extends PureComponent {
   static propTypes = {
     contract: contractSelectors.contractShape.isRequired,
-    dispute: contractSelectors.disputeShape.isRequired,
     fetchContract: PropTypes.func.isRequired,
     createDispute: PropTypes.func.isRequired,
 
@@ -24,8 +23,13 @@ class Contract extends PureComponent {
   }
 
   componentDidMount() {
-    const { match, fetchContract, createDispute } = this.props
+    const { match, fetchContract } = this.props
     fetchContract(match.params.contractAddress)
+  }
+
+  createDispute = () => {
+    const { createDispute, match } = this.props
+    createDispute(match.params.contractAddress)
   }
 
   render() {
@@ -46,7 +50,7 @@ class Contract extends PureComponent {
                     {key}: {JSON.stringify(value)}
                   </div>
                 ))}
-                <button onClick={v => v}>Create dispute</button>
+                <button onClick={this.createDispute}>Create dispute</button>
               </div>
             ),
             failed: contract.failedLoading && 'failedLoading contract'
