@@ -1,12 +1,89 @@
-/* @define Balance */
+/* @define Contract */
 .Contract {
   display: flex;
-  height: 100vh;
-  flex-direction: column;
+  height: 100%;
+  padding-top: 20vh;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  background: #fff;
-  &-form {
+  font-family: 'Open Sans Condensed', sans-serif;
 
+  &-content {
+    display: flex;
+    flex-direction: column;
+    .identicon {
+      border-top-left-radius: 0px;
+      border-bottom-left-radius: 0px;
+    }
+    &-address {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      .identicon {
+        border-radius: 3px;
+      }
+      &-address {
+        padding-left: 20px;
+        font-size: 60px;
+      }
+    }
+  }
+
+  &-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+
+    &-button {
+      flex: 1;
+      background: #f5f5f5;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+      color: gray;
+      border-radius: 3px;
+      &-left {
+        margin-right: 2px;
+      }
+
+      &-right {
+        margin-left: 2px;
+      }
+      &:hover {
+        color: #000;
+      }
+
+    }
+
+
+  }
+
+  .partyB {
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    padding-top: 10px;
+    .content {
+      height: 20px;
+      line-height: 20px;
+      padding: 0 5px 0 5px;
+      font-size: 15px;
+      background: #f5f5f5;
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px;
+    }
+
+    .identicon {
+      border-top-left-radius: 3px;
+      border-bottom-left-radius: 3px;
+    }
+  }
+}
+
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+  .Contract {
+    padding-top: 10px;
   }
 }
