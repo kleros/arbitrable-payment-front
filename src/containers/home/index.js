@@ -131,8 +131,8 @@ class Home extends PureComponent {
                   </div>
                 }
 
-                {contract.data && contracts.address && contract.data.address != contracts.data[0].address && 
-                  <div className="flex-item wide contract grow" onClick={() => this.redirect(`/contracts/${contract.address}`)}>
+                {contract.data && contract.data.address && !contracts.data.some(c => c.address === contract.data.address) &&
+                  <div className="flex-item wide contract grow" onClick={() => this.redirect(`/contracts/${contract.data.address}`)}>
                     <div className="type">Owner</div>
                     <Blockies seed={contract.data.address} size={10} scale={14} bgColor="#fff" />
                     <div className="content">
