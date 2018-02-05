@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Blockies from 'react-blockies'
+import { ClipLoader } from 'react-spinners'
 
 import { objMap } from '../../utils/functional'
 import * as contractSelectors from '../../reducers/contract'
@@ -56,7 +57,7 @@ class Contract extends PureComponent {
           [contract.data && contract.data.partyAFee],
           [contract.failedLoading],
           {
-            loading: <span>loading</span>,
+            loading: <div className="loader"><ClipLoader color={'gray'}  loading={true} /></div>,
             done: contract.data && (
               <div className="Contract">
                 <div className="Contract-content">
