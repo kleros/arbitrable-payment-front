@@ -18,7 +18,7 @@ import './home.css'
 
 class Home extends PureComponent {
   state = {
-    randomSeed: "",
+    randomSeed: '',
     totalContracts: 0
   }
 
@@ -86,8 +86,6 @@ class Home extends PureComponent {
       accounts,
       version
     } = this.props
-
-    console.log(this.props)
 
     return (
       <div className="container">

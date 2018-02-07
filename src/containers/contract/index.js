@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Blockies from 'react-blockies'
 import { ClipLoader } from 'react-spinners'
 
+import * as walletActions from '../../actions/wallet'
 import { objMap } from '../../utils/functional'
 import * as contractSelectors from '../../reducers/contract'
 import * as contractActions from '../../actions/contract'
@@ -12,11 +13,16 @@ import { renderIf } from '../../utils/react-redux'
 import './contract.css'
 
 class Contract extends PureComponent {
+  state = {
+    party: '',
+    partyOther: ''
+  }
   static propTypes = {
     contract: contractSelectors.contractShape.isRequired,
     fetchContract: PropTypes.func.isRequired,
     createDispute: PropTypes.func.isRequired,
     createPay: PropTypes.func.isRequired,
+    fetchAccounts: PropTypes.func.isRequired,
 
     // Router
     match: PropTypes.shape({
@@ -26,8 +32,15 @@ class Contract extends PureComponent {
   }
 
   componentDidMount() {
-    const { match, fetchContract } = this.props
+    const { match, fetchContract, contract, accounts } = this.props
     fetchContract(match.params.contractAddress)
+    if (contract.data && contract.data.partyA.toLowerCase() === accounts.data[0].toLowerCase()) {
+      this.setState({party: 'partyA'})
+      this.setState({partyOther: 'partyB'})
+    } else if (contract.data && contract.data.partyB.toLowerCase() === accounts.data[0].toLowerCase()) {
+      this.setState({party: 'partyB'})
+      this.setState({partyOther: 'partyA'})
+    }
   }
 
   createDispute = () => {
@@ -48,14 +61,14 @@ class Contract extends PureComponent {
   }
 
   render() {
-    const { loadingContract, contract } = this.props
+    const { loadingContract, contract, accounts } = this.props
 
     return (
       <div>
         {renderIf(
           [contract.loading],
-          [contract.data && contract.data.partyAFee],
-          [contract.failedLoading],
+          [contract.data && contract.data.partyAFee && accounts.data && accounts.data[0]],
+          [contract.failedLoading || accounts.failedLoading],
           {
             loading: <div className="loader"><ClipLoader color={'gray'}  loading={true} /></div>,
             done: contract.data && (
@@ -82,21 +95,35 @@ class Contract extends PureComponent {
                     <div className="content">
                       {this.shortAddress(contract.data.partyB)}
                     </div>
-
                   </div>
 
                   <div className=" Contract-content-item Contract-content-item-mail">{contract.data.email}</div>
                   <div className="description Contract-content-item">{contract.data.description}</div>
-
                   {!contract.data.partyAFee && !contract.data.partyBFee ?
                     <div className="Contract-actions">
                       <div className="Contract-actions-button Contract-actions-button-left" onClick={this.createDispute}>Create dispute</div>
-                      <div className="Contract-actions-button Contract-actions-button-right" onClick={this.createPay}>Pay</div>
+                      {contract.data.partyA === accounts.data[0] && <div className="Contract-actions-button Contract-actions-button-right" onClick={this.createPay}>Pay</div>}
                     </div>
-                    :
+                    : <div></div>
+                  }
+                  {!contract.data[`${this.state.party}Fee`] && contract.data[`${this.state.partyOther}Fee`] ?
+                    <div>
+                      <div className="Contract-waiting">
+                        The other party raise a dispute. So as not to lose the dispute you must pay the fee.
+                      </div>
+                      <div className="Contract-actions">
+                        <div className="Contract-actions-button Contract-actions-button-left" onClick={this.createDispute}>Pay the fee</div>
+                      </div>
+                    </div>
+                    : <div className="Contract-waiting">
+                        Waiting pay fee from the other party ({this.shortAddress(contract.data[this.state.partyOther])})
+                      </div>
+                  }
+                  {contract.data.partyAFee && contract.data.partyBFee ?
                     <div className="Contract-waiting">
-                      Waiting pay from the other party
+                      Send evidence
                     </div>
+                    : <div></div>
                   }
                 </div>
             </div>
@@ -112,11 +139,13 @@ export default connect(
   state => ({
     contract: state.contract.contract,
     dispute: state.contract.dispute,
-    pay: state.contract.pay
+    pay: state.contract.pay,
+    accounts: state.wallet.accounts
   }),
   {
     fetchContract: contractActions.fetchContract,
     createDispute: contractActions.createDispute,
-    createPay: contractActions.createPay
+    createPay: contractActions.createPay,
+    fetchAccounts: walletActions.fetchAccounts
   }
 )(Contract)
