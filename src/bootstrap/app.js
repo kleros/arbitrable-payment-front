@@ -7,6 +7,7 @@ import { Switch, Route } from 'react-router-dom'
 
 import Home from '../containers/home'
 import NewContract from '../containers/contract/form'
+import NewEvidence from '../containers/contract/evidence-form'
 import Contract from '../containers/contract'
 
 import Initializer from './initializer'
@@ -29,6 +30,7 @@ const App = ({ store, history, testElement }) => (
               path="/contracts/:contractAddress"
               component={Contract}
             />
+          <Route exact path="/evidences/new" component={NewEvidence} />
           </Switch>
           {testElement}
         </div>

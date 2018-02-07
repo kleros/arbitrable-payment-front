@@ -8,6 +8,8 @@ export const CREATE_DISPUTE = 'CREATE_DISPUTE'
 export const RECEIVE_DISPUTE = 'RECEIVE_DISPUTE'
 export const CREATE_PAY = 'CREATE_PAY'
 export const RECEIVE_PAY = 'RECEIVE_PAY'
+export const CREATE_EVIDENCE = 'CREATE_EVIDENCE'
+export const RECEIVE_EVIDENCE = 'RECEIVE_EVIDENCE'
 
 // Action Creators
 export const createContract = contract => ({
@@ -27,6 +29,7 @@ export const receiveContract = contract => ({
   type: RECEIVE_CONTRACT,
   payload: { contract }
 })
+
 export const createDispute = contractAddress => ({
   type: CREATE_DISPUTE,
   payload: { contractAddress }
@@ -42,4 +45,12 @@ export const createPay = contractAddress => ({
 export const receivePay = disputeTx => ({
   type: RECEIVE_PAY,
   payload: { disputeTx }
+})
+export const createEvidence = evidence => ({
+  type: CREATE_EVIDENCE,
+  payload: { evidence }
+})
+export const receiveEvidence = evidence => ({
+  type: RECEIVE_EVIDENCE,
+  payload: { evidence }
 })

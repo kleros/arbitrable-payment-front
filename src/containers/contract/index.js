@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Blockies from 'react-blockies'
 import { ClipLoader } from 'react-spinners'
+import { push } from 'react-router-redux'
 
 import * as walletActions from '../../actions/wallet'
 import { objMap } from '../../utils/functional'
@@ -53,11 +54,21 @@ class Contract extends PureComponent {
     createPay(match.params.contractAddress)
   }
 
-  shortAddress = (address = "0x0") => {
+  shortAddress = address => {
     const startAddress = address.substr(0, address.length-36)
     const endAddress = address.substr(37)
 
     return `${startAddress}...${endAddress}`
+  }
+
+  // TODO go to utils
+  redirect = (url, ...args) => {
+    if (!args.length) {
+      this.props.history.push(url)
+    } else {
+      const allArgs = args.reduce((acc, arg, url) => (`${acc}/${arg}`))
+      this.props.history.push(`${url}/${allArgs}`)
+    }
   }
 
   render() {
@@ -97,8 +108,6 @@ class Contract extends PureComponent {
                     </div>
                   </div>
 
-                  {console.log(contract.data)}
-
                   <div className=" Contract-content-item Contract-content-item-mail">{contract.data.email}</div>
                   <div className="description Contract-content-item">{contract.data.description}</div>
                   {!contract.data.partyAFee && !contract.data.partyBFee ?
@@ -114,7 +123,7 @@ class Contract extends PureComponent {
                         The other party raise a dispute. So as not to lose the dispute you must pay the fee.
                       </div>
                       <div className="Contract-actions">
-                        <div className="Contract-actions-button Contract-actions-button-left" onClick={this.createDispute}>Pay the fee</div>
+                        <div className="Contract-actions-button" onClick={this.createDispute}>Pay the fee</div>
                       </div>
                     </div>
                     : <div></div>
@@ -126,10 +135,20 @@ class Contract extends PureComponent {
                     : <div></div>
                   }
                   {contract.data.partyAFee && contract.data.partyBFee ?
-                    <div className="Contract-waiting">
-                      Send evidence
+                    <div className="Contract-actions">
+                      <div className="Contract-actions-button" onClick={() => this.redirect('/evidences/new')}>Send Evidence</div>
                     </div>
                     : <div></div>
+                  }
+                  {console.log(contract.data)}
+                  {
+                    contract.data.evidences.map((evidence, i) =>
+                      <div className="evidenceCard" onClick={() => window.location.replace(evidence.url)} key={i}>
+                        <div className="name">{evidence.name}</div>
+                        <div className="description">{evidence.description}</div>
+                        <div className="url">{evidence.url}</div>
+                      </div>
+                    )
                   }
                 </div>
             </div>

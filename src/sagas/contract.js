@@ -172,6 +172,39 @@ function* createDispute({type, payload: { contractAddress }}) {
 }
 
 /**
+ * Send evidence
+ * @param {object} { payload: evidence } - Evidence.
+ */
+function* createEvidence({type, payload: { evidence }}) {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  yield put(push('/'))
+
+  let evidenceTx = null
+
+  try {
+    evidenceTx = yield call(
+      kleros.arbitrableContract.submitEvidence,
+      accounts[0],
+      evidence.addressContract,
+      evidence.name,
+      evidence.description,
+      evidence.url
+    )
+
+    // notification send evidence in waiting
+
+  } catch (err) {
+    console.log(err)
+  }
+
+  // notification evidence sent
+
+  yield put(contractActions.receiveEvidence(evidenceTx))
+}
+
+/**
  * The root of the wallet saga.
  * @export default walletSaga
  */
@@ -180,5 +213,6 @@ export default function* walletSaga() {
   yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
   yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract),
   yield takeLatest(contractActions.CREATE_DISPUTE, createDispute),
-  yield takeLatest(contractActions.CREATE_PAY, createPay)
+  yield takeLatest(contractActions.CREATE_PAY, createPay),
+  yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence)
 }

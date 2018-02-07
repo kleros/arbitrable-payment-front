@@ -24,13 +24,19 @@ export default createReducer({
     loading: false,
     data: null,
     failedLoading: false
-  }
+  },
+  evidence: {
+    loading: false,
+    data: null,
+    failedLoading: false
+  },
 })
 
 // Selectors
 export const createContract = state => state.contract.contract.data
 export const createDispute = state => state.contract.dispute.data
 export const createPay = state => state.contract.pay.data
+export const createEvidence = state => state.contract.evidence.data
 
 // Shapes
 export const contractShape = PropTypes.shape({
