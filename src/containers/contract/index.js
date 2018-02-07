@@ -53,7 +53,7 @@ class Contract extends PureComponent {
     createPay(match.params.contractAddress)
   }
 
-  shortAddress = address => {
+  shortAddress = (address = "0x0") => {
     const startAddress = address.substr(0, address.length-36)
     const endAddress = address.substr(37)
 
@@ -116,7 +116,7 @@ class Contract extends PureComponent {
                       </div>
                     </div>
                     : <div className="Contract-waiting">
-                        Waiting pay fee from the other party ({this.shortAddress(contract.data[this.state.partyOther])})
+                        Waiting pay fee from the other party ({this.shortAddress(contract.data[`${this.state.partyOther}`])})
                       </div>
                   }
                   {contract.data.partyAFee && contract.data.partyBFee ?
