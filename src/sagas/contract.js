@@ -112,6 +112,41 @@ function* createPay({type, payload: { contractAddress }}) {
 }
 
 /**
+ * Reimburse party A. To be called if the good or service can't be fully provided.
+ * @param {object} { payload: contractAddress } - The address of the contract.
+ */
+function* reimburse({type, payload: { contractAddress }}) {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  yield put(push('/'))
+
+  let reimburseTx = null
+
+  try {
+    const arbitrableContract = yield call(
+      kleros.arbitrableContract._ArbitrableContract.load,
+      contractAddress,
+      // amountReimbursed
+    )
+
+    const reimburseTx = yield call(
+      arbitrableContract.reimburse,
+      {from: accounts[0]}
+    )
+
+    // notification reimburse in waiting
+
+  } catch (err) {
+    console.log(err)
+  }
+
+  // notification reimburse done
+
+  yield put(contractActions.receiveReimburse(reimburseTx))
+}
+
+/**
  * Raises dispute.
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
@@ -214,5 +249,6 @@ export default function* walletSaga() {
   yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract),
   yield takeLatest(contractActions.CREATE_DISPUTE, createDispute),
   yield takeLatest(contractActions.CREATE_PAY, createPay),
+  yield takeLatest(contractActions.CREATE_REIMBURSE, reimburse),
   yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence)
 }

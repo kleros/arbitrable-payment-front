@@ -114,6 +114,7 @@ class Contract extends PureComponent {
                     <div className="Contract-actions">
                       <div className="Contract-actions-button Contract-actions-button-left" onClick={this.createDispute}>Create dispute</div>
                       {contract.data.partyA === accounts.data[0] && <div className="Contract-actions-button Contract-actions-button-right" onClick={this.createPay}>Pay</div>}
+                      {contract.data.partyB === accounts.data[0] && <div className="Contract-actions-button Contract-actions-button-right" onClick={this.createReimburse}>Reimburse</div>}
                     </div>
                     : <div></div>
                   }
@@ -140,7 +141,6 @@ class Contract extends PureComponent {
                     </div>
                     : <div></div>
                   }
-                  {console.log(contract.data)}
                   {
                     contract.data.evidences.map((evidence, i) =>
                       <div className="evidenceCard" onClick={() => window.location.replace(evidence.url)} key={i}>
