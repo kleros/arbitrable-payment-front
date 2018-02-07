@@ -97,6 +97,8 @@ class Contract extends PureComponent {
                     </div>
                   </div>
 
+                  {console.log(contract.data)}
+
                   <div className=" Contract-content-item Contract-content-item-mail">{contract.data.email}</div>
                   <div className="description Contract-content-item">{contract.data.description}</div>
                   {!contract.data.partyAFee && !contract.data.partyBFee ?
@@ -115,9 +117,13 @@ class Contract extends PureComponent {
                         <div className="Contract-actions-button Contract-actions-button-left" onClick={this.createDispute}>Pay the fee</div>
                       </div>
                     </div>
-                    : <div className="Contract-waiting">
-                        Waiting pay fee from the other party ({this.shortAddress(contract.data[`${this.state.partyOther}`])})
-                      </div>
+                    : <div></div>
+                  }
+                  {contract.data[`${this.state.party}Fee`] && !contract.data[`${this.state.partyOther}Fee`] ?
+                    <div className="Contract-waiting">
+                      Waiting pay fee from the other party ({this.shortAddress(contract.data[`${this.state.partyOther}`])})
+                    </div>
+                    : <div></div>
                   }
                   {contract.data.partyAFee && contract.data.partyBFee ?
                     <div className="Contract-waiting">
