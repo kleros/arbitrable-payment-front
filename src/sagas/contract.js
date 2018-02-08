@@ -29,7 +29,7 @@ function* createContract({type, payload: { contract }}) {
       process.env.REACT_APP_ARBITRATOR_ADDRESS,
       contract.timeout,
       contract.partyB.toLowerCase(),
-      contract.arbitratorExtraData,
+      0,
       contract.email,
       contract.description
     )

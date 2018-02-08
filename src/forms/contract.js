@@ -28,16 +28,11 @@ export const {
     }
   },
   step4: {
-    arbitratorExtraData: {
-      type: 'text'
-    }
-  },
-  step5: {
     email: {
       type: 'text'
     }
   },
-  step6: {
+  step5: {
     description: {
       type: 'text'
     }
