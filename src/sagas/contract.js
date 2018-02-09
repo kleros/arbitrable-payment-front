@@ -84,7 +84,7 @@ function* fetchContract({ payload: { contractAddress } }) {
  * Pay the party B. To be called when the good is delivered or the service rendered.
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
-function* createPay({type, payload: { contractAddress }}) {
+function* createPay({type, payload: { contractAddress, partyA, partyB }}) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
@@ -93,12 +93,16 @@ function* createPay({type, payload: { contractAddress }}) {
   let payTx = null
 
   try {
-    const arbitrableContract = yield call(
-      kleros.arbitrableContract._ArbitrableContract.load,
-      contractAddress
-    )
-
-    const payTx = yield call(arbitrableContract.pay, {from: accounts[0]})
+    if (partyA === accounts[0])
+      payTx = yield call(
+        kleros.arbitrableContract.payArbitrationFeeByPartyA,
+        contractAddress
+      )
+    if (partyB === accounts[0])
+      payTx = yield call(
+        kleros.arbitrableContract.payArbitrationFeeByPartyB,
+        contractAddress
+      )
 
     // notification pay in waiting
 

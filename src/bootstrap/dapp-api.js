@@ -15,7 +15,12 @@ else
   )
 
 export const eth = ethInstance
-export default new Kleros(
+
+const kleros = new Kleros(
   ethInstance.currentProvider,
   process.env.REACT_APP_STORE_PROVIDER
 )
+
+export default kleros
+
+kleros.disputes.watchForDisputes(process.env.REACT_APP_ARBITRATOR_ADDRESS)

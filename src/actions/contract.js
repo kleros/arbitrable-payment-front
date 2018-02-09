@@ -39,9 +39,9 @@ export const receiveDispute = disputeTx => ({
   type: RECEIVE_DISPUTE,
   payload: { disputeTx }
 })
-export const createPay = contractAddress => ({
+export const createPay = (contractAddress, partyA, partyB) => ({
   type: CREATE_PAY,
-  payload: { contractAddress }
+  payload: { contractAddress, partyA, partyB }
 })
 export const receivePay = disputeTx => ({
   type: RECEIVE_PAY,

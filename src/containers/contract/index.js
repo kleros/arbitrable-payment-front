@@ -33,16 +33,29 @@ class Contract extends PureComponent {
   }
 
   componentDidMount() {
-    const { match, fetchContract, contract, accounts } = this.props
+    const { match, fetchContract } = this.props
     fetchContract(match.params.contractAddress)
-    if (contract.data && contract.data.partyA.toLowerCase() === accounts.data[0].toLowerCase()) {
-      this.setState({party: 'partyA'})
-      this.setState({partyOther: 'partyB'})
-    } else if (contract.data && contract.data.partyB.toLowerCase() === accounts.data[0].toLowerCase()) {
-      this.setState({party: 'partyB'})
-      this.setState({partyOther: 'partyA'})
-    }
   }
+
+  componentWillReceiveProps(nextProps) {
+   const { contract: prevContract } = this.props
+   const { contract, accounts } = nextProps
+   if (prevContract !== contract) {
+     if (
+       contract.data &&
+       contract.data.partyA.toLowerCase() === accounts.data[0].toLowerCase()
+     ) {
+       this.setState({ party: 'partyA' })
+       this.setState({ partyOther: 'partyB' })
+     } else if (
+       contract.data &&
+       contract.data.partyB.toLowerCase() === accounts.data[0].toLowerCase()
+     ) {
+       this.setState({ party: 'partyB' })
+       this.setState({ partyOther: 'partyA' })
+     }
+   }
+ }
 
   createDispute = () => {
     const { createDispute, match } = this.props
@@ -50,8 +63,12 @@ class Contract extends PureComponent {
   }
 
   createPay = () => {
-    const { createPay, match } = this.props
-    createPay(match.params.contractAddress)
+    const { contract, createPay, match } = this.props
+    createPay(
+      match.params.contractAddress,
+      contract.data.partyA,
+      contract.data.partyB
+    )
   }
 
   shortAddress = address => {
