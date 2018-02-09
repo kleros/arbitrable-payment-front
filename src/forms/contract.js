@@ -9,13 +9,18 @@ export const {
   step1: {
     partyB: {
       type: 'text',
-      placeholder: 'Ethereum address of the other party'
+      props: {
+        placeholder: 'Other Party address'
+      }
     }
   },
   step2: {
     payment: {
       type: 'number',
-      placeholder: 'Payment (ETH)',
+      props: {
+        placeholder: 'Payment (ETH)',
+        type: 'number'
+      },
       validate: [required, number]
     }
   },

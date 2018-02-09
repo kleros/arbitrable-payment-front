@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const TextInput = ({
-  input: { value, onChange },
+  input: { value, type, onChange },
   meta: { valid, touched, error },
   placeholder,
   ...rest
@@ -10,7 +10,7 @@ const TextInput = ({
   <div className="TextInput" {...rest}>
     <input
       className="input"
-      type="text"
+      type={type}
       placeholder={placeholder}
       value={value}
       onChange={onChange}

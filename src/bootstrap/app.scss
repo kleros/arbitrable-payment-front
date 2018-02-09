@@ -24,6 +24,10 @@ fieldset {
   border: none;
 }
 
+textarea, input, button {
+  outline: none;
+}
+
 /* Placeload */
 
 @keyframes placeHolderShimmer {
