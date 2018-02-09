@@ -7,32 +7,24 @@ export const {
   submit: submitCreateContractForm
 } = wizardForm('createContractFormKey', {
   step1: {
+    partyB: {
+      type: 'text',
+      placeholder: 'Ethereum address of the other party'
+    }
+  },
+  step2: {
     payment: {
       type: 'number',
       placeholder: 'Payment (ETH)',
       validate: [required, number]
     }
   },
-  step2: {
-    timeout: {
-      type: 'number',
-      visibleIf: 'payment',
-      placeholder: 'Timeout',
-      validate: [required, number]
-    }
-  },
   step3: {
-    partyB: {
-      type: 'text',
-      placeholder: 'Timeout'
-    }
-  },
-  step4: {
     email: {
       type: 'text'
     }
   },
-  step5: {
+  step4: {
     description: {
       type: 'text'
     }
