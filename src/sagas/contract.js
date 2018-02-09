@@ -27,7 +27,7 @@ function* createContract({type, payload: { contract }}) {
       unit.toWei(contract.payment, 'ether'),
       contract.description,
       process.env.REACT_APP_ARBITRATOR_ADDRESS,
-      REACT_APP_ARBITRATOR_TIMEOUT,
+      process.env.REACT_APP_ARBITRATOR_TIMEOUT,
       contract.partyB.toLowerCase(),
       process.env.REACT_APP_ARBITRATOR_EXTRADATA,
       contract.email,
