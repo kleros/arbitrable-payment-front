@@ -49,7 +49,8 @@ class NewEvidence extends PureComponent {
     const {
       createEvidenceFormIsInvalid,
       submitCreateEvidenceForm,
-      createEvidence
+      createEvidence,
+      contract
     } = this.props
     const { hasPrevPage, hasNextPage } = this.state
 
@@ -60,6 +61,7 @@ class NewEvidence extends PureComponent {
             backHandlerRef={this.getBackHandlerRef}
             onPageChange={this.handlePageChange}
             onSubmit={createEvidence}
+            initialValues={{ addressContract: contract.data.address }}
           />
         </div>
       </div>
