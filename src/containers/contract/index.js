@@ -106,21 +106,21 @@ class Contract extends PureComponent {
                     <div><Blockies seed={contract.data.address} size={6} scale={10} bgColor="#f5f5f5" /></div>
                     <div className="Contract-content-address-address">{this.shortAddress(contract.data.address)}</div>
                   </div>
-                  <div className="partyB">
-                    <div className="identicon">
+                  <div className="Contract-partyB">
+                    <div className="Contract-partyB-identicon">
                       <Blockies seed={contract.data.partyA} size={5} scale={4} bgColor="#f5f5f5" />
                     </div>
-                    <div className="content">
+                    <div className="Contract-partyB-content">
                       {this.shortAddress(contract.data.partyA)}
                     </div>
 
                     <div>&nbsp;&nbsp;</div>
 
-                    <div className="identicon">
+                    <div className="Contract-partyB-identicon">
                       <Blockies seed={contract.data.partyB} size={5} scale={4} bgColor="#f5f5f5" />
                     </div>
 
-                    <div className="content">
+                    <div className="Contract-partyB-content">
                       {this.shortAddress(contract.data.partyB)}
                     </div>
                   </div>
@@ -160,10 +160,10 @@ class Contract extends PureComponent {
                   }
                   {
                     contract.data.evidences.map((evidence, i) =>
-                      <div className="evidenceCard" onClick={() => window.location.replace(evidence.url)} key={i}>
-                        <div className="name">{evidence.name}</div>
+                      <div className="Contract-evidenceCard" onClick={() => window.location.replace(evidence.url)} key={i}>
+                        <div className="Contract-evidenceCard-name">{evidence.name}</div>
                         <div className="description">{evidence.description}</div>
-                        <div className="url">{evidence.url}</div>
+                        <div className="Contract-evidenceCard-url">{evidence.url}</div>
                       </div>
                     )
                   }
