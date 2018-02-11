@@ -106,26 +106,26 @@ class Contract extends PureComponent {
                     <div><Blockies seed={contract.data.address} size={6} scale={10} bgColor="#f5f5f5" /></div>
                     <div className="Contract-content-address-address">{this.shortAddress(contract.data.address)}</div>
                   </div>
-                  <div className="Contract-partyB">
-                    <div className="Contract-partyB-identicon">
+                  <div className="Contract-content-partyB">
+                    <div className="Contract-content-partyB-identicon">
                       <Blockies seed={contract.data.partyA} size={5} scale={4} bgColor="#f5f5f5" />
                     </div>
-                    <div className="Contract-partyB-content">
+                    <div className="Contract-content-partyB-content">
                       {this.shortAddress(contract.data.partyA)}
                     </div>
 
                     <div>&nbsp;&nbsp;</div>
 
-                    <div className="Contract-partyB-identicon">
+                    <div className="Contract-content-partyB-identicon">
                       <Blockies seed={contract.data.partyB} size={5} scale={4} bgColor="#f5f5f5" />
                     </div>
 
-                    <div className="Contract-partyB-content">
+                    <div className="Contract-content-partyB-content">
                       {this.shortAddress(contract.data.partyB)}
                     </div>
                   </div>
 
-                  <div className=" Contract-content-item Contract-content-item-mail">{contract.data.email}</div>
+                  <div className="Contract-content-item Contract-content-item-mail">{contract.data.email}</div>
                   <div className="description Contract-content-item">{contract.data.description}</div>
                   {!contract.data.partyAFee && !contract.data.partyBFee ?
                     <div className="Contract-actions">
@@ -137,33 +137,33 @@ class Contract extends PureComponent {
                   }
                   {!contract.data[`${this.state.party}Fee`] && contract.data[`${this.state.partyOther}Fee`] ?
                     <div>
-                      <div className="Contract-waiting">
+                      <div className="Contract-content-waiting">
                         The other party raise a dispute. So as not to lose the dispute you must pay the fee.
                       </div>
-                      <div className="Contract-actions">
-                        <div className="Contract-actions-button" onClick={this.createDispute}>Pay the fee</div>
+                      <div className="Contract-content-actions">
+                        <div className="Contract-content-actions-button" onClick={this.createDispute}>Pay the fee</div>
                       </div>
                     </div>
                     : <div></div>
                   }
                   {contract.data[`${this.state.party}Fee`] && !contract.data[`${this.state.partyOther}Fee`] ?
-                    <div className="Contract-waiting">
+                    <div className="Contract-content-waiting">
                       Waiting pay fee from the other party ({this.shortAddress(contract.data[`${this.state.partyOther}`])})
                     </div>
                     : <div></div>
                   }
                   {contract.data.partyAFee && contract.data.partyBFee ?
                     <div className="Contract-actions">
-                      <div className="Contract-actions-button" onClick={() => this.redirect('/evidences/new')}>Send Evidence</div>
+                      <div className="Contract-content-actions-button" onClick={() => this.redirect('/evidences/new')}>Send Evidence</div>
                     </div>
                     : <div></div>
                   }
                   {
                     contract.data.evidences.map((evidence, i) =>
-                      <div className="Contract-evidenceCard" onClick={() => window.location.replace(evidence.url)} key={i}>
-                        <div className="Contract-evidenceCard-name">{evidence.name}</div>
+                      <div className="Contract-content-evidenceCard" onClick={() => window.location.replace(evidence.url)} key={i}>
+                        <div className="Contract-content-evidenceCard-name">{evidence.name}</div>
                         <div className="description">{evidence.description}</div>
-                        <div className="Contract-evidenceCard-url">{evidence.url}</div>
+                        <div className="Contract-content-evidenceCard-url">{evidence.url}</div>
                       </div>
                     )
                   }
