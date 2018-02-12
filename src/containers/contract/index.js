@@ -128,10 +128,10 @@ class Contract extends PureComponent {
                   <div className="Contract-content-item Contract-content-item-mail">{contract.data.email}</div>
                   <div className="description Contract-content-item">{contract.data.description}</div>
                   {!contract.data.partyAFee && !contract.data.partyBFee ?
-                    <div className="Contract-actions">
-                      <div className="Contract-actions-button Contract-actions-button-left" onClick={this.createDispute}>Create dispute</div>
-                      {contract.data.partyA === accounts.data[0] && <div className="Contract-actions-button Contract-actions-button-right" onClick={this.createPay}>Pay</div>}
-                      {contract.data.partyB === accounts.data[0] && <div className="Contract-actions-button Contract-actions-button-right" onClick={this.createReimburse}>Reimburse</div>}
+                    <div className="Contract-content-actions">
+                      <div className="Contract-content-actions-button Contract-actions-button-left" onClick={this.createDispute}>Create dispute</div>
+                      {contract.data.partyA === accounts.data[0] && <div className="Contract-content-actions-button Contract-content-actions-button-right" onClick={this.createPay}>Pay</div>}
+                      {contract.data.partyB === accounts.data[0] && <div className="Contract-content-actions-button Contract-content-actions-button-right" onClick={this.createReimburse}>Reimburse</div>}
                     </div>
                     : <div></div>
                   }
@@ -153,7 +153,7 @@ class Contract extends PureComponent {
                     : <div></div>
                   }
                   {contract.data.partyAFee && contract.data.partyBFee ?
-                    <div className="Contract-actions">
+                    <div className="Contract-content-actions">
                       <div className="Contract-content-actions-button" onClick={() => this.redirect('/evidences/new')}>Send Evidence</div>
                     </div>
                     : <div></div>
