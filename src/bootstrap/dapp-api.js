@@ -23,4 +23,5 @@ const kleros = new Kleros(
 
 export default kleros
 
-kleros.disputes.watchForDisputes(process.env.REACT_APP_ARBITRATOR_ADDRESS)
+kleros.watchForEvents(process.env.REACT_APP_ARBITRATOR_ADDRESS)
+kleros.disputes.addDisputeEventListener(process.env.REACT_APP_ARBITRATOR_ADDRESS)
