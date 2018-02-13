@@ -20,10 +20,5 @@ export const {
     url: {
       type: 'text'
     }
-  },
-  step4: {
-    addressContract: {
-      type: 'text'
-    }
-  },
+  }
 })
