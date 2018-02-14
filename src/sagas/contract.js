@@ -12,7 +12,7 @@ import { ETH_NO_ACCOUNTS } from '../constants/errors'
  * Creates a new contract.
  * @param {object} { payload: contract } - The contract to create.
  */
-function* createContract({type, payload: { contract }}) {
+function* createContract({ type, payload: { contract } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
@@ -82,9 +82,9 @@ function* fetchContract({ payload: { contractAddress } }) {
 
 /**
  * Pay the party B. To be called when the good is delivered or the service rendered.
- * @param {object} { payload: contractAddress } - The address of the contract.
+ * @param {object} { payload: contractAddress, partyA, partyB } - The address of the contract.
  */
-function* createPay({type, payload: { contractAddress, partyA, partyB }}) {
+function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
@@ -105,7 +105,6 @@ function* createPay({type, payload: { contractAddress, partyA, partyB }}) {
       )
 
     // notification pay in waiting
-
   } catch (err) {
     console.log(err)
   }
@@ -119,7 +118,7 @@ function* createPay({type, payload: { contractAddress, partyA, partyB }}) {
  * Reimburse party A. To be called if the good or service can't be fully provided.
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
-function* reimburse({type, payload: { contractAddress }}) {
+function* reimburse({ type, payload: { contractAddress } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
@@ -130,17 +129,15 @@ function* reimburse({type, payload: { contractAddress }}) {
   try {
     const arbitrableContract = yield call(
       kleros.arbitrableContract._ArbitrableContract.load,
-      contractAddress,
+      contractAddress
       // amountReimbursed
     )
 
-    const reimburseTx = yield call(
-      arbitrableContract.reimburse,
-      {from: accounts[0]}
-    )
+    const reimburseTx = yield call(arbitrableContract.reimburse, {
+      from: accounts[0]
+    })
 
     // notification reimburse in waiting
-
   } catch (err) {
     console.log(err)
   }
@@ -154,23 +151,19 @@ function* reimburse({type, payload: { contractAddress }}) {
  * Raises dispute.
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
-function* createDispute({type, payload: { contractAddress }}) {
+function* createDispute({ type, payload: { contractAddress } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
-  let contract, disputeTx = null
+  let contract,
+    disputeTx = null
 
   try {
-    contract = yield call(
-      kleros.arbitrableContract.getData,
-      contractAddress
-    )
+    contract = yield call(kleros.arbitrableContract.getData, contractAddress)
 
     let fee
-    if (contract.partyA === accounts[0])
-      fee = contract.partyAFee
-    if (contract.partyB === accounts[0])
-      fee = contract.partyBFee
+    if (contract.partyA === accounts[0]) fee = contract.partyAFee
+    if (contract.partyB === accounts[0]) fee = contract.partyBFee
 
     const court = yield call(
       kleros.klerosPOC.load,
@@ -211,10 +204,76 @@ function* createDispute({type, payload: { contractAddress }}) {
 }
 
 /**
+ * Call by PartyA to be to reimburse if partyB fails to pay the fee.
+ * @param {object} { payload: contractAddress, partyA, partyB } - The address of the contract.
+ */
+function* createCallTimeoutPartyA({
+  type,
+  payload: { contractAddress, partyA, partyB }
+}) {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  yield put(push('/'))
+
+  let callTimeoutPartyATx = null
+
+  try {
+    if (partyA === accounts[0])
+      callTimeoutPartyATx = yield call(
+        kleros.arbitrableContract.payArbitrationFeeByPartyA,
+        contractAddress
+      )
+    if (partyB === accounts[0]) throw new Error('The caller must be the partyA')
+
+    // notification pay in waiting
+  } catch (err) {
+    console.log(err)
+  }
+
+  // notification pay done
+
+  yield put(contractActions.receiveCallTimeoutPartyA(callTimeoutPartyATx))
+}
+
+/**
+ * Call by PartyB to be to reimburse if partyA fails to pay the fee.
+ * @param {object} { payload: contractAddress, partyA, partyB } - The address of the contract.
+ */
+function* createCallTimeoutPartyB({
+  type,
+  payload: { contractAddress, partyA, partyB }
+}) {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  yield put(push('/'))
+
+  let callTimeoutPartyBTx = null
+
+  try {
+    if (partyB === accounts[0])
+      callTimeoutPartyBTx = yield call(
+        kleros.arbitrableContract.payArbitrationFeeByPartyB,
+        contractAddress
+      )
+    if (partyA === accounts[0]) throw new Error('The caller must be the partyB')
+
+    // notification pay in waiting
+  } catch (err) {
+    console.log(err)
+  }
+
+  // notification pay done
+
+  yield put(contractActions.receiveCallTimeoutPartyB(callTimeoutPartyBTx))
+}
+
+/**
  * Send evidence
  * @param {object} { payload: evidence } - Evidence.
  */
-function* createEvidence({type, payload: { evidence }}) {
+function* createEvidence({ type, payload: { evidence } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
@@ -233,7 +292,6 @@ function* createEvidence({type, payload: { evidence }}) {
     )
 
     // notification send evidence in waiting
-
   } catch (err) {
     console.log(err)
   }
@@ -249,10 +307,10 @@ function* createEvidence({type, payload: { evidence }}) {
  */
 export default function* walletSaga() {
   yield takeLatest(contractActions.CREATE_CONTRACT, createContract),
-  yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
+    yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
   yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract),
-  yield takeLatest(contractActions.CREATE_DISPUTE, createDispute),
-  yield takeLatest(contractActions.CREATE_PAY, createPay),
-  yield takeLatest(contractActions.CREATE_REIMBURSE, reimburse),
-  yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence)
+    yield takeLatest(contractActions.CREATE_DISPUTE, createDispute),
+    yield takeLatest(contractActions.CREATE_PAY, createPay),
+    yield takeLatest(contractActions.CREATE_REIMBURSE, reimburse),
+    yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence)
 }

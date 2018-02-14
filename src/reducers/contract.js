@@ -35,6 +35,16 @@ export default createReducer({
     data: null,
     failedLoading: false
   },
+  callTimeoutPartyA: {
+    loading: false,
+    data: null,
+    failedLoading: false
+  },
+  callTimeoutPartyB: {
+    loading: false,
+    data: null,
+    failedLoading: false
+  }
 })
 
 // Selectors
@@ -43,6 +53,10 @@ export const createDispute = state => state.contract.dispute.data
 export const createPay = state => state.contract.pay.data
 export const createReimburse = state => state.contract.reimburse.data
 export const createEvidence = state => state.contract.evidence.data
+export const createCallTimeoutPartyA = state =>
+  state.contract.pay.callTimeoutPartyA
+export const createCallTimeoutPartyB = state =>
+  state.contract.pay.callTimeoutPartyB
 
 // Shapes
 export const contractShape = PropTypes.shape({
