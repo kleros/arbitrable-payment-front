@@ -93,18 +93,31 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
   let payTx = null
 
   try {
-    if (partyA === accounts[0])
-      payTx = yield call(
-        kleros.arbitrableContract.payArbitrationFeeByPartyA,
-        contractAddress
-      )
-    if (partyB === accounts[0])
-      payTx = yield call(
-        kleros.arbitrableContract.payArbitrationFeeByPartyB,
-        contractAddress
-      )
+    if (partyA != accounts[0])
+      throw new Error('The caller must be the partyA')
+
+    const contract = yield call(
+      kleros.arbitrableContract._ArbitrableContract.load,
+      contractAddress
+    )
+
+    // TODO get the amount from the api
+    const amount = yield call(
+      contract.amount.call
+    )
+
+    if (amount.toNumber() === 0)
+      throw new Error('The dispute is already finished')
+
+    payTx = yield call(
+      contract.pay,
+      {
+        from:accounts[0]
+      }
+    )
 
     // notification pay in waiting
+
   } catch (err) {
     console.log(err)
   }
@@ -118,7 +131,7 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
  * Reimburse party A. To be called if the good or service can't be fully provided.
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
-function* reimburse({ type, payload: { contractAddress } }) {
+function* createReimburse({ type, payload: { contractAddress } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
@@ -127,15 +140,29 @@ function* reimburse({ type, payload: { contractAddress } }) {
   let reimburseTx = null
 
   try {
-    const arbitrableContract = yield call(
+    const contract = yield call(
       kleros.arbitrableContract._ArbitrableContract.load,
       contractAddress
-      // amountReimbursed
     )
 
-    const reimburseTx = yield call(arbitrableContract.reimburse, {
-      from: accounts[0]
-    })
+    // TODO get the amount from the api
+    const amount = yield call(
+      contract.amount.call
+    )
+
+    console.log(amount)
+
+    if (amount.toNumber() === 0)
+      throw new Error('The dispute is already finished')
+
+    // TODO add fn reimburse in the api
+    const reimburseTx = yield call(
+      contract.reimburse,
+      amount.Number(),
+      {
+        from: accounts[0]
+      }
+    )
 
     // notification reimburse in waiting
   } catch (err) {
@@ -221,7 +248,7 @@ function* createCallTimeoutPartyA({
   try {
     if (partyA === accounts[0])
       callTimeoutPartyATx = yield call(
-        kleros.arbitrableContract.payArbitrationFeeByPartyA,
+        kleros.arbitrableContract.callTimeoutPartyA,
         contractAddress
       )
     if (partyB === accounts[0]) throw new Error('The caller must be the partyA')
@@ -254,7 +281,7 @@ function* createCallTimeoutPartyB({
   try {
     if (partyB === accounts[0])
       callTimeoutPartyBTx = yield call(
-        kleros.arbitrableContract.payArbitrationFeeByPartyB,
+        kleros.arbitrableContract.callTimeoutPartyB,
         contractAddress
       )
     if (partyA === accounts[0]) throw new Error('The caller must be the partyB')
@@ -307,10 +334,10 @@ function* createEvidence({ type, payload: { evidence } }) {
  */
 export default function* walletSaga() {
   yield takeLatest(contractActions.CREATE_CONTRACT, createContract),
-    yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
+  yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
   yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract),
-    yield takeLatest(contractActions.CREATE_DISPUTE, createDispute),
-    yield takeLatest(contractActions.CREATE_PAY, createPay),
-    yield takeLatest(contractActions.CREATE_REIMBURSE, reimburse),
-    yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence)
+  yield takeLatest(contractActions.CREATE_DISPUTE, createDispute),
+  yield takeLatest(contractActions.CREATE_PAY, createPay),
+  yield takeLatest(contractActions.CREATE_REIMBURSE, createReimburse),
+  yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence)
 }

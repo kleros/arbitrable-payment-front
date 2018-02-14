@@ -51,9 +51,9 @@ export const receivePay = disputeTx => ({
   type: RECEIVE_PAY,
   payload: { disputeTx }
 })
-export const createReimburse = reimburse => ({
+export const createReimburse = (contractAddress, partyA, partyB) => ({
   type: CREATE_REIMBURSE,
-  payload: { reimburse }
+  payload: { contractAddress, partyA, partyB }
 })
 export const receiveReimburse = reimburse => ({
   type: RECEIVE_REIMBURSE,

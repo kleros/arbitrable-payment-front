@@ -23,6 +23,7 @@ class Contract extends PureComponent {
     fetchContract: PropTypes.func.isRequired,
     createDispute: PropTypes.func.isRequired,
     createPay: PropTypes.func.isRequired,
+    createReimburse: PropTypes.func.isRequired,
     fetchAccounts: PropTypes.func.isRequired,
 
     // Router
@@ -65,6 +66,15 @@ class Contract extends PureComponent {
   createPay = () => {
     const { contract, createPay, match } = this.props
     createPay(
+      match.params.contractAddress,
+      contract.data.partyA,
+      contract.data.partyB
+    )
+  }
+
+  createReimburse = () => {
+    const { contract, createReimburse, match } = this.props
+    createReimburse(
       match.params.contractAddress,
       contract.data.partyA,
       contract.data.partyB
@@ -182,12 +192,14 @@ export default connect(
     contract: state.contract.contract,
     dispute: state.contract.dispute,
     pay: state.contract.pay,
+    reimburse: state.contract.reimburse,
     accounts: state.wallet.accounts
   }),
   {
     fetchContract: contractActions.fetchContract,
     createDispute: contractActions.createDispute,
     createPay: contractActions.createPay,
+    createReimburse: contractActions.createReimburse,
     fetchAccounts: walletActions.fetchAccounts
   }
 )(Contract)
