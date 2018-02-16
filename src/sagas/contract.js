@@ -150,8 +150,6 @@ function* createReimburse({ type, payload: { contractAddress } }) {
       contract.amount.call
     )
 
-    console.log(amount)
-
     if (amount.toNumber() === 0)
       throw new Error('The dispute is already finished')
 
@@ -234,7 +232,7 @@ function* createDispute({ type, payload: { contractAddress } }) {
  * Call by PartyA to be to reimburse if partyB fails to pay the fee.
  * @param {object} { payload: contractAddress, partyA, partyB } - The address of the contract.
  */
-function* createCallTimeoutPartyA({
+function* createTimeout({
   type,
   payload: { contractAddress, partyA, partyB }
 }) {
@@ -243,57 +241,47 @@ function* createCallTimeoutPartyA({
 
   yield put(push('/'))
 
-  let callTimeoutPartyATx = null
+  let timeoutTx = null
 
   try {
-    if (partyA === accounts[0])
-      callTimeoutPartyATx = yield call(
-        kleros.arbitrableContract.callTimeoutPartyA,
-        contractAddress
+    const contract = yield call(
+      kleros.arbitrableContract._ArbitrableContract.load,
+      contractAddress
+    )
+
+    // TODO get the amount from the api
+    const amount = yield call(
+      contract.amount.call
+    )
+
+    if (amount.toNumber() === 0)
+      throw new Error('The dispute is already finished')
+
+    if (partyA === accounts[0]) {
+      timeoutTx = yield call(
+        contract.timeOutByPartyA,
+        {
+          from: accounts[0]
+        }
       )
-    if (partyB === accounts[0]) throw new Error('The caller must be the partyA')
+    } else if (partyB === accounts[0]) {
+      timeoutTx = yield call(
+        contract.timeOutByPartyB,
+        {
+          from: accounts[0]
+        }
+      )
+    }
 
     // notification pay in waiting
+
   } catch (err) {
     console.log(err)
   }
 
-  // notification pay done
+  // notification callTimeoutPartyA done
 
-  yield put(contractActions.receiveCallTimeoutPartyA(callTimeoutPartyATx))
-}
-
-/**
- * Call by PartyB to be to reimburse if partyA fails to pay the fee.
- * @param {object} { payload: contractAddress, partyA, partyB } - The address of the contract.
- */
-function* createCallTimeoutPartyB({
-  type,
-  payload: { contractAddress, partyA, partyB }
-}) {
-  const accounts = yield call(eth.accounts)
-  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
-
-  yield put(push('/'))
-
-  let callTimeoutPartyBTx = null
-
-  try {
-    if (partyB === accounts[0])
-      callTimeoutPartyBTx = yield call(
-        kleros.arbitrableContract.callTimeoutPartyB,
-        contractAddress
-      )
-    if (partyA === accounts[0]) throw new Error('The caller must be the partyB')
-
-    // notification pay in waiting
-  } catch (err) {
-    console.log(err)
-  }
-
-  // notification pay done
-
-  yield put(contractActions.receiveCallTimeoutPartyB(callTimeoutPartyBTx))
+  yield put(contractActions.receiveTimeout(timeoutTx))
 }
 
 /**
@@ -339,5 +327,6 @@ export default function* walletSaga() {
   yield takeLatest(contractActions.CREATE_DISPUTE, createDispute),
   yield takeLatest(contractActions.CREATE_PAY, createPay),
   yield takeLatest(contractActions.CREATE_REIMBURSE, createReimburse),
-  yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence)
+  yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence),
+  yield takeLatest(contractActions.CREATE_TIMEOUT, createTimeout)
 }

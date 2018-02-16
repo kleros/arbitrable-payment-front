@@ -81,6 +81,15 @@ class Contract extends PureComponent {
     )
   }
 
+  timeout = () => {
+    const { contract, createTimeout, match } = this.props
+    createTimeout(
+      match.params.contractAddress,
+      contract.data.partyA,
+      contract.data.partyB
+    )
+  }
+
   shortAddress = address => {
     const startAddress = address.substr(0, address.length-36)
     const endAddress = address.substr(37)
@@ -156,13 +165,18 @@ class Contract extends PureComponent {
                     </div>
                     : <div></div>
                   }
-                  {contract.data[`${this.state.party}Fee`] && !contract.data[`${this.state.partyOther}Fee`] ?
+                  {Date.now() < contract.data.lastInteraction.toNumber() + contract.data.timeout && contract.data[`${this.state.party}Fee`] && !contract.data[`${this.state.partyOther}Fee`] ?
                     <div className="Contract-content-waiting">
                       Waiting pay fee from the other party ({this.shortAddress(contract.data[`${this.state.partyOther}`])})
                     </div>
-                    : <div></div>
+                    : contract.data[`${this.state.party}Fee`] ?
+                      <div className="Contract-content-actions">
+                        <div className="Contract-content-actions-button" onClick={this.timeout}>{`Timeout ${this.state.partyOther}`}</div>
+                      </div>
+                      : <div></div>
+
                   }
-                  {contract.data.partyAFee && contract.data.partyBFee ?
+                  {Date.now() < contract.data.lastInteraction.toNumber() + contract.data.timeout && contract.data.partyAFee && contract.data.partyBFee ?
                     <div className="Contract-content-actions">
                       <div className="Contract-content-actions-button" onClick={() => this.redirect('/evidences/new')}>Send Evidence</div>
                     </div>
@@ -193,6 +207,7 @@ export default connect(
     dispute: state.contract.dispute,
     pay: state.contract.pay,
     reimburse: state.contract.reimburse,
+    timeout: state.contract.timeout,
     accounts: state.wallet.accounts
   }),
   {
@@ -200,6 +215,7 @@ export default connect(
     createDispute: contractActions.createDispute,
     createPay: contractActions.createPay,
     createReimburse: contractActions.createReimburse,
-    fetchAccounts: walletActions.fetchAccounts
+    fetchAccounts: walletActions.fetchAccounts,
+    createTimeout: contractActions.createTimeout
   }
 )(Contract)

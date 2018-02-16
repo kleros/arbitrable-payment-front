@@ -12,10 +12,8 @@ export const CREATE_REIMBURSE = 'CREATE_REIMBURSE'
 export const RECEIVE_REIMBURSE = 'RECEIVE_REIMBURSE'
 export const CREATE_EVIDENCE = 'CREATE_EVIDENCE'
 export const RECEIVE_EVIDENCE = 'RECEIVE_EVIDENCE'
-export const CREATE_CALL_TIMEOUT_PARTY_A = 'CREATE_CALL_TIMEOUT_PARTY_A'
-export const RECEIVE_CALL_TIMEOUT_PARTY_A = 'RECEIVE_CALL_TIMEOUT_PARTY_A'
-export const CREATE_CALL_TIMEOUT_PARTY_B = 'CREATE_CALL_TIMEOUT_PARTY_B'
-export const RECEIVE_CALL_TIMEOUT_PARTY_B = 'RECEIVE_CALL_TIMEOUT_PARTY_B'
+export const CREATE_TIMEOUT = 'CREATE_TIMEOUT'
+export const RECEIVE_TIMEOUT = 'RECEIVE_TIMEOUT'
 
 // Action Creators
 export const createContract = contract => ({
@@ -67,19 +65,11 @@ export const receiveEvidence = evidence => ({
   type: RECEIVE_EVIDENCE,
   payload: { evidence }
 })
-export const createCallTimeoutPartyA = (contractAddress, partyA, partyB) => ({
-  type: CREATE_CALL_TIMEOUT_PARTY_A,
+export const createTimeout = (contractAddress, partyA, partyB) => ({
+  type: CREATE_TIMEOUT,
   payload: { contractAddress, partyA, partyB }
 })
-export const receiveCallTimeoutPartyA = callTimeoutPartyA => ({
-  type: RECEIVE_CALL_TIMEOUT_PARTY_A,
-  payload: { callTimeoutPartyA }
-})
-export const createCallTimeoutPartyB = (contractAddress, partyA, partyB) => ({
-  type: CREATE_CALL_TIMEOUT_PARTY_B,
-  payload: { contractAddress, partyA, partyB }
-})
-export const receiveCallTimeoutPartyB = callTimeoutPartyB => ({
-  type: RECEIVE_CALL_TIMEOUT_PARTY_B,
-  payload: { callTimeoutPartyB }
+export const receiveTimeout = timeout => ({
+  type: RECEIVE_TIMEOUT,
+  payload: { timeout }
 })
