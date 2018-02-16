@@ -165,18 +165,19 @@ class Contract extends PureComponent {
                     </div>
                     : <div></div>
                   }
-                  {Date.now() < contract.data.lastInteraction.toNumber() + contract.data.timeout && contract.data[`${this.state.party}Fee`] && !contract.data[`${this.state.partyOther}Fee`] ?
+                  {(Date.now() / 1000 | 0) < (contract.data.lastInteraction.toNumber() + contract.data.timeout) && contract.data[`${this.state.party}Fee`] && !contract.data[`${this.state.partyOther}Fee`] ?
                     <div className="Contract-content-waiting">
                       Waiting pay fee from the other party ({this.shortAddress(contract.data[`${this.state.partyOther}`])})
                     </div>
-                    : contract.data[`${this.state.party}Fee`] ?
-                      <div className="Contract-content-actions">
-                        <div className="Contract-content-actions-button" onClick={this.timeout}>{`Timeout ${this.state.partyOther}`}</div>
-                      </div>
-                      : <div></div>
-
+                    : <div></div>
                   }
-                  {Date.now() < contract.data.lastInteraction.toNumber() + contract.data.timeout && contract.data.partyAFee && contract.data.partyBFee ?
+                  {(Date.now() / 1000 | 0) >= (contract.data.lastInteraction.toNumber() + contract.data.timeout) && contract.data[`${this.state.party}Fee`] && !contract.data[`${this.state.partyOther}Fee`] ?
+                    <div className="Contract-content-actions">
+                      <div className="Contract-content-actions-button" onClick={this.timeout}>{`Timeout ${this.state.partyOther}`}</div>
+                    </div>
+                    : <div></div>
+                  }
+                  {contract.data.partyAFee && contract.data.partyBFee ?
                     <div className="Contract-content-actions">
                       <div className="Contract-content-actions-button" onClick={() => this.redirect('/evidences/new')}>Send Evidence</div>
                     </div>
