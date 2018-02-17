@@ -4,15 +4,14 @@
   display: flex;
   flex-direction: column;
   font-family: 'Open Sans Condensed', sans-serif;
-  min-height: 100vh;
-  background: #f5f5f5;
 }
 
 .flex-container-main {
-  width: 100%;
   display: flex;
   flex-direction: column;
   box-sizing: content-box;
+  height: 100%;
+  color: #444;
   &-menu {
     background: white;
     border-bottom: 1px solid lightgray;
@@ -33,12 +32,28 @@
         border-bottom: 3px solid #444;
         cursor: pointer;
       }
-      .kleros {
+      &-kleros {
         flex: 1;
         border-color: white;
         font-size: 30px;
         font-variant: capitalize;
       }
+      &-kleros:hover {
+        border-color: white;
+      }
+    }
+  }
+
+  &-footer {
+    flex: 1;
+    background: #F0F0F0;
+    border-top: 1px solid lightgray;
+    text-align: center;
+    line-height: 50px;
+    color: gray;
+    font-size: 14px;
+    &-kleros {
+      font-weight: bold;
     }
   }
 }
@@ -50,7 +65,7 @@
   flex-wrap: wrap;
   box-sizing: border-box;
   background: #f5f5f5;
-  border: 20px solid #f4f4f4;
+  border: 20px solid #f5f5f5;
 }
 
 .flex-item {
@@ -139,19 +154,6 @@
 
 .address {
   font-size: 40px;
-}
-
-.footer {
-  flex: 1;
-  background: #f4f4f4;
-  min-height: 70px;
-}
-
-.IA {
-  position: fixed;
-  right: 50px;
-  bottom: 50px;
-  width: 60px;
 }
 
 @media only screen and (min-device-width : 320px) and (max-device-width : 480px) {

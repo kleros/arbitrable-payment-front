@@ -9,6 +9,7 @@ import Home from '../containers/home'
 import NewContract from '../containers/contract/form'
 import NewEvidence from '../containers/contract/evidence-form'
 import Contract from '../containers/contract'
+import KlerosGitter from '../components/kleros-gitter'
 
 import Initializer from './initializer'
 
@@ -33,6 +34,7 @@ const App = ({ store, history, testElement }) => (
           <Route exact path="/evidences/new" component={NewEvidence} />
           </Switch>
           {testElement}
+          <KlerosGitter />
         </div>
       </ConnectedRouter>
     </Initializer>

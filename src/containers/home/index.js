@@ -100,7 +100,7 @@ class Home extends PureComponent {
                 <div className="flex-container-main-menu">
                   <div className="flex-container-main-menu-items">
                     <div
-                      className="flex-container-main-menu-items-item kleros">
+                      className="flex-container-main-menu-items-item flex-container-main-menu-items-kleros">
                       KLEROS
                     </div>
                     <div
@@ -209,11 +209,16 @@ class Home extends PureComponent {
                   )
                 }
               </div>
+              <div className="flex-container-main-footer">
+                Contracting front © 2018 powered by
+                <span className="flex-container-main-footer-kleros">
+                  &nbsp;Kleros
+                </span>
+              </div>
             </div>
             ),
             failed: contract.failedLoading && 'failedLoading'
         })}
-        <div className="footer" />
       </div>
     )
   }

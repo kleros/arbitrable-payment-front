@@ -1,0 +1,19 @@
+@import '../../styles/_colors.scss';
+
+/* @define Button */
+.Kleros-gitter {
+  position: fixed;
+  right: 30px;
+  bottom: 20px;
+  width: 60px;
+  z-index: 100;
+  cursor: pointer;
+  &-logo {
+    width: 40px;
+    border-radius: 50%;
+    border: 1px solid lightgray;
+    background: #fff;
+    height: 40px;
+    padding: 10px;
+  }
+}
