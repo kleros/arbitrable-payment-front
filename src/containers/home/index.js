@@ -96,7 +96,25 @@ class Home extends PureComponent {
           {
             loading: <span>loading</span>,
             done: contracts.data && (
-              <div className="flex-container" key={contract._id}>
+              <div className="flex-container-main" key={contract._id}>
+                <div className="flex-container-main-menu">
+                  <div className="flex-container-main-menu-items">
+                    <div
+                      className="flex-container-main-menu-items-item kleros">
+                      KLEROS
+                    </div>
+                    <div
+                      className="flex-container-main-menu-items-item">
+                      Profile
+                    </div>
+                    <div
+                      className="flex-container-main-menu-items-item"
+                      onClick={() => this.redirect('/contracts/new')}>
+                      New contract
+                    </div>
+                  </div>
+                </div>
+              <div className="flex-container">
                 <div className="flex-item wide contract grow">
                   <div className="type">Profile</div>
                   <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff" />
@@ -191,6 +209,7 @@ class Home extends PureComponent {
                   )
                 }
               </div>
+            </div>
             ),
             failed: contract.failedLoading && 'failedLoading'
         })}
