@@ -14,9 +14,9 @@ import { objMap } from '../../utils/functional'
 import { renderIf } from '../../utils/react-redux'
 import Identicon from '../../components/identicon'
 
-import './home.css'
+import './profile.css'
 
-class Home extends PureComponent {
+class Profile extends PureComponent {
   state = {
     randomSeed: '',
     totalContracts: 0
@@ -104,7 +104,6 @@ class Home extends PureComponent {
                       KLEROS
                     </div>
                     <div
-                      onClick={() => this.redirect('/profile')}
                       className="flex-container-main-menu-items-item">
                       Profile
                     </div>
@@ -115,90 +114,30 @@ class Home extends PureComponent {
                     </div>
                   </div>
                 </div>
-              <div className="flex-container">
-
-                {contract.creating &&
-                  <div className="flex-item wide grow" onClick={() => this.redirect(`/contracts/${contract.address}`)}>
-                    <Blockies seed={this.state.randomSeed} size={10} scale={14} bgColor="#fff" />
-                    <div className="creationContentContract">
-                      <div>
-                        Contract creation
-                      </div>
-                    </div>
-                  </div>
-                }
-
-                {contract.data && contract.data.address && !contracts.data.some(c => c.address === contract.data.address) &&
-                  <div className="flex-item wide contract grow" onClick={() => this.redirect(`/contracts/${contract.data.address}`)}>
-                    <div className="type">Owner</div>
-                    <Blockies seed={contract.data.address} size={10} scale={14} bgColor="#fff" />
+                <div className="flex-container">
+                  <div className="flex-item wide contract grow">
+                    <div className="type">Profile</div>
+                    <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff" />
                     <div className="content">
-                      <div className="address">{this.shortAddress(contract.data.address)}</div>
-                      <div className="partyB">
-                        <div className="identicon">
-                          <Blockies seed={contract.data.partyA} size={5} scale={4} bgColor="#f5f5f5" />
-                        </div>
-                        <div className="content">
-                          {this.shortAddress(contract.data.partyA)}
-                        </div>
-
-                        <div>&nbsp;&nbsp;</div>
-
-                        <div className="identicon">
-                          <Blockies seed={contract.data.partyB} size={5} scale={4} bgColor="#f5f5f5" />
-                        </div>
-
-                        <div className="content">
-                          {this.shortAddress(contract.data.partyB)}
-                        </div>
-
+                      <div className="address">{this.shortAddress(accounts.data[0])}</div>
+                      <div className="balanceETH">{Number(balance.data).toFixed(3)} ETH</div>
+                      <div className="nbContracts">
+                        {contract.data && contracts.data.length+1}
+                        {!contract.data && contracts.data.length} contracts
                       </div>
-                      <div className="description">{contract.data.description.slice(0, 50)}</div>
                     </div>
                   </div>
-                }
+                </div>
 
-                {
-                  contracts.data.map((contract, i) =>
-                    <div className="flex-item wide contract grow" key={contract._id} onClick={() => this.redirect(`/contracts/${contract.address}`)}>
-                      {contract.partyA === accounts.data[0] && <div className="type">Owner</div>}
-                      <Blockies seed={contract.address} size={10} scale={14} bgColor="#fff" />
-                      <div className="content">
-                        <div className="address">{this.shortAddress(contract.address)}</div>
-                        <div className="partyB">
-                          <div className="identicon">
-                            <Blockies seed={contract.partyA} size={5} scale={4} bgColor="#f5f5f5" />
-                          </div>
-                          <div className="content">
-                            {this.shortAddress(contract.partyA)}
-                          </div>
+                <div className="flex-container-main-flex-grow" />
 
-                          <div>&nbsp;&nbsp;</div>
-
-                          <div className="identicon">
-                            <Blockies seed={contract.partyB} size={5} scale={4} bgColor="#f5f5f5" />
-                          </div>
-
-                          <div className="content">
-                            {this.shortAddress(contract.partyB)}
-                          </div>
-
-                        </div>
-                        <div className="description">{contract.description.slice(0, 50)}</div>
-                      </div>
-                    </div>
-                  )
-                }
-
+                <div className="flex-container-main-footer">
+                  Contracting front © 2018 powered by
+                  <span className="flex-container-main-footer-kleros">
+                    &nbsp;Kleros
+                  </span>
+                </div>
               </div>
-              <div className="flex-container-main-flex-grow"></div>
-              <div className="flex-container-main-footer">
-                Contracting front © 2018 powered by
-                <span className="flex-container-main-footer-kleros">
-                  &nbsp;Kleros
-                </span>
-              </div>
-            </div>
             ),
             failed: contract.failedLoading && 'failedLoading'
         })}
@@ -221,4 +160,4 @@ export default connect(
     fetchContracts: contractActions.fetchContracts,
     fetchVersion: walletActions.fetchVersion
   }
-)(Home)
+)(Profile)

@@ -9,7 +9,9 @@ import Home from '../containers/home'
 import NewContract from '../containers/contract/form'
 import NewEvidence from '../containers/contract/evidence-form'
 import Contract from '../containers/contract'
+import Profile from '../containers/profile'
 import KlerosGitter from '../components/kleros-gitter'
+
 
 import Initializer from './initializer'
 
@@ -25,6 +27,7 @@ const App = ({ store, history, testElement }) => (
           </Helmet>
           <Switch>
             <Route exact path="/" component={Home} />
+            <Route exact path="/profile" component={Profile} />
             <Route exact path="/contracts/new" component={NewContract} />
             <Route
               exact
