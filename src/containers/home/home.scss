@@ -14,6 +14,10 @@
   box-sizing: content-box;
   height: 100%;
   color: #444;
+  background: url('./back_kleros.png') #f5f5f5;
+  background-repeat: no-repeat;
+  background-size: 70%;
+  background-attachment: fixed;
   &-menu {
     background: white;
     border-bottom: 1px solid lightgray;
@@ -48,11 +52,10 @@
 
   &-flex-grow {
     flex: 1;
-    background: #f5f5f5;
   }
 
   &-footer {
-    background: #F0F0F0;
+    background: #f0f0f0;
     border-top: 1px solid lightgray;
     text-align: center;
     line-height: 50px;
@@ -70,8 +73,9 @@
   flex-direction: row;
   flex-wrap: wrap;
   box-sizing: border-box;
-  background: #f5f5f5;
-  border: 20px solid #f5f5f5;
+
+  padding: 20px;
+
 }
 
 .flex-item {
