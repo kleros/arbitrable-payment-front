@@ -157,7 +157,7 @@ class Contract extends PureComponent {
                   {!contract.data[`${this.state.party}Fee`] && contract.data[`${this.state.partyOther}Fee`] ?
                     <div>
                       <div className="Contract-content-waiting">
-                        The other party raise a dispute. So as not to lose the dispute you must pay the fee.
+                        The other party raise a dispute.<br/>So as not to lose the dispute you must pay the fee.
                       </div>
                       <div className="Contract-content-actions">
                         <div className="Contract-content-actions-button" onClick={this.createDispute}>Pay the fee</div>
@@ -167,7 +167,7 @@ class Contract extends PureComponent {
                   }
                   {(Date.now() / 1000 | 0) < (contract.data.lastInteraction.toNumber() + contract.data.timeout) && contract.data[`${this.state.party}Fee`] && !contract.data[`${this.state.partyOther}Fee`] ?
                     <div className="Contract-content-waiting">
-                      Waiting pay fee from the other party ({this.shortAddress(contract.data[`${this.state.partyOther}`])})
+                      Waiting pay fee from the other party<br/>({this.shortAddress(contract.data[`${this.state.partyOther}`])})
                     </div>
                     : <div></div>
                   }
