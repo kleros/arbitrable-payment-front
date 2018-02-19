@@ -51,6 +51,13 @@ class NewContract extends PureComponent {
     }
   }
 
+  nextStep = event => {
+    event.preventDefault()
+    const { submitCreateContractForm } = this.props
+    submitCreateContractForm()
+    this.setState({step: this.state.step+1})
+  }
+
   render() {
     const {
       createContractFormIsInvalid,
@@ -83,7 +90,7 @@ class NewContract extends PureComponent {
                 onSubmit={createContract}
               />
             </div>
-            <div onClick={submitCreateContractForm} className="arrow-container">
+            <div onClick={this.nextStep} className="arrow-container">
               <div className="arrow-container-arrow"  />
               <div className="arrow-container-arrow arrow-container-arrow-animation" />
             </div>
