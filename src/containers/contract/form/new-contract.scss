@@ -11,6 +11,8 @@
   background-size: 70%;
   background-attachment: fixed;
   &-form {
+    display: flex;
+    flex-direction: row;
     position: relative;
     top: -5vh;
   }
@@ -23,4 +25,34 @@
   border-bottom: 1px solid lightgray;
   padding: 10px 14px;
   border-radius: 5px;
+}
+
+.arrow-container {
+  cursor: pointer;
+  &-arrow {
+    position: absolute;
+    top: 24px;
+    width: 30px;
+    height: 30px;
+    transform: rotate(45deg);
+    border-left: none;
+    border-top: none;
+    border-right: 2px gray solid;
+    border-top: 2px gray solid;
+  }
+  &-arrow-animation {
+    animation-duration: 2.5s;
+    animation-iteration-count: infinite;
+    animation-name: arrow;
+  }
+  @keyframes arrow {
+    0% {
+      opacity: 1;
+      transform: rotate(45deg);
+    }
+    100% {
+      opacity: 0;
+      transform: rotate(45deg) translateX(18px) translateY(-18px);
+    }
+  }
 }

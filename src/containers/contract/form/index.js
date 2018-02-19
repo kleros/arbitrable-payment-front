@@ -76,11 +76,18 @@ class NewContract extends PureComponent {
         </div>
         <div className="NewContract">
           <div className="NewContract-form" onKeyPress={this.handleKeyPress}>
-            <CreateContractForm
-              backHandlerRef={this.getBackHandlerRef}
-              onPageChange={this.handlePageChange}
-              onSubmit={createContract}
-            />
+            <div>
+              <CreateContractForm
+                backHandlerRef={this.getBackHandlerRef}
+                onPageChange={this.handlePageChange}
+                onSubmit={createContract}
+              />
+            </div>
+            <div onClick={submitCreateContractForm} className="arrow-container">
+              <div className="arrow-container-arrow"  />
+              <div className="arrow-container-arrow arrow-container-arrow-animation" />
+            </div>
+
           </div>
         </div>
         <div className="flex-container-main-footer">

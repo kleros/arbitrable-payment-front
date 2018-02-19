@@ -17,11 +17,6 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  font-family: 'Open Sans Condensed', sans-serif;
-  background: url('./back_kleros.png') #f5f5f5;
-  background-repeat: no-repeat;
-  background-size: 70%;
-  background-attachment: fixed;
   &-content {
     display: flex;
     flex-direction: column;
