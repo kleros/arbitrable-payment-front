@@ -67,6 +67,7 @@
     "react-router-redux": "^5.0.0-alpha.9",
     "react-scripts": "1.1.0",
     "react-spinners": "^0.2.6",
+    "react-stepper-horizontal": "^1.0.10",
     "redux": "^3.7.2",
     "redux-form": "^7.2.1",
     "redux-saga": "^0.16.0"

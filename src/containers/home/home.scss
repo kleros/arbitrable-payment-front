@@ -5,6 +5,10 @@
   min-height: 100vh;
   flex-direction: column;
   font-family: 'Open Sans Condensed', sans-serif;
+  background: url('./back_kleros.png') #f5f5f5;
+  background-repeat: no-repeat;
+  background-size: 70%;
+  background-attachment: fixed;
 }
 
 .flex-container-main {
@@ -14,10 +18,7 @@
   box-sizing: content-box;
   height: 100%;
   color: #444;
-  background: url('./back_kleros.png') #f5f5f5;
-  background-repeat: no-repeat;
-  background-size: 70%;
-  background-attachment: fixed;
+
   &-menu {
     background: white;
     border-bottom: 1px solid lightgray;

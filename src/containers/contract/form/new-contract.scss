@@ -1,13 +1,18 @@
 /* @define Balance */
 .NewContract {
   display: flex;
-  height: 100vh;
+  flex: 1;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #fff;
+  font-family: 'Open Sans Condensed', sans-serif;
+  background: url('../back_kleros.png') #f5f5f5;
+  background-repeat: no-repeat;
+  background-size: 70%;
+  background-attachment: fixed;
   &-form {
-
+    position: relative;
+    top: -5vh;
   }
 }
 
@@ -17,4 +22,5 @@
   font-size: 40px;
   border-bottom: 1px solid lightgray;
   padding: 10px 14px;
+  border-radius: 5px;
 }

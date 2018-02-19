@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import Stepper from 'react-stepper-horizontal'
 
 import * as walletSelectors from '../../../reducers/wallet'
 import * as walletActions from '../../../actions/wallet'
@@ -25,7 +26,11 @@ class NewContract extends PureComponent {
     createContract: PropTypes.func.isRequired
   }
 
-  state = { hasPrevPage: null, hasNextPage: null }
+  state = {
+    hasPrevPage: null,
+    hasNextPage: null,
+    step: 0
+  }
 
   componentDidMount() {
     const { fetchBalance } = this.props
@@ -42,6 +47,7 @@ class NewContract extends PureComponent {
       event.preventDefault()
       const { submitCreateContractForm } = this.props
       submitCreateContractForm()
+      this.setState({step: this.state.step+1})
     }
   }
 
@@ -51,16 +57,37 @@ class NewContract extends PureComponent {
       submitCreateContractForm,
       createContract
     } = this.props
-    const { hasPrevPage, hasNextPage } = this.state
+    const { hasPrevPage, hasNextPage, step } = this.state
 
     return (
-      <div className="NewContract">
-        <div className="Contract-form" onKeyPress={this.handleKeyPress}>
-          <CreateContractForm
-            backHandlerRef={this.getBackHandlerRef}
-            onPageChange={this.handlePageChange}
-            onSubmit={createContract}
+      <div className="container">
+        <div>
+          <Stepper
+            steps={
+              [
+                {title: 'Address PartyB'},
+                {title: 'Payment'},
+                {title: 'Email'},
+                {title: 'Description'}
+              ]
+            }
+            activeStep={ step }
           />
+        </div>
+        <div className="NewContract">
+          <div className="NewContract-form" onKeyPress={this.handleKeyPress}>
+            <CreateContractForm
+              backHandlerRef={this.getBackHandlerRef}
+              onPageChange={this.handlePageChange}
+              onSubmit={createContract}
+            />
+          </div>
+        </div>
+        <div className="flex-container-main-footer">
+          Contracting front © 2018 powered by
+          <span className="flex-container-main-footer-kleros">
+            &nbsp;Kleros
+          </span>
         </div>
       </div>
     )
