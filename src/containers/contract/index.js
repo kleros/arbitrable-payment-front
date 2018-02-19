@@ -157,7 +157,7 @@ class Contract extends PureComponent {
                   {!contract.data[`${this.state.party}Fee`] && contract.data[`${this.state.partyOther}Fee`] ?
                     <div>
                       <div className="Contract-content-waiting">
-                        The other party raise a dispute.<br/>So as not to lose the dispute you must pay the fee.
+                        The other party raises a dispute.<br/>So as not to lose the dispute you must pay the fee.
                       </div>
                       <div className="Contract-content-actions">
                         <div className="Contract-content-actions-button" onClick={this.createDispute}>Pay the fee</div>

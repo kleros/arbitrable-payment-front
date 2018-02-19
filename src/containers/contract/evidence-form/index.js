@@ -57,8 +57,6 @@ class NewEvidence extends PureComponent {
     return (
       <div className="NewContract">
         <div className="Contract-form" onKeyPress={this.handleKeyPress}>
-          {console.log(this.getBackHandlerRef)}
-          <h1>sdwer</h1>
           <CreateEvidenceForm
             backHandlerRef={this.getBackHandlerRef}
             onPageChange={this.handlePageChange}
