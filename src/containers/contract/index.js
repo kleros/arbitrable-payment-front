@@ -193,7 +193,7 @@ class Contract extends PureComponent {
                     )
                   }
                 </div>
-            </div>
+              </div>
             ),
             failed: contract.failedLoading && 'failedLoading contract'
         })}
