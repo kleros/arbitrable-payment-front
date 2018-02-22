@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import Stepper from 'react-stepper-horizontal'
 
 import * as walletSelectors from '../../../reducers/wallet'
 import * as walletActions from '../../../actions/wallet'
@@ -25,7 +26,11 @@ class NewEvidence extends PureComponent {
     createEvidence: PropTypes.func.isRequired
   }
 
-  state = { hasPrevPage: null, hasNextPage: null }
+  state = {
+    hasPrevPage: null,
+    hasNextPage: null,
+    step: 0
+  }
 
   componentDidMount() {
     const { fetchBalance } = this.props
@@ -52,17 +57,30 @@ class NewEvidence extends PureComponent {
       createEvidence,
       contract
     } = this.props
-    const { hasPrevPage, hasNextPage } = this.state
+
+    const { hasPrevPage, hasNextPage, step } = this.state
 
     return (
-      <div className="NewContract">
-        <div className="Contract-form" onKeyPress={this.handleKeyPress}>
-          <CreateEvidenceForm
-            backHandlerRef={this.getBackHandlerRef}
-            onPageChange={this.handlePageChange}
-            onSubmit={createEvidence}
-            initialValues={{ addressContract: contract.data.address }}
+      <div className="container">
+        <div>
+          <Stepper
+            steps={[
+              { title: 'Name' },
+              { title: 'Description' },
+              { title: 'Url' }
+            ]}
+            activeStep={step}
           />
+        </div>
+        <div className="NewContract">
+          <div className="Contract-form" onKeyPress={this.handleKeyPress}>
+            <CreateEvidenceForm
+              backHandlerRef={this.getBackHandlerRef}
+              onPageChange={this.handlePageChange}
+              onSubmit={createEvidence}
+              initialValues={{ addressContract: contract.data.address }}
+            />
+          </div>
         </div>
       </div>
     )
