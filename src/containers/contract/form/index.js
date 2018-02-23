@@ -107,6 +107,7 @@ class NewContract extends PureComponent {
           && this.props.form.createContractFormKey
           && this.props.form.createContractFormKey.values
           && !isNaN(this.props.form.createContractFormKey.values.payment)
+          && this.props.form.createContractFormKey.values.payment > 0
         )
           return true
       case 2:

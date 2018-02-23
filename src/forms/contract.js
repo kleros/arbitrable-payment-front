@@ -31,7 +31,7 @@ export const {
   },
   step4: {
     description: {
-      type: 'text'
+      type: 'textarea'
     }
   }
 })
