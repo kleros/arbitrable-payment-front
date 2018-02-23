@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import sha3 from 'crypto-js/sha3'
 import Stepper from 'react-stepper-horizontal'
 
 import * as walletSelectors from '../../../reducers/wallet'
@@ -29,7 +30,8 @@ class NewContract extends PureComponent {
   state = {
     hasPrevPage: null,
     hasNextPage: null,
-    step: 0
+    step: 0,
+    allowNextStep: false
   }
 
   componentDidMount() {
@@ -58,13 +60,80 @@ class NewContract extends PureComponent {
     this.setState({step: this.state.step+1})
   }
 
+  isAddress = address => {
+    if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+        // check if it has the basic requirements of an address
+        return false
+    } else if (/^(0x)?[0-9a-f]{40}$/.test(address) || /^(0x)?[0-9A-F]{40}$/.test(address)) {
+        // If it's all small caps or all all caps, return true
+        return true
+    } else {
+        // Otherwise check each case
+        return this.isChecksumAddress(address);
+    }
+  }
+
+  isChecksumAddress = address => {
+    // Check each case
+    address = address.replace('0x','')
+    let addressHash = sha3(address.toLowerCase())
+    for (let i = 0; i < 40; i++) {
+        // the nth letter should be uppercase if the nth digit of casemap is 1
+        if ((parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) || (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])) {
+            return false
+        }
+    }
+    return true;
+  }
+
+  isEmail = email => {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return re.test(String(email).toLowerCase());
+  }
+
+  isFieldOk = () => {
+    switch (this.state.step) {
+      case 0:
+        if (
+          this.props.form
+          && this.props.form.createContractFormKey
+          && this.props.form.createContractFormKey.values
+          && this.isAddress(this.props.form.createContractFormKey.values.partyB)
+        )
+          return true
+      case 1:
+        if (
+          this.props.form
+          && this.props.form.createContractFormKey
+          && this.props.form.createContractFormKey.values
+          && !isNaN(this.props.form.createContractFormKey.values.payment)
+        )
+          return true
+      case 2:
+        if (
+          this.props.form
+          && this.props.form.createContractFormKey
+          && this.props.form.createContractFormKey.values
+          && this.isEmail(this.props.form.createContractFormKey.values.email)
+        )
+          return true
+      }
+    return false
+  }
+
   render() {
     const {
       createContractFormIsInvalid,
       submitCreateContractForm,
       createContract
     } = this.props
-    const { hasPrevPage, hasNextPage, step } = this.state
+
+    const {
+      hasPrevPage,
+      hasNextPage,
+      step,
+      allowNextStep
+    } = this.state
 
     return (
       <div className="container">
@@ -80,7 +149,7 @@ class NewContract extends PureComponent {
             }
             activeStep={ step }
           />
-        </div>
+      </div>
         <div className="NewContract">
           <div className="NewContract-form" onKeyPress={this.handleKeyPress}>
             <div>
@@ -90,11 +159,13 @@ class NewContract extends PureComponent {
                 onSubmit={createContract}
               />
             </div>
-            <div onClick={this.nextStep} className="arrow-container">
-              <div className="arrow-container-arrow"  />
-              <div className="arrow-container-arrow arrow-container-arrow-animation" />
-            </div>
-
+            {
+              this.isFieldOk() &&
+              <div onClick={this.nextStep} className="arrow-container">
+                <div className="arrow-container-arrow"  />
+                <div className="arrow-container-arrow arrow-container-arrow-animation" />
+              </div>
+            }
           </div>
         </div>
         <div className="flex-container-main-footer">
@@ -112,7 +183,8 @@ export default connect(
   state => ({
     balance: state.wallet.balance,
     contract: state.contract.contract,
-    createContractFormIsInvalid: getCreateContractFormIsInvalid(state)
+    createContractFormIsInvalid: getCreateContractFormIsInvalid(state),
+    form: state.form
   }),
   {
     fetchBalance: walletActions.fetchBalance,
