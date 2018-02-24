@@ -193,7 +193,11 @@ class Home extends PureComponent {
                 {
                   contracts.data.length === 0 &&
                     <div className="flex-container-main-newContract-container">
-                      <div className="flex-container-main-newContract-container-content">New Contract</div>
+                      <div
+                        className="flex-container-main-newContract-container-content"
+                        onClick={() => this.redirect('/contracts/new')}>
+                        New Contract
+                      </div>
                     </div>
                 }
               </div>
