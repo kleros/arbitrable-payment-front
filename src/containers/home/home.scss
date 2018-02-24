@@ -50,6 +50,26 @@
     }
   }
 
+  &-newContract-container {
+    margin-top: 20vh;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    &-content {
+      width: 300px;
+      padding: 10px 14px;
+      background: lightgray;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    &-content:hover {
+      cursor: pointer;
+    }
+  }
+
   &-flex-grow {
     flex: 1;
   }
@@ -60,9 +80,14 @@
     text-align: center;
     line-height: 50px;
     color: gray;
-    font-size: 14px;
+    font-size: 1px;
     &-kleros {
       font-weight: bold;
+    }
+    &-wtfpl {
+      position: relative;
+      top: 3px;
+      opacity: 0.5;
     }
   }
 }
