@@ -15,6 +15,19 @@
     flex-direction: row;
     position: relative;
     top: -5vh;
+    &-release {
+      margin: 0 10px;
+      flex: 1;
+      padding: 3px 5px;
+      background: #d3d3d3;
+      border-radius: 3px;
+      text-align: center;
+      font-weight: bold;
+      line-height: 35px;
+      color: #444;
+      font-size: 20px;
+      cursor: pointer;
+    }
   }
 }
 

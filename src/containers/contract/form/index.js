@@ -45,7 +45,7 @@ class NewContract extends PureComponent {
     this.setState({ hasPrevPage, hasNextPage })
 
   handleKeyPress = event => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && this.state.step !== 3) {
       event.preventDefault()
       const { submitCreateContractForm } = this.props
       submitCreateContractForm()
@@ -118,6 +118,15 @@ class NewContract extends PureComponent {
           && this.isEmail(this.props.form.createContractFormKey.values.email)
         )
           return true
+        case 3:
+          if (
+            this.props.form
+            && this.props.form.createContractFormKey
+            && this.props.form.createContractFormKey.values
+            && this.props.form.createContractFormKey.values.description != ''
+            && this.props.form.createContractFormKey.values.description != null
+          )
+        return true
       }
     return false
   }
@@ -159,9 +168,17 @@ class NewContract extends PureComponent {
                 onPageChange={this.handlePageChange}
                 onSubmit={createContract}
               />
+              {
+                step === 3 && this.isFieldOk() &&
+                <div
+                  className="NewContract-form-release"
+                  onClick={submitCreateContractForm}>
+                    Release the contract
+                </div>
+              }
             </div>
             {
-              this.isFieldOk() &&
+              this.isFieldOk() && step != 3 &&
               <div onClick={this.nextStep} className="arrow-container">
                 <div className="arrow-container-arrow"  />
                 <div className="arrow-container-arrow arrow-container-arrow-animation" />
