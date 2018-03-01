@@ -7,6 +7,11 @@ export const {
   submit: submitCreateContractForm
 } = wizardForm('createContractFormKey', {
   step1: {
+    title: {
+      type: 'text'
+    }
+  },
+  step2: {
     partyB: {
       type: 'text',
       props: {
@@ -14,7 +19,7 @@ export const {
       }
     }
   },
-  step2: {
+  step3: {
     payment: {
       type: 'number',
       props: {
@@ -24,12 +29,12 @@ export const {
       validate: [required, number]
     }
   },
-  step3: {
+  step4: {
     email: {
       type: 'text'
     }
   },
-  step4: {
+  step5: {
     description: {
       type: 'textarea'
     }

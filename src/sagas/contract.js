@@ -31,6 +31,7 @@ function* createContract({ type, payload: { contract } }) {
       contract.partyB.toLowerCase(),
       process.env.REACT_APP_ARBITRATOR_EXTRADATA,
       contract.email,
+      contract.title,
       contract.description
     )
   } catch (err) {
@@ -93,8 +94,7 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
   let payTx = null
 
   try {
-    if (partyA != accounts[0])
-      throw new Error('The caller must be the partyA')
+    if (partyA != accounts[0]) throw new Error('The caller must be the partyA')
 
     const contract = yield call(
       kleros.arbitrableContract._ArbitrableContract.load,
@@ -102,22 +102,16 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
     )
 
     // TODO get the amount from the api
-    const amount = yield call(
-      contract.amount.call
-    )
+    const amount = yield call(contract.amount.call)
 
     if (amount.toNumber() === 0)
       throw new Error('The dispute is already finished')
 
-    payTx = yield call(
-      contract.pay,
-      {
-        from:accounts[0]
-      }
-    )
+    payTx = yield call(contract.pay, {
+      from: accounts[0]
+    })
 
     // notification pay in waiting
-
   } catch (err) {
     console.log(err)
   }
@@ -146,21 +140,15 @@ function* createReimburse({ type, payload: { contractAddress } }) {
     )
 
     // TODO get the amount from the api
-    const amount = yield call(
-      contract.amount.call
-    )
+    const amount = yield call(contract.amount.call)
 
     if (amount.toNumber() === 0)
       throw new Error('The dispute is already finished')
 
     // TODO add fn reimburse in the api
-    const reimburseTx = yield call(
-      contract.reimburse,
-      amount.Number(),
-      {
-        from: accounts[0]
-      }
-    )
+    const reimburseTx = yield call(contract.reimburse, amount.Number(), {
+      from: accounts[0]
+    })
 
     // notification reimburse in waiting
   } catch (err) {
@@ -250,31 +238,22 @@ function* createTimeout({
     )
 
     // TODO get the amount from the api
-    const amount = yield call(
-      contract.amount.call
-    )
+    const amount = yield call(contract.amount.call)
 
     if (amount.toNumber() === 0)
       throw new Error('The dispute is already finished')
 
     if (partyA === accounts[0]) {
-      timeoutTx = yield call(
-        contract.timeOutByPartyA,
-        {
-          from: accounts[0]
-        }
-      )
+      timeoutTx = yield call(contract.timeOutByPartyA, {
+        from: accounts[0]
+      })
     } else if (partyB === accounts[0]) {
-      timeoutTx = yield call(
-        contract.timeOutByPartyB,
-        {
-          from: accounts[0]
-        }
-      )
+      timeoutTx = yield call(contract.timeOutByPartyB, {
+        from: accounts[0]
+      })
     }
 
     // notification pay in waiting
-
   } catch (err) {
     console.log(err)
   }
@@ -322,11 +301,11 @@ function* createEvidence({ type, payload: { evidence } }) {
  */
 export default function* walletSaga() {
   yield takeLatest(contractActions.CREATE_CONTRACT, createContract),
-  yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
+    yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
   yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract),
-  yield takeLatest(contractActions.CREATE_DISPUTE, createDispute),
-  yield takeLatest(contractActions.CREATE_PAY, createPay),
-  yield takeLatest(contractActions.CREATE_REIMBURSE, createReimburse),
-  yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence),
-  yield takeLatest(contractActions.CREATE_TIMEOUT, createTimeout)
+    yield takeLatest(contractActions.CREATE_DISPUTE, createDispute),
+    yield takeLatest(contractActions.CREATE_PAY, createPay),
+    yield takeLatest(contractActions.CREATE_REIMBURSE, createReimburse),
+    yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence),
+    yield takeLatest(contractActions.CREATE_TIMEOUT, createTimeout)
 }
