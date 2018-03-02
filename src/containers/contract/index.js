@@ -119,11 +119,13 @@ class Contract extends PureComponent {
           {
             loading: <div className="loader"><ClipLoader color={'gray'}  loading={true} /></div>,
             done: contract.data && (
-              <div className="Contract">
+              <div className="Contract">{console.log(contract.data)}
                 <div className="Contract-content">
                   <div className="Contract-content-address">
                     <div><Blockies seed={contract.data.address} size={6} scale={10} bgColor="#f5f5f5" /></div>
-                    <div className="Contract-content-address-address">{this.shortAddress(contract.data.address)}</div>
+                    <div className="Contract-content-address-address">
+                      {contract.data.title || this.shortAddress(contract.data.address)}
+                    </div>
                   </div>
                   <div className="Contract-content-partyB">
                     <div className="Contract-content-partyB-identicon">

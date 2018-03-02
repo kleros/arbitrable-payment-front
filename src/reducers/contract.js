@@ -55,6 +55,7 @@ export const createTimeout = state =>
 export const contractShape = PropTypes.shape({
   address: PropTypes.string,
   arbitrator: PropTypes.string,
+  title: PropTypes.string,
   description: PropTypes.string,
   disputeId: PropTypes.number,
   email: PropTypes.string,

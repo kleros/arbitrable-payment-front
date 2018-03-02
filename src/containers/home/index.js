@@ -212,7 +212,6 @@ class Home extends PureComponent {
                       bgColor="#fff"
                     />
                     <div className="content">
-                      {console.log(contract)}
                       <div className="address">
                         {contract.title || this.shortAddress(contract.address)}
                       </div>
