@@ -16,6 +16,8 @@ import Button from '../../../components/button'
 
 import './new-evidence.css'
 
+const FINAL_STEP = 2
+
 class NewEvidence extends PureComponent {
   static propTypes = {
     balance: walletSelectors.balanceShape.isRequired,
@@ -47,7 +49,52 @@ class NewEvidence extends PureComponent {
       event.preventDefault()
       const { submitCreateEvidenceForm } = this.props
       submitCreateEvidenceForm()
+      this.setState({ step: this.state.step + 1 })
     }
+  }
+
+  nextStep = event => {
+    event.preventDefault()
+    const { submitCreateEvidenceForm } = this.props
+    submitCreateEvidenceForm()
+    this.setState({ step: this.state.step + 1 })
+  }
+
+  isUrl = url => {
+    var re = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/g
+    return re.test(String(url).toLowerCase())
+  }
+
+  isFieldOk = () => {
+    switch (this.state.step) {
+      case 0:
+        if (
+          this.props.form &&
+          this.props.form.createEvidenceFormKey &&
+          this.props.form.createEvidenceFormKey.values &&
+          this.props.form.createEvidenceFormKey.values.name != '' &&
+          this.props.form.createEvidenceFormKey.values.name != null
+        )
+          return true
+      case 1:
+        if (
+          this.props.form &&
+          this.props.form.createEvidenceFormKey &&
+          this.props.form.createEvidenceFormKey.values &&
+          this.props.form.createEvidenceFormKey.values.description != '' &&
+          this.props.form.createEvidenceFormKey.values.description != null
+        )
+          return true
+      case 2:
+        if (
+          this.props.form &&
+          this.props.form.createEvidenceFormKey &&
+          this.props.form.createEvidenceFormKey.values &&
+          this.isUrl(this.props.form.createEvidenceFormKey.values.url)
+        )
+          return true
+    }
+    return false
   }
 
   render() {
@@ -73,13 +120,33 @@ class NewEvidence extends PureComponent {
           />
         </div>
         <div className="NewContract">
-          <div className="Contract-form" onKeyPress={this.handleKeyPress}>
-            <CreateEvidenceForm
-              backHandlerRef={this.getBackHandlerRef}
-              onPageChange={this.handlePageChange}
-              onSubmit={createEvidence}
-              initialValues={{ addressContract: contract.data.address }}
-            />
+          <div className="NewContract-form" onKeyPress={this.handleKeyPress}>
+            <div>
+              <CreateEvidenceForm
+                backHandlerRef={this.getBackHandlerRef}
+                onPageChange={this.handlePageChange}
+                onSubmit={createEvidence}
+                initialValues={{ addressContract: contract.data.address }}
+              />
+              {step === FINAL_STEP &&
+                this.isFieldOk() && (
+                  <div
+                    className="NewContract-form-release"
+                    onClick={submitCreateEvidenceForm}
+                  >
+                    Add the evidence
+                  </div>
+                )
+              }
+            </div>
+            {this.isFieldOk() &&
+              step != FINAL_STEP && (
+                <div onClick={this.nextStep} className="arrow-container">
+                  <div className="arrow-container-arrow" />
+                  <div className="arrow-container-arrow arrow-container-arrow-animation" />
+                </div>
+              )
+            }
           </div>
         </div>
       </div>
@@ -92,7 +159,8 @@ export default connect(
     balance: state.wallet.balance,
     contract: state.contract.contract,
     evidence: state.contract.evidence,
-    createEvidenceFormIsInvalid: getCreateEvidenceFormIsInvalid(state)
+    createEvidenceFormIsInvalid: getCreateEvidenceFormIsInvalid(state),
+    form: state.form
   }),
   {
     fetchBalance: walletActions.fetchBalance,

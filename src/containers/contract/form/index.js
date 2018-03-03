@@ -189,7 +189,8 @@ class NewContract extends PureComponent {
                   >
                     Release the contract
                   </div>
-                )}
+                )
+              }
             </div>
             {this.isFieldOk() &&
               step != FINAL_STEP && (
@@ -197,7 +198,8 @@ class NewContract extends PureComponent {
                   <div className="arrow-container-arrow" />
                   <div className="arrow-container-arrow arrow-container-arrow-animation" />
                 </div>
-              )}
+              )
+            }
           </div>
         </div>
         <div className="flex-container-main-footer">
