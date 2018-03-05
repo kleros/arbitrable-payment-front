@@ -9,11 +9,11 @@
   z-index: 100;
   cursor: pointer;
   &-logo {
-    width: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     border: 1px solid lightgray;
     background: #fff;
-    height: 40px;
-    padding: 10px;
+    padding: 5px;
   }
 }
