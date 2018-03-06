@@ -183,8 +183,8 @@ class Home extends PureComponent {
                             />
                           </div>
 
-                          <div className="content">
-                            {this.shortAddress(contract.data.partyB)}
+                          <div className="address short">
+                            {contract.title || this.shortAddress(contract.address)}
                           </div>
                         </div>
                         <div className="description">
@@ -212,7 +212,7 @@ class Home extends PureComponent {
                       bgColor="#fff"
                     />
                     <div className="content">
-                      <div className="address">
+                      <div className="address short">
                         {contract.title || this.shortAddress(contract.address)}
                       </div>
                       <div className="partyB">

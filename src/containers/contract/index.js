@@ -119,11 +119,11 @@ class Contract extends PureComponent {
           {
             loading: <div className="loader"><ClipLoader color={'gray'}  loading={true} /></div>,
             done: contract.data && (
-              <div className="Contract">{console.log(contract.data)}
+              <div className="Contract">
                 <div className="Contract-content">
                   <div className="Contract-content-address">
                     <div><Blockies seed={contract.data.address} size={6} scale={10} bgColor="#f5f5f5" /></div>
-                    <div className="Contract-content-address-address">
+                    <div className="Contract-content-address-address short">
                       {contract.data.title || this.shortAddress(contract.data.address)}
                     </div>
                   </div>
@@ -188,9 +188,9 @@ class Contract extends PureComponent {
                   {
                     contract.data.evidences.map((evidence, i) =>
                       <div className="Contract-content-evidenceCard" onClick={() => window.location.replace(evidence.url)} key={i}>
-                        <div className="Contract-content-evidenceCard-name">{evidence.name}</div>
+                        <div className="Contract-content-evidenceCard-name short">{evidence.name}</div>
                         <div className="description">{evidence.description}</div>
-                        <div className="Contract-content-evidenceCard-url">{evidence.url}</div>
+                        <div className="Contract-content-evidenceCard-url short">{evidence.url}</div>
                       </div>
                     )
                   }
