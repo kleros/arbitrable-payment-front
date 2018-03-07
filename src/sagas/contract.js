@@ -20,7 +20,7 @@ function* createContract({ type, payload: { contract } }) {
 
   let newContract = null
 
-  console.log('contract.title',contract.title)
+  console.log('contract.title', contract.title)
 
   try {
     newContract = yield call(
@@ -28,7 +28,7 @@ function* createContract({ type, payload: { contract } }) {
       accounts[0].toLowerCase(),
       unit.toWei(contract.payment, 'ether'),
       contract.description,
-      process.env.REACT_APP_ARBITRATOR_ADDRESS,
+      process.env.REACT_APP_ARBITRATOR_ADDRESS_DEV,
       process.env.REACT_APP_ARBITRATOR_TIMEOUT,
       contract.partyB.toLowerCase(),
       process.env.REACT_APP_ARBITRATOR_EXTRADATA,
@@ -40,7 +40,7 @@ function* createContract({ type, payload: { contract } }) {
     console.log(err)
   }
 
-  console.log('newContract',newContract)
+  console.log('newContract', newContract)
 
   yield put(contractActions.receiveContract(newContract))
 }
@@ -184,7 +184,7 @@ function* createDispute({ type, payload: { contractAddress } }) {
 
     const court = yield call(
       kleros.klerosPOC.load,
-      process.env.REACT_APP_ARBITRATOR_ADDRESS
+      process.env.REACT_APP_ARBITRATOR_ADDRESS_DEV
     )
 
     const arbitrationCost = yield call(
@@ -305,11 +305,11 @@ function* createEvidence({ type, payload: { evidence } }) {
  */
 export default function* walletSaga() {
   yield takeLatest(contractActions.CREATE_CONTRACT, createContract),
-  yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
+    yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
   yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract),
-  yield takeLatest(contractActions.CREATE_DISPUTE, createDispute),
-  yield takeLatest(contractActions.CREATE_PAY, createPay),
-  yield takeLatest(contractActions.CREATE_REIMBURSE, createReimburse),
-  yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence),
-  yield takeLatest(contractActions.CREATE_TIMEOUT, createTimeout)
+    yield takeLatest(contractActions.CREATE_DISPUTE, createDispute),
+    yield takeLatest(contractActions.CREATE_PAY, createPay),
+    yield takeLatest(contractActions.CREATE_REIMBURSE, createReimburse),
+    yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence),
+    yield takeLatest(contractActions.CREATE_TIMEOUT, createTimeout)
 }

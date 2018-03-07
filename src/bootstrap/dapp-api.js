@@ -24,5 +24,8 @@ const kleros = new Kleros(
 export default kleros
 
 eth.accounts((error, accounts) => {
-  kleros.watchForEvents(process.env.REACT_APP_ARBITRATOR_ADDRESS, accounts[0])
+  kleros.watchForEvents(
+    process.env.REACT_APP_ARBITRATOR_ADDRESS_DEV,
+    accounts[0]
+  )
 })
