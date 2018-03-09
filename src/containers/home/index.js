@@ -139,6 +139,7 @@ class Home extends PureComponent {
 
                 {contract.data &&
                   contract.data.address &&
+                  contract.title &&
                   !contracts.data.some(
                     c => c.address === contract.data.address
                   ) && (
@@ -184,7 +185,7 @@ class Home extends PureComponent {
                           </div>
 
                           <div className="address short">
-                            {contract.title || this.shortAddress(contract.address)}
+                            {contract.title || this.shortAddress(contract.data.address)}
                           </div>
                         </div>
                         <div className="description">
