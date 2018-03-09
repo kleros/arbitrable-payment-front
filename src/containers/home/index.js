@@ -251,7 +251,9 @@ class Home extends PureComponent {
                   </div>
                 ))}
 
-                {contracts.data.length === 0 &&
+                {
+                  contracts.data.length === 0 &&
+                  !(contract.data && contract.data.address) &&
                   !contract.creating && (
                     <div className="flex-container-main-newContract-container">
                       <div
