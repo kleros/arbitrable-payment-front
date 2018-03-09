@@ -148,7 +148,7 @@ class Contract extends PureComponent {
 
                   <div className="Contract-content-item Contract-content-item-mail">{contract.data.email}</div>
                   <div className="description Contract-content-item">{contract.data.description}</div>
-                  {!contract.data.partyAFee && !contract.data.partyBFee ?
+                  {contract.data.status != 4 && !contract.data.partyAFee && !contract.data.partyBFee ?
                     <div className="Contract-content-actions">
                       <div className="Contract-content-actions-button Contract-actions-button-left" onClick={this.createDispute}>Create dispute</div>
                       {contract.data.partyA === accounts.data[0] && <div className="Contract-content-actions-button Contract-content-actions-button-right" onClick={this.createPay}>Pay</div>}
@@ -156,7 +156,7 @@ class Contract extends PureComponent {
                     </div>
                     : <div></div>
                   }
-                  {!contract.data[`${this.state.party}Fee`] && contract.data[`${this.state.partyOther}Fee`] ?
+                  {contract.data.status != 4 && !contract.data[`${this.state.party}Fee`] && contract.data[`${this.state.partyOther}Fee`] ?
                     <div>
                       <div className="Contract-content-waiting">
                         The other party raises a dispute.<br/>So as not to lose the dispute you must pay the fee.
@@ -167,19 +167,19 @@ class Contract extends PureComponent {
                     </div>
                     : <div></div>
                   }
-                  {(Date.now() / 1000 | 0) < (contract.data.lastInteraction.toNumber() + contract.data.timeout) && contract.data[`${this.state.party}Fee`] && !contract.data[`${this.state.partyOther}Fee`] ?
+                  {contract.data.status != 4 && (Date.now() / 1000 | 0) < (contract.data.lastInteraction.toNumber() + contract.data.timeout) && contract.data[`${this.state.party}Fee`] && !contract.data[`${this.state.partyOther}Fee`] ?
                     <div className="Contract-content-waiting">
                       Waiting pay fee from the other party<br/>({this.shortAddress(contract.data[`${this.state.partyOther}`])})
                     </div>
                     : <div></div>
                   }
-                  {(Date.now() / 1000 | 0) >= (contract.data.lastInteraction.toNumber() + contract.data.timeout) && contract.data[`${this.state.party}Fee`] && !contract.data[`${this.state.partyOther}Fee`] ?
+                  {contract.data.status != 4 && (Date.now() / 1000 | 0) >= (contract.data.lastInteraction.toNumber() + contract.data.timeout) && contract.data[`${this.state.party}Fee`] && !contract.data[`${this.state.partyOther}Fee`] ?
                     <div className="Contract-content-actions">
                       <div className="Contract-content-actions-button" onClick={this.timeout}>{`Timeout ${this.state.partyOther}`}</div>
                     </div>
                     : <div></div>
                   }
-                  {contract.data.partyAFee && contract.data.partyBFee ?
+                  {contract.data.status != 4 && contract.data.partyAFee && contract.data.partyBFee ?
                     <div className="Contract-content-actions">
                       <div className="Contract-content-actions-button" onClick={() => this.redirect('/evidences/new')}>Send Evidence</div>
                     </div>

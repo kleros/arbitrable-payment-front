@@ -156,9 +156,10 @@ class Home extends PureComponent {
                         scale={14}
                         bgColor="#fff"
                       />
+
                       <div className="content">
                         <div className="address">
-                          {this.shortAddress(contract.data.address)}
+                          {contract.data.title}
                         </div>
                         <div className="partyB">
                           <div className="identicon">
@@ -183,9 +184,8 @@ class Home extends PureComponent {
                               bgColor="#f5f5f5"
                             />
                           </div>
-
-                          <div className="address short">
-                            {contract.data.title}
+                          <div className="content">
+                            {this.shortAddress(contract.data.partyB)}
                           </div>
                         </div>
                         <div className="description">
@@ -214,7 +214,7 @@ class Home extends PureComponent {
                     />
                     <div className="content">
                       <div className="address short">
-                        {contract.title || this.shortAddress(contract.address)}
+                        {contract.title}
                       </div>
                       <div className="partyB">
                         <div className="identicon">
