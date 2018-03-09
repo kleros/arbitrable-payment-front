@@ -20,8 +20,6 @@ function* createContract({ type, payload: { contract } }) {
 
   let newContract = null
 
-  console.log('contract.title', contract.title)
-
   try {
     newContract = yield call(
       kleros.arbitrableContract.deployContract,
@@ -39,8 +37,6 @@ function* createContract({ type, payload: { contract } }) {
   } catch (err) {
     console.log(err)
   }
-
-  console.log('newContract', newContract)
 
   yield put(contractActions.receiveContract(newContract))
 }
