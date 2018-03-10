@@ -26,8 +26,7 @@ class NewContract extends PureComponent {
     createContractFormIsInvalid: PropTypes.bool.isRequired,
     fetchBalance: PropTypes.func.isRequired,
     submitCreateContractForm: PropTypes.func.isRequired,
-    createContract: PropTypes.func.isRequired,
-    form: CreateContractForm.isRequired
+    createContract: PropTypes.func.isRequired
   }
 
   state = {

@@ -26,8 +26,7 @@ class NewEvidence extends PureComponent {
     createEvidenceFormIsInvalid: PropTypes.bool.isRequired,
     fetchBalance: PropTypes.func.isRequired,
     submitCreateEvidenceForm: PropTypes.func.isRequired,
-    createEvidence: PropTypes.func.isRequired,
-    form: CreateContractForm.isRequired
+    createEvidence: PropTypes.func.isRequired
   }
 
   state = {
