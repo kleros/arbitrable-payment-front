@@ -1,5 +1,4 @@
 import Eth from 'ethjs'
-
 import { Kleros } from 'kleros-api'
 
 let ethInstance

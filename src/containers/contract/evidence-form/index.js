@@ -15,6 +15,7 @@ import {
 import Button from '../../../components/button'
 
 import './new-evidence.css'
+import { CreateContractForm } from '../../../forms/contract'
 
 const FINAL_STEP = 2
 
@@ -25,7 +26,8 @@ class NewEvidence extends PureComponent {
     createEvidenceFormIsInvalid: PropTypes.bool.isRequired,
     fetchBalance: PropTypes.func.isRequired,
     submitCreateEvidenceForm: PropTypes.func.isRequired,
-    createEvidence: PropTypes.func.isRequired
+    createEvidence: PropTypes.func.isRequired,
+    form: CreateContractForm.isRequired
   }
 
   state = {
@@ -48,53 +50,54 @@ class NewEvidence extends PureComponent {
     if (event.key === 'Enter') {
       event.preventDefault()
       const { submitCreateEvidenceForm } = this.props
+      const { step } = this.state
       submitCreateEvidenceForm()
-      this.setState({ step: this.state.step + 1 })
+      this.setState({ step: step + 1 })
     }
   }
 
   nextStep = event => {
     event.preventDefault()
     const { submitCreateEvidenceForm } = this.props
+    const { step } = this.state
     submitCreateEvidenceForm()
-    this.setState({ step: this.state.step + 1 })
+    this.setState({ step: step + 1 })
   }
 
   isUrl = url => {
-    var re = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/g
+    const re = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/g
     return re.test(String(url).toLowerCase())
   }
 
-  isFieldOk = () => {
-    switch (this.state.step) {
+  isFieldOk = step => {
+    const { form } = this.props
+    switch (step) {
       case 0:
-        if (
-          this.props.form &&
-          this.props.form.createEvidenceFormKey &&
-          this.props.form.createEvidenceFormKey.values &&
-          this.props.form.createEvidenceFormKey.values.name != '' &&
-          this.props.form.createEvidenceFormKey.values.name != null
+        return (
+          form &&
+          form.createEvidenceFormKey &&
+          form.createEvidenceFormKey.values &&
+          form.createEvidenceFormKey.values.name !== '' &&
+          form.createEvidenceFormKey.values.name != null
         )
-          return true
       case 1:
-        if (
-          this.props.form &&
-          this.props.form.createEvidenceFormKey &&
-          this.props.form.createEvidenceFormKey.values &&
-          this.props.form.createEvidenceFormKey.values.description != '' &&
-          this.props.form.createEvidenceFormKey.values.description != null
+        return (
+          form &&
+          form.createEvidenceFormKey &&
+          form.createEvidenceFormKey.values &&
+          form.createEvidenceFormKey.values.description !== '' &&
+          form.createEvidenceFormKey.values.description != null
         )
-          return true
       case 2:
-        if (
-          this.props.form &&
-          this.props.form.createEvidenceFormKey &&
-          this.props.form.createEvidenceFormKey.values &&
-          this.isUrl(this.props.form.createEvidenceFormKey.values.url)
+        return (
+          form &&
+          form.createEvidenceFormKey &&
+          form.createEvidenceFormKey.values &&
+          this.isUrl(form.createEvidenceFormKey.values.url)
         )
-          return true
+      default:
+        return false
     }
-    return false
   }
 
   render() {
@@ -129,24 +132,22 @@ class NewEvidence extends PureComponent {
                 initialValues={{ addressContract: contract.data.address }}
               />
               {step === FINAL_STEP &&
-                this.isFieldOk() && (
+                this.isFieldOk(step) && (
                   <div
                     className="NewContract-form-release"
                     onClick={submitCreateEvidenceForm}
                   >
                     Add the evidence
                   </div>
-                )
-              }
+                )}
             </div>
-            {this.isFieldOk() &&
-              step != FINAL_STEP && (
+            {this.isFieldOk(step) &&
+              step !== FINAL_STEP && (
                 <div onClick={this.nextStep} className="arrow-container">
                   <div className="arrow-container-arrow" />
                   <div className="arrow-container-arrow arrow-container-arrow-animation" />
                 </div>
-              )
-            }
+              )}
           </div>
         </div>
       </div>

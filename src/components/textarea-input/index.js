@@ -5,8 +5,8 @@ const TextareaInput = ({
   input: { value, type, onChange },
   meta: { valid, touched, error },
   placeholder,
-  rows = 7,
-  cols = 50,
+  rows,
+  cols,
   ...rest
 }) => (
   <div className="TextareaInput" {...rest}>
@@ -27,6 +27,11 @@ const TextareaInput = ({
   </div>
 )
 
+TextareaInput.defaultProps = {
+  rows: 7,
+  cols: 50
+}
+
 TextareaInput.propTypes = {
   // Redux Form
   input: PropTypes.shape({
@@ -38,10 +43,11 @@ TextareaInput.propTypes = {
     touched: PropTypes.bool,
     error: PropTypes.string
   }).isRequired,
-
   // State
   placeholder: PropTypes.oneOfType([PropTypes.element, PropTypes.string])
-    .isRequired
+    .isRequired,
+  rows: PropTypes.number,
+  cols: PropTypes.number
 }
 
 export default TextareaInput
