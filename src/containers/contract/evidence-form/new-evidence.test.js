@@ -1,6 +1,6 @@
 import setupIntegrationTest, {
   flushPromises
-} from '../../bootstrap/setup-integration-test'
+} from '../../../bootstrap/setup-integration-test'
 
 import NewEvidence from '.'
 
