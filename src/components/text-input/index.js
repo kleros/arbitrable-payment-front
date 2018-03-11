@@ -10,7 +10,7 @@ const TextInput = ({
   <div className="TextInput" {...rest}>
     <input
       className="input"
-      type={type}
+      type="text"
       placeholder={placeholder}
       value={value}
       onChange={onChange}
