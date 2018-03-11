@@ -139,6 +139,7 @@ class Home extends PureComponent {
 
                 {contract.data &&
                   contract.data.address &&
+                  contract.data.title &&
                   !contracts.data.some(
                     c => c.address === contract.data.address
                   ) && (
@@ -155,9 +156,10 @@ class Home extends PureComponent {
                         scale={14}
                         bgColor="#fff"
                       />
+
                       <div className="content">
                         <div className="address">
-                          {this.shortAddress(contract.data.address)}
+                          {contract.data.title}
                         </div>
                         <div className="partyB">
                           <div className="identicon">
@@ -182,9 +184,8 @@ class Home extends PureComponent {
                               bgColor="#f5f5f5"
                             />
                           </div>
-
-                          <div className="address short">
-                            {contract.title || this.shortAddress(contract.address)}
+                          <div className="content">
+                            {this.shortAddress(contract.data.partyB)}
                           </div>
                         </div>
                         <div className="description">
@@ -213,7 +214,7 @@ class Home extends PureComponent {
                     />
                     <div className="content">
                       <div className="address short">
-                        {contract.title || this.shortAddress(contract.address)}
+                        {contract.title}
                       </div>
                       <div className="partyB">
                         <div className="identicon">
@@ -250,7 +251,9 @@ class Home extends PureComponent {
                   </div>
                 ))}
 
-                {contracts.data.length === 0 &&
+                {
+                  contracts.data.length === 0 &&
+                  !(contract.data && contract.data.address) &&
                   !contract.creating && (
                     <div className="flex-container-main-newContract-container">
                       <div

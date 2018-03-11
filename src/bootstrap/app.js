@@ -12,7 +12,6 @@ import Contract from '../containers/contract'
 import Profile from '../containers/profile'
 import KlerosGitter from '../components/kleros-gitter'
 
-
 import Initializer from './initializer'
 
 import './app.css'
@@ -34,7 +33,7 @@ const App = ({ store, history, testElement }) => (
               path="/contracts/:contractAddress"
               component={Contract}
             />
-          <Route exact path="/evidences/new" component={NewEvidence} />
+            <Route exact path="/evidences/new" component={NewEvidence} />
           </Switch>
           {testElement}
           <KlerosGitter />
