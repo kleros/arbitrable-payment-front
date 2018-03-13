@@ -171,6 +171,17 @@ class NewContract extends PureComponent {
               { title: 'Description' }
             ]}
             activeStep={step}
+            activeColor={'#1E1F22'}
+            defaultColor={'#999'}
+            completeColor={'1E1F22'}
+            completeTitleColor={'#fff'}
+            defaultTitleColor={'#999'}
+            activeTitleColor={'#fff'}
+            defaultBorderColor={'#999'}
+            completeBorderColor={'#999'}
+            activeBorderColor={'#999'}
+            defaultBarColor={'#999'}
+            completeBarColor={'#fff'}
           />
         </div>
         <div className="NewContract">
@@ -189,8 +200,7 @@ class NewContract extends PureComponent {
                   >
                     Release the contract
                   </div>
-                )
-              }
+                )}
             </div>
             {this.isFieldOk() &&
               step != FINAL_STEP && (
@@ -198,8 +208,7 @@ class NewContract extends PureComponent {
                   <div className="arrow-container-arrow" />
                   <div className="arrow-container-arrow arrow-container-arrow-animation" />
                 </div>
-              )
-            }
+              )}
           </div>
         </div>
         <div className="flex-container-main-footer">

@@ -5,7 +5,7 @@
   min-height: 100vh;
   flex-direction: column;
   font-family: 'Open Sans Condensed', sans-serif;
-  background: url('./back_kleros.png') #f5f5f5;
+  background: url('./back_kleros.png') #2A2B30;
   background-repeat: no-repeat;
   background-size: 70%;
   background-attachment: fixed;
@@ -75,8 +75,7 @@
   }
 
   &-footer {
-    background: #f0f0f0;
-    border-top: 1px solid lightgray;
+    background: #1E1F22;
     text-align: center;
     line-height: 50px;
     color: gray;
