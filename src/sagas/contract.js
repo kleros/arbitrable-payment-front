@@ -1,6 +1,7 @@
 import unit from 'ethjs-unit'
-import { takeLatest, call, put, select } from 'redux-saga/effects'
 import { push } from 'react-router-redux'
+
+import { takeLatest, call, put, select } from 'redux-saga/effects'
 
 import kleros, { eth } from '../bootstrap/dapp-api'
 import * as contractActions from '../actions/contract'
@@ -94,7 +95,7 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
   let payTx = null
 
   try {
-    if (partyA != accounts[0]) throw new Error('The caller must be the partyA')
+    if (partyA !== accounts[0]) throw new Error('The caller must be the partyA')
 
     const contract = yield call(
       kleros.arbitrableContract._ArbitrableContract.load,
@@ -300,12 +301,12 @@ function* createEvidence({ type, payload: { evidence } }) {
  * @export default walletSaga
  */
 export default function* walletSaga() {
-  yield takeLatest(contractActions.CREATE_CONTRACT, createContract),
-    yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
-  yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract),
-    yield takeLatest(contractActions.CREATE_DISPUTE, createDispute),
-    yield takeLatest(contractActions.CREATE_PAY, createPay),
-    yield takeLatest(contractActions.CREATE_REIMBURSE, createReimburse),
-    yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence),
-    yield takeLatest(contractActions.CREATE_TIMEOUT, createTimeout)
+  yield takeLatest(contractActions.CREATE_CONTRACT, createContract)
+  yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
+  yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract)
+  yield takeLatest(contractActions.CREATE_DISPUTE, createDispute)
+  yield takeLatest(contractActions.CREATE_PAY, createPay)
+  yield takeLatest(contractActions.CREATE_REIMBURSE, createReimburse)
+  yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence)
+  yield takeLatest(contractActions.CREATE_TIMEOUT, createTimeout)
 }
