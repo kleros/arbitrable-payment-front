@@ -97,6 +97,12 @@ class Contract extends PureComponent {
     return `${startAddress}...${endAddress}`
   }
 
+  showEmptyContractEl = contract => contract.data.partyAFee === 0 && contract.data.partyBFee === 0
+
+  hideEmptyContractEl = contract => {
+    return {"display":(contract.data.partyAFee === 0 && contract.data.partyBFee === 0) ? "none" : "block"}
+  }
+
   // TODO go to utils
   redirect = (url, ...args) => {
     if (!args.length) this.props.history.push(url)
@@ -147,9 +153,10 @@ class Contract extends PureComponent {
                   <div className="description Contract-content-item">{contract.data.description}</div>
                   {contract.data.status !== 4 && !contract.data.partyAFee && !contract.data.partyBFee ?
                     <div className="Contract-content-actions">
-                      <div className="Contract-content-actions-button Contract-actions-button-left" onClick={this.createDispute}>Create dispute</div>
-                      {contract.data.partyA === accounts.data[0] && <div className="Contract-content-actions-button Contract-content-actions-button-right" onClick={this.createPay}>Pay</div>}
-                      {contract.data.partyB === accounts.data[0] && <div className="Contract-content-actions-button Contract-content-actions-button-right" onClick={this.createReimburse}>Reimburse</div>}
+                      <div style={this.hideEmptyContractEl(contract)} className="Contract-content-actions-button Contract-actions-button-left" onClick={this.createDispute}>Create dispute</div>
+                      {contract.data.partyA === accounts.data[0] && <div style={this.hideEmptyContractEl(contract)} className="Contract-content-actions-button Contract-content-actions-button-right" onClick={this.createPay}>Pay</div>}
+                      {contract.data.partyB === accounts.data[0] && <div style={this.hideEmptyContractEl(contract)} className="Contract-content-actions-button Contract-content-actions-button-right" onClick={this.createReimburse}>Reimburse</div>}
+                      {this.showEmptyContractEl(contract) && <div className="Contract-content-item">No contractual fees remain</div>}
                     </div>
                     : <div></div>
                   }
