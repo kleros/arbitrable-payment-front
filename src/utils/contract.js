@@ -13,3 +13,6 @@ export const redirect = (url, history, ...args) => {
     history.push(`${url}/${allArgs}`)
   }
 }
+
+export const shortAddress = address =>
+  `${address.substr(0, address.length - 36)}...${address.substr(37)}`

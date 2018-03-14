@@ -10,11 +10,11 @@ import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
 import * as walletSelectors from '../../reducers/wallet'
 import * as contractSelectors from '../../reducers/contract'
+import { ContractDisplayList } from '../contract-display-list'
 import { objMap } from '../../utils/functional'
 import { renderIf } from '../../utils/react-redux'
 import Identicon from '../../components/identicon'
-
-import {redirect} from '../../utils/contract'
+import { redirect, shortAddress } from '../../utils/contract'
 
 import './profile.css'
 
@@ -71,7 +71,8 @@ class Profile extends PureComponent {
       loadingContract,
       contracts,
       accounts,
-      version
+      version,
+      history
     } = this.props
 
     return (
@@ -84,7 +85,8 @@ class Profile extends PureComponent {
                 <div className="flex-container-main-menu">
                   <div className="flex-container-main-menu-items">
                     <div
-                      className="flex-container-main-menu-items-item flex-container-main-menu-items-kleros">
+                      className="flex-container-main-menu-items-item flex-container-main-menu-items-kleros"
+                      onClick={() => redirect('/', history)}>
                       KLEROS
                     </div>
                     <div
@@ -93,7 +95,7 @@ class Profile extends PureComponent {
                     </div>
                     <div
                       className="flex-container-main-menu-items-item"
-                      onClick={() => redirect('/contracts/new', this.props.history)}>
+                      onClick={() => redirect('/contracts/new', history)}>
                       New contract
                     </div>
                   </div>
@@ -103,7 +105,7 @@ class Profile extends PureComponent {
                     <div className="type">Profile</div>
                     <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff"/>
                     <div className="content">
-                      <div className="address">{this.shortAddress(accounts.data[0])}</div>
+                      <div className="address">{shortAddress(accounts.data[0])}</div>
                       <div className="balanceETH">{Number(balance.data).toFixed(3)} ETH</div>
                       <div className="nbContracts">
                         {contract.data && contracts.data.length + 1}
@@ -112,9 +114,7 @@ class Profile extends PureComponent {
                     </div>
                   </div>
                 </div>
-                <div className="flex-container-main-flex-grow">
-
-                </div>
+                <div className="flex-container-main-flex-grow"/>
                 <div className="flex-container-main-footer">
                   Contracting front © 2018 powered by
                   <span className="flex-container-main-footer-kleros">

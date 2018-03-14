@@ -10,10 +10,9 @@ import { objMap } from '../../utils/functional'
 import * as contractSelectors from '../../reducers/contract'
 import * as contractActions from '../../actions/contract'
 import { renderIf } from '../../utils/react-redux'
+import { redirect, shortAddress } from '../../utils/contract'
 
 import './contract.css'
-
-import {redirect} from '../../utils/contract'
 
 class Contract extends PureComponent {
   state = {
@@ -92,29 +91,22 @@ class Contract extends PureComponent {
     )
   }
 
-  shortAddress = address => {
-    const startAddress = address.substr(0, address.length-36)
-    const endAddress = address.substr(37)
-
-    return `${startAddress}...${endAddress}`
-  }
-
   render() {
-    const { loadingContract, contract, accounts } = this.props
-
+    const { loadingContract, contract, accounts, history } = this.props
+    const { partyOther, party } = this.state
     return (
       <div>
         {renderIf(
           [contract.loading],[contract.data && contract.data.partyAFee && accounts.data && accounts.data[0]],[contract.failedLoading || accounts.failedLoading],
           {
-            loading: <div className="loader"><ClipLoader color={'gray'}  loading={true} /></div>,
+            loading: <div className="loader"><ClipLoader color={'gray'} loading={true} /></div>,
             done: contract.data && (
               <div className="Contract">
                 <div className="Contract-content">
                   <div className="Contract-content-address">
                     <div><Blockies seed={contract.data.address} size={6} scale={10} bgColor="#f5f5f5" /></div>
                     <div className="Contract-content-address-address short">
-                      {contract.data.title || this.shortAddress(contract.data.address)}
+                      {contract.data.title || shortAddress(contract.data.address)}
                     </div>
                   </div>
                   <div className="Contract-content-partyB">
@@ -122,7 +114,7 @@ class Contract extends PureComponent {
                       <Blockies seed={contract.data.partyA} size={5} scale={4} bgColor="#f5f5f5" />
                     </div>
                     <div className="Contract-content-partyB-content">
-                      {this.shortAddress(contract.data.partyA)}
+                      {shortAddress(contract.data.partyA)}
                     </div>
 
                     <div>&nbsp;&nbsp;</div>
@@ -132,7 +124,7 @@ class Contract extends PureComponent {
                     </div>
 
                     <div className="Contract-content-partyB-content">
-                      {this.shortAddress(contract.data.partyB)}
+                      {shortAddress(contract.data.partyB)}
                     </div>
                   </div>
 
@@ -146,7 +138,7 @@ class Contract extends PureComponent {
                     </div>
                     : <div/>
                   }
-                  {contract.data.status !== 4 && !contract.data[`${this.state.party}Fee`] && contract.data[`${this.state.partyOther}Fee`] ?
+                  {contract.data.status !== 4 && !contract.data[`${party}Fee`] && contract.data[`${partyOther}Fee`] ?
                     <div>
                       <div className="Contract-content-waiting">
                         The other party raises a dispute.<br/>So as not to lose the dispute you must pay the fee.
@@ -157,21 +149,21 @@ class Contract extends PureComponent {
                     </div>
                     : <div/>
                   }
-                  {contract.data.status !== 4 && (Date.now() / 1000 | 0) < (contract.data.lastInteraction.toNumber() + contract.data.timeout) && contract.data[`${this.state.party}Fee`] && !contract.data[`${this.state.partyOther}Fee`] ?
+                  {contract.data.status !== 4 && (Date.now() / 1000 | 0) < (contract.data.lastInteraction.toNumber() + contract.data.timeout) && contract.data[`${party}Fee`] && !contract.data[`${partyOther}Fee`] ?
                     <div className="Contract-content-waiting">
-                      Waiting pay fee from the other party<br/>({this.shortAddress(contract.data[`${this.state.partyOther}`])})
+                      Waiting pay fee from the other party<br/>({shortAddress(contract.data[`${partyOther}`])})
                     </div>
                     : <div/>
                   }
-                  {contract.data.status !== 4 && (Date.now() / 1000 | 0) >= (contract.data.lastInteraction.toNumber() + contract.data.timeout) && contract.data[`${this.state.party}Fee`] && !contract.data[`${this.state.partyOther}Fee`] ?
+                  {contract.data.status !== 4 && (Date.now() / 1000 | 0) >= (contract.data.lastInteraction.toNumber() + contract.data.timeout) && contract.data[`${party}Fee`] && !contract.data[`${partyOther}Fee`] ?
                     <div className="Contract-content-actions">
-                      <div className="Contract-content-actions-button" onClick={this.timeout}>{`Timeout ${this.state.partyOther}`}</div>
+                      <div className="Contract-content-actions-button" onClick={this.timeout}>{`Timeout ${partyOther}`}</div>
                     </div>
                     : <div/>
                   }
                   {contract.data.status !== 4 && contract.data.partyAFee && contract.data.partyBFee ?
                     <div className="Contract-content-actions">
-                      <div className="Contract-content-actions-button" onClick={() => redirect('/evidences/new', this.props.history)}>Send Evidence</div>
+                      <div className="Contract-content-actions-button" onClick={() => redirect('/evidences/new', history)}>Send Evidence</div>
                     </div>
                     : <div/>
                   }
