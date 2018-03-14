@@ -14,6 +14,8 @@ import { objMap } from '../../utils/functional'
 import { renderIf } from '../../utils/react-redux'
 import Identicon from '../../components/identicon'
 
+import {redirect} from '../../utils/contract'
+
 import './profile.css'
 
 class Profile extends PureComponent {
@@ -62,16 +64,6 @@ class Profile extends PureComponent {
     return totalContracts
   }
 
-  // TODO go to utils
-  redirect = (url, ...args) => {
-    if (!args.length) {
-      this.props.history.push(url)
-    } else {
-      const allArgs = args.reduce((acc, arg, url) => `${acc}/${arg}`)
-      this.props.history.push(`${url}/${allArgs}`)
-    }
-  }
-
   render () {
     const {
       balance,
@@ -101,13 +93,13 @@ class Profile extends PureComponent {
                     </div>
                     <div
                       className="flex-container-main-menu-items-item"
-                      onClick={() => this.redirect('/contracts/new')}>
+                      onClick={() => redirect('/contracts/new', this.props.history)}>
                       New contract
                     </div>
                   </div>
                 </div>
                 <div className="flex-container">
-                  <div className="flex-item wide contract grow">
+                  <div className="flex-item wide grow">
                     <div className="type">Profile</div>
                     <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff"/>
                     <div className="content">
@@ -120,7 +112,9 @@ class Profile extends PureComponent {
                     </div>
                   </div>
                 </div>
-                <div className="flex-container-main-flex-grow"/>
+                <div className="flex-container-main-flex-grow">
+
+                </div>
                 <div className="flex-container-main-footer">
                   Contracting front © 2018 powered by
                   <span className="flex-container-main-footer-kleros">

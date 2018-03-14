@@ -14,6 +14,8 @@ import { objMap } from '../../utils/functional'
 import { renderIf } from '../../utils/react-redux'
 import Identicon from '../../components/identicon'
 
+import {redirect} from '../../utils/contract'
+
 import './home.css'
 
 class Home extends PureComponent {
@@ -67,20 +69,9 @@ class Home extends PureComponent {
 
   getTotalContracts = totalContracts => {
     this.setState({ totalContracts })
-
     return totalContracts
   }
 
-  // TODO go to utils
-  redirect = (url, ...args) => {
-    if (!args.length) {
-      this.props.history.push(url)
-    } else {
-      const allArgs = args.reduce((acc, arg, url) => `${acc}/${arg}`)
-
-      this.props.history.push(`${url}/${allArgs}`)
-    }
-  }
 
   render() {
     const {
@@ -104,14 +95,14 @@ class Home extends PureComponent {
                     KLEROS
                   </div>
                   <div
-                    onClick={() => this.redirect('/profile')}
+                    onClick={() => redirect('/profile', this.props.history)}
                     className="flex-container-main-menu-items-item"
                   >
                     Profile
                   </div>
                   <div
                     className="flex-container-main-menu-items-item"
-                    onClick={() => this.redirect('/contracts/new')}
+                    onClick={() => redirect('/contracts/new', this.props.history)}
                   >
                     New contract
                   </div>
@@ -122,7 +113,7 @@ class Home extends PureComponent {
                   <div
                     className="flex-item wide grow"
                     onClick={() =>
-                      this.redirect(`/contracts/${contract.address}`)
+                      redirect(`/contracts/${contract.address}`, this.props.history)
                     }
                   >
                     <Blockies
@@ -146,7 +137,7 @@ class Home extends PureComponent {
                     <div
                       className="flex-item wide contract grow"
                       onClick={() =>
-                        this.redirect(`/contracts/${contract.data.address}`)
+                        redirect(`/contracts/${contract.data.address}`, this.props.history)
                       }
                     >
                       <div className="type">Owner</div>
@@ -200,7 +191,7 @@ class Home extends PureComponent {
                     className="flex-item wide contract grow"
                     key={contract._id}
                     onClick={() =>
-                      this.redirect(`/contracts/${contract.address}`)
+                      redirect(`/contracts/${contract.address}`, this.props.history)
                     }
                   >
                     {contract.partyA === accounts.data[0] && (
@@ -258,7 +249,7 @@ class Home extends PureComponent {
                     <div className="flex-container-main-newContract-container">
                       <div
                         className="flex-container-main-newContract-container-content"
-                        onClick={() => this.redirect('/contracts/new')}
+                        onClick={() => redirect('/contracts/new', this.props.history)}
                       >
                         New Contract
                       </div>
