@@ -10,9 +10,11 @@ import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
 import * as walletSelectors from '../../reducers/wallet'
 import * as contractSelectors from '../../reducers/contract'
+import { ContractDisplayList } from '../contract-display-list'
 import { objMap } from '../../utils/functional'
 import { renderIf } from '../../utils/react-redux'
 import Identicon from '../../components/identicon'
+import { redirect, shortAddress } from '../../utils/contract'
 
 import './profile.css'
 
@@ -62,16 +64,6 @@ class Profile extends PureComponent {
     return totalContracts
   }
 
-  // TODO go to utils
-  redirect = (url, ...args) => {
-    if (!args.length) {
-      this.props.history.push(url)
-    } else {
-      const allArgs = args.reduce((acc, arg, url) => `${acc}/${arg}`)
-      this.props.history.push(`${url}/${allArgs}`)
-    }
-  }
-
   render () {
     const {
       balance,
@@ -79,7 +71,8 @@ class Profile extends PureComponent {
       loadingContract,
       contracts,
       accounts,
-      version
+      version,
+      history
     } = this.props
 
     return (
@@ -92,7 +85,8 @@ class Profile extends PureComponent {
                 <div className="flex-container-main-menu">
                   <div className="flex-container-main-menu-items">
                     <div
-                      className="flex-container-main-menu-items-item flex-container-main-menu-items-kleros">
+                      className="flex-container-main-menu-items-item flex-container-main-menu-items-kleros"
+                      onClick={() => redirect('/', history)}>
                       KLEROS
                     </div>
                     <div
@@ -101,17 +95,17 @@ class Profile extends PureComponent {
                     </div>
                     <div
                       className="flex-container-main-menu-items-item"
-                      onClick={() => this.redirect('/contracts/new')}>
+                      onClick={() => redirect('/contracts/new', history)}>
                       New contract
                     </div>
                   </div>
                 </div>
                 <div className="flex-container">
-                  <div className="flex-item wide contract grow">
+                  <div className="flex-item wide grow">
                     <div className="type">Profile</div>
                     <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff"/>
                     <div className="content">
-                      <div className="address">{this.shortAddress(accounts.data[0])}</div>
+                      <div className="address">{shortAddress(accounts.data[0])}</div>
                       <div className="balanceETH">{Number(balance.data).toFixed(3)} ETH</div>
                       <div className="nbContracts">
                         {contract.data && contracts.data.length + 1}
