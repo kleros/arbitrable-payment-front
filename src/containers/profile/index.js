@@ -22,10 +22,10 @@ class Profile extends PureComponent {
     totalContracts: 0
   }
 
-  randomSeed = () => (this.setState({randomSeed: Math.random().toString(36).substring(6).toString()}))
+  randomSeed = () => this.setState({randomSeed: Math.random().toString(36).substring(6).toString()})
 
-  componentWillUnmount(){
-    clearInterval(this.intervalId);
+  componentWillUnmount () {
+    clearInterval(this.intervalId)
   }
 
   static propTypes = {
@@ -33,7 +33,6 @@ class Profile extends PureComponent {
     contract: contractSelectors.contractShape.isRequired,
     creatingContract: PropTypes.bool,
     fetchContracts: PropTypes.func.isRequired,
-
     balance: walletSelectors.balanceShape.isRequired,
     version: walletSelectors.versionShape.isRequired,
     fetchBalance: PropTypes.func.isRequired,
@@ -44,40 +43,36 @@ class Profile extends PureComponent {
     loadingContracts: false
   }
 
-  componentDidMount() {
-    this.intervalId = setInterval(this.randomSeed, 100);
-    const { fetchBalance, fetchContracts, fetchVersion } = this.props
+  componentDidMount () {
+    this.intervalId = setInterval(this.randomSeed, 100)
+    const {fetchBalance, fetchContracts, fetchVersion} = this.props
     fetchBalance()
     fetchContracts()
     fetchVersion()
   }
 
   shortAddress = address => {
-    const startAddress = address.substr(0, address.length-36)
+    const startAddress = address.substr(0, address.length - 36)
     const endAddress = address.substr(37)
-
     return `${startAddress}...${endAddress}`
   }
 
   getTotalContracts = totalContracts => {
     this.setState({totalContracts})
-
     return totalContracts
   }
 
   // TODO go to utils
   redirect = (url, ...args) => {
     if (!args.length) {
-      this.props.history.push(url);
+      this.props.history.push(url)
     } else {
-      const allArgs = args.reduce((acc, arg, url) => (`${acc}/${arg}`))
-
+      const allArgs = args.reduce((acc, arg, url) => `${acc}/${arg}`)
       this.props.history.push(`${url}/${allArgs}`)
     }
-
   }
 
-  render() {
+  render () {
     const {
       balance,
       contract,
@@ -89,10 +84,7 @@ class Profile extends PureComponent {
 
     return (
       <div className="container">
-        {renderIf(
-          [balance.loading],
-          [balance.data],
-          [balance.failedLoading],
+        {renderIf([balance.loading], [balance.data], [balance.failedLoading],
           {
             loading: <span>loading</span>,
             done: contracts.data && (
@@ -117,20 +109,18 @@ class Profile extends PureComponent {
                 <div className="flex-container">
                   <div className="flex-item wide contract grow">
                     <div className="type">Profile</div>
-                    <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff" />
+                    <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff"/>
                     <div className="content">
                       <div className="address">{this.shortAddress(accounts.data[0])}</div>
                       <div className="balanceETH">{Number(balance.data).toFixed(3)} ETH</div>
                       <div className="nbContracts">
-                        {contract.data && contracts.data.length+1}
+                        {contract.data && contracts.data.length + 1}
                         {!contract.data && contracts.data.length} contracts
                       </div>
                     </div>
                   </div>
                 </div>
-
-                <div className="flex-container-main-flex-grow" />
-
+                <div className="flex-container-main-flex-grow"/>
                 <div className="flex-container-main-footer">
                   Contracting front © 2018 powered by
                   <span className="flex-container-main-footer-kleros">
@@ -140,7 +130,7 @@ class Profile extends PureComponent {
               </div>
             ),
             failed: contract.failedLoading && 'failedLoading'
-        })}
+          })}
       </div>
     )
   }
@@ -150,7 +140,7 @@ export default connect(
   state => ({
     balance: state.wallet.balance,
     contract: state.contract.contract,
-    contracts: state.contract.contracts ,
+    contracts: state.contract.contracts,
     accounts: state.wallet.accounts,
     version: state.wallet.version
   }),
