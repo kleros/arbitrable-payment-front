@@ -75,7 +75,7 @@ class Home extends PureComponent {
       version,
       history
     } = this.props
-
+    const { randomSeed } = this.state
     return (
       <div className="container">
         {renderIf([balance.loading], [balance.data], [balance.failedLoading], {
@@ -101,7 +101,13 @@ class Home extends PureComponent {
                   </div>
                 </div>
               </div>
-              <ContractDisplayList contracts={contracts} contract={contract} history={history} accounts={accounts}/>
+              <ContractDisplayList
+                randomSeed={randomSeed}
+                contracts={contracts}
+                contract={contract}
+                history={history}
+                accounts={accounts}
+              />
               <div className="flex-container-main-flex-grow" />
               <div className="flex-container-main-footer">
                 <a

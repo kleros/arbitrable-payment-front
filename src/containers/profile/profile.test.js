@@ -2,7 +2,7 @@ import setupIntegrationTest, {
   flushPromises
 } from '../../bootstrap/setup-integration-test'
 
-import Home from '.'
+import Profile from '.'
 
 let integration = {
   store: null,
@@ -12,14 +12,9 @@ let integration = {
 }
 
 beforeEach(() => {
-  integration = setupIntegrationTest({ router: { location: '/' } })
+  integration = setupIntegrationTest({ router: { location: '/profile' } })
 })
 
-it('Renders and loads balance correctly.', async () => {
-  const app = integration.mountApp()
-  await flushPromises()
-  app.update()
-  expect(app.find(Home).text()).toBe(
-    'Hello CryptoWorldWelcome [Blockies], You have 100 ETH.'
-  )
+it('Profile test', async () => {
+  expect(true)
 })

@@ -3,7 +3,7 @@ import { Kleros } from 'kleros-api'
 
 let ethInstance
 if (process.env.NODE_ENV === 'test')
-  ethInstance = new Eth(require('ethInstanceereumjs-testrpc').provider())
+  ethInstance = new Eth(require('ethereumjs-testrpc').provider())
 else if (window.web3 && window.web3.currentProvider)
   ethInstance = new Eth(window.web3.currentProvider)
 else

@@ -5,27 +5,27 @@ import { redirect, shortAddress } from '../../utils/contract'
 
 /**
  * Contract Display List Component
+ * @param randomSeed
  * @param contract
  * @param props - e.g. must receive this.props with a history field
  * @param accounts
  * @returns {*}
  * @constructor
  */
-export const ContractDisplayList = ({contracts, contract, history, accounts}) =>
+export const ContractDisplayList = ({
+  accounts,
+  contracts,
+  contract,
+  history,
+  randomSeed
+}) => (
   <div className="flex-container">
     {contract.creating && (
       <div
         className="flex-item wide grow"
-        onClick={() =>
-          redirect(`/contracts/${contract.address}`, history)
-        }
+        onClick={() => redirect(`/contracts/${contract.address}`, history)}
       >
-        <Blockies
-          seed={this.state.randomSeed}
-          size={10}
-          scale={14}
-          bgColor="#fff"
-        />
+        <Blockies seed={randomSeed} size={10} scale={14} bgColor="#fff" />
         <div className="creationContentContract">
           <div>Contract creation</div>
         </div>
@@ -33,84 +33,71 @@ export const ContractDisplayList = ({contracts, contract, history, accounts}) =>
     )}
 
     {contract.data &&
-    contract.data.address &&
-    contract.data.title &&
-    !contracts.data.some(
-      c => c.address === contract.data.address
-    ) && (
-      <div
-        className="flex-item wide contract grow"
-        onClick={() =>
-          redirect(`/contracts/${contract.data.address}`, history)
-        }
-      >
-        <div className="type">Owner</div>
-        <Blockies
-          seed={contract.data.address}
-          size={10}
-          scale={14}
-          bgColor="#fff"
-        />
+      contract.data.address &&
+      contract.data.title &&
+      !contracts.data.some(c => c.address === contract.data.address) && (
+        <div
+          className="flex-item wide contract grow"
+          onClick={() =>
+            redirect(`/contracts/${contract.data.address}`, history)
+          }
+        >
+          <div className="type">Owner</div>
+          <Blockies
+            seed={contract.data.address}
+            size={10}
+            scale={14}
+            bgColor="#fff"
+          />
 
-        <div className="content">
-          <div className="address">
-            {contract.data.title}
-          </div>
-          <div className="partyB">
-            <div className="identicon">
-              <Blockies
-                seed={contract.data.partyA}
-                size={5}
-                scale={4}
-                bgColor="#f5f5f5"
-              />
-            </div>
-            <div className="content">
-              {shortAddress(contract.data.partyA)}
-            </div>
+          <div className="content">
+            <div className="address">{contract.data.title}</div>
+            <div className="partyB">
+              <div className="identicon">
+                <Blockies
+                  seed={contract.data.partyA}
+                  size={5}
+                  scale={4}
+                  bgColor="#f5f5f5"
+                />
+              </div>
+              <div className="content">
+                {shortAddress(contract.data.partyA)}
+              </div>
 
-            <div>&nbsp;&nbsp;</div>
+              <div>&nbsp;&nbsp;</div>
 
-            <div className="identicon">
-              <Blockies
-                seed={contract.data.partyB}
-                size={5}
-                scale={4}
-                bgColor="#f5f5f5"
-              />
+              <div className="identicon">
+                <Blockies
+                  seed={contract.data.partyB}
+                  size={5}
+                  scale={4}
+                  bgColor="#f5f5f5"
+                />
+              </div>
+              <div className="content">
+                {shortAddress(contract.data.partyB)}
+              </div>
             </div>
-            <div className="content">
-              {shortAddress(contract.data.partyB)}
+            <div className="description">
+              {contract.data.description.slice(0, 50)}
             </div>
-          </div>
-          <div className="description">
-            {contract.data.description.slice(0, 50)}
           </div>
         </div>
-      </div>
-    )}
+      )}
 
     {contracts.data.map((contract, i) => (
       <div
         className="flex-item wide contract grow"
         key={contract._id}
-        onClick={() =>
-          redirect(`/contracts/${contract.address}`, history)
-        }
+        onClick={() => redirect(`/contracts/${contract.address}`, history)}
       >
         {contract.partyA === accounts.data[0] && (
           <div className="type">Owner</div>
         )}
-        <Blockies
-          seed={contract.address}
-          size={10}
-          scale={14}
-          bgColor="#fff"
-        />
+        <Blockies seed={contract.address} size={10} scale={14} bgColor="#fff" />
         <div className="content">
-          <div className="address short">
-            {contract.title}
-          </div>
+          <div className="address short">{contract.title}</div>
           <div className="partyB">
             <div className="identicon">
               <Blockies
@@ -120,9 +107,7 @@ export const ContractDisplayList = ({contracts, contract, history, accounts}) =>
                 bgColor="#f5f5f5"
               />
             </div>
-            <div className="content">
-              {shortAddress(contract.partyA)}
-            </div>
+            <div className="content">{shortAddress(contract.partyA)}</div>
 
             <div>&nbsp;&nbsp;</div>
 
@@ -135,19 +120,14 @@ export const ContractDisplayList = ({contracts, contract, history, accounts}) =>
               />
             </div>
 
-            <div className="content">
-              {shortAddress(contract.partyB)}
-            </div>
+            <div className="content">{shortAddress(contract.partyB)}</div>
           </div>
-          <div className="description">
-            {contract.description.slice(0, 50)}
-          </div>
+          <div className="description">{contract.description.slice(0, 50)}</div>
         </div>
       </div>
     ))}
 
-    {
-      contracts.data.length === 0 &&
+    {contracts.data.length === 0 &&
       !(contract.data && contract.data.address) &&
       !contract.creating && (
         <div className="flex-container-main-newContract-container">
@@ -160,3 +140,4 @@ export const ContractDisplayList = ({contracts, contract, history, accounts}) =>
         </div>
       )}
   </div>
+)

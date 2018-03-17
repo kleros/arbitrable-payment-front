@@ -1,20 +1,17 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import configureStore from './bootstrap/configure-store'
 import App from './bootstrap/app'
 import registerServiceWorker from './bootstrap/register-service-worker'
-
-const { store, history } = configureStore()
-export default store
+import { configuredStore, configuredHistory } from './store'
 
 // Random number is used so hot reloading works with `react-loadable`
 const render = Component => {
   ReactDOM.render(
     <Component
       key={process.env.NODE_ENV === 'development' ? Math.random() : undefined}
-      store={store}
-      history={history}
+      store={configuredStore}
+      history={configuredHistory}
     />,
     document.getElementById('root')
   )
