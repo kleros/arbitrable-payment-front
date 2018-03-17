@@ -10,7 +10,6 @@ import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
 import * as walletSelectors from '../../reducers/wallet'
 import * as contractSelectors from '../../reducers/contract'
-import { ContractDisplayList } from '../contract-display-list'
 import { objMap } from '../../utils/functional'
 import { renderIf } from '../../utils/react-redux'
 import Identicon from '../../components/identicon'
@@ -24,9 +23,15 @@ class Profile extends PureComponent {
     totalContracts: 0
   }
 
-  randomSeed = () => this.setState({randomSeed: Math.random().toString(36).substring(6).toString()})
+  randomSeed = () =>
+    this.setState({
+      randomSeed: Math.random()
+        .toString(36)
+        .substring(6)
+        .toString()
+    })
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     clearInterval(this.intervalId)
   }
 
@@ -45,9 +50,9 @@ class Profile extends PureComponent {
     loadingContracts: false
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.intervalId = setInterval(this.randomSeed, 100)
-    const {fetchBalance, fetchContracts, fetchVersion} = this.props
+    const { fetchBalance, fetchContracts, fetchVersion } = this.props
     fetchBalance()
     fetchContracts()
     fetchVersion()
@@ -60,11 +65,11 @@ class Profile extends PureComponent {
   }
 
   getTotalContracts = totalContracts => {
-    this.setState({totalContracts})
+    this.setState({ totalContracts })
     return totalContracts
   }
 
-  render () {
+  render() {
     const {
       balance,
       contract,
@@ -77,54 +82,58 @@ class Profile extends PureComponent {
 
     return (
       <div className="container">
-        {renderIf([balance.loading], [balance.data], [balance.failedLoading],
-          {
-            loading: <span>loading</span>,
-            done: contracts.data && (
-              <div className="flex-container-main" key={contract._id}>
-                <div className="flex-container-main-menu">
-                  <div className="flex-container-main-menu-items">
-                    <div
-                      className="flex-container-main-menu-items-item flex-container-main-menu-items-kleros"
-                      onClick={() => redirect('/', history)}>
-                      KLEROS
-                    </div>
-                    <div
-                      className="flex-container-main-menu-items-item">
-                      Profile
-                    </div>
-                    <div
-                      className="flex-container-main-menu-items-item"
-                      onClick={() => redirect('/contracts/new', history)}>
-                      New contract
-                    </div>
+        {renderIf([balance.loading], [balance.data], [balance.failedLoading], {
+          loading: <span>loading</span>,
+          done: contracts.data && (
+            <div className="flex-container-main" key={contract._id}>
+              <div className="flex-container-main-menu">
+                <div className="flex-container-main-menu-items">
+                  <div
+                    className="flex-container-main-menu-items-item flex-container-main-menu-items-kleros"
+                    onClick={() => redirect('/', history)}
+                  >
+                    KLEROS
                   </div>
-                </div>
-                <div className="flex-container">
-                  <div className="flex-item wide grow">
-                    <div className="type">Profile</div>
-                    <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff"/>
-                    <div className="content">
-                      <div className="address">{shortAddress(accounts.data[0])}</div>
-                      <div className="balanceETH">{Number(balance.data).toFixed(3)} ETH</div>
-                      <div className="nbContracts">
-                        {contract.data && contracts.data.length + 1}
-                        {!contract.data && contracts.data.length} contracts
-                      </div>
-                    </div>
+                  <div className="flex-container-main-menu-items-item">
+                    Profile
                   </div>
-                </div>
-                <div className="flex-container-main-flex-grow"/>
-                <div className="flex-container-main-footer">
-                  Contracting front © 2018 powered by
-                  <span className="flex-container-main-footer-kleros">
-                    &nbsp;Kleros
-                  </span>
+                  <div
+                    className="flex-container-main-menu-items-item"
+                    onClick={() => redirect('/contracts/new', history)}
+                  >
+                    New contract
+                  </div>
                 </div>
               </div>
-            ),
-            failed: contract.failedLoading && 'failedLoading'
-          })}
+              <div className="flex-container">
+                <div className="flex-item wide grow">
+                  <div className="type">Profile</div>
+                  <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff" />
+                  <div className="content">
+                    <div className="address">
+                      {shortAddress(accounts.data[0])}
+                    </div>
+                    <div className="balanceETH">
+                      {Number(balance.data).toFixed(3)} ETH
+                    </div>
+                    <div className="nbContracts">
+                      {contract.data && contracts.data.length + 1}
+                      {!contract.data && contracts.data.length} contracts
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="flex-container-main-flex-grow" />
+              <div className="flex-container-main-footer">
+                Contracting front © 2018 powered by
+                <span className="flex-container-main-footer-kleros">
+                  &nbsp;Kleros
+                </span>
+              </div>
+            </div>
+          ),
+          failed: contract.failedLoading && 'failedLoading'
+        })}
       </div>
     )
   }
