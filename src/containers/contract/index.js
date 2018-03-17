@@ -91,10 +91,10 @@ class Contract extends PureComponent {
     )
   }
 
-  showEmptyContractEl = contract => contract.data.status === 4
+  showEmptyContractEl = contract => contract.data.status === 4 || contract.data.amount.e === 0
 
   hideEmptyContractEl = contract => {
-    return {"display":(contract.data.status === 4) ? "none" : "block"}
+    return {"display":(contract.data.status === 4 || contract.data.amount.e === 0) ? "none" : "block"}
   }
 
   render() {
