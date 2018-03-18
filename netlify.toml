@@ -1,6 +1,6 @@
 [build]
   publish = "build"
-  command = "react-scripts build"
+  command = "yarn build"
 
 # Production context: All deploys to the main
 # repository branch will inherit these settings.
