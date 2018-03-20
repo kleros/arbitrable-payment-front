@@ -14,7 +14,7 @@ let integration = {
 beforeEach(() => {
   integration = setupIntegrationTest({ router: { location: '/contract' } })
 })
-
-it('Contract test', async () => {
+  
+it('New evidence test', async () => {
   expect(true)
 })
