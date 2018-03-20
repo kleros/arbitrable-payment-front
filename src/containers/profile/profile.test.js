@@ -14,3 +14,7 @@ let integration = {
 beforeEach(() => {
   integration = setupIntegrationTest({ router: { location: '/profile' } })
 })
+
+it('Profile test', async () => {
+  expect(true)
+})
