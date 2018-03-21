@@ -141,7 +141,7 @@ class Contract extends PureComponent {
                       <div style={this.hideEmptyContractEl(contract)} className="Contract-content-actions-button Contract-actions-button-left" onClick={this.createDispute}>Create dispute</div>
                       {contract.data.partyA === accounts.data[0] && <div style={this.hideEmptyContractEl(contract)} className="Contract-content-actions-button Contract-content-actions-button-right" onClick={this.createPay}>Pay</div>}
                       {contract.data.partyB === accounts.data[0] && <div style={this.hideEmptyContractEl(contract)} className="Contract-content-actions-button Contract-content-actions-button-right" onClick={this.createReimburse}>Reimburse</div>}
-                      {this.showEmptyContractEl(contract) && <div className="Contract-content-item">No contractual fees remain</div>}
+                      {this.showEmptyContractEl(contract) && <div className="Contract-content-item"><b>The contract is closed.</b></div>}
                     </div>
                     : <div/>
                   }

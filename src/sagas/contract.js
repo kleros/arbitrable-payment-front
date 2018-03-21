@@ -1,13 +1,18 @@
 import unit from 'ethjs-unit'
 import { push } from 'react-router-redux'
-
 import { takeLatest, call, put, select } from 'redux-saga/effects'
+import { toastr } from 'react-redux-toastr'
 
 import kleros, { eth } from '../bootstrap/dapp-api'
 import * as contractActions from '../actions/contract'
 import * as contractSelectors from '../reducers/contract'
 import { receiveAction, errorAction } from '../utils/actions'
 import { ETH_NO_ACCOUNTS } from '../constants/errors'
+
+const toastrOptions = {
+  timeOut: 3000,
+  showCloseButton: false,
+}
 
 /**
  * Creates a new contract.
@@ -111,13 +116,17 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
     payTx = yield call(contract.pay, {
       from: accounts[0]
     })
-
-    // notification pay in waiting
   } catch (err) {
     console.log(err)
+    toastr.error('Pay transaction failed', toastrOptions)
+    throw 'Error pay transaction'
   }
 
-  // notification pay done
+  yield call(
+    toastr.success,
+    'Payment successful',
+    toastrOptions
+  )
 
   yield put(contractActions.receivePay(payTx))
 }
@@ -150,13 +159,17 @@ function* createReimburse({ type, payload: { contractAddress } }) {
     const reimburseTx = yield call(contract.reimburse, amount.Number(), {
       from: accounts[0]
     })
-
-    // notification reimburse in waiting
   } catch (err) {
     console.log(err)
+    toastr.error('Reimburse failed', toastrOptions)
+    throw 'Error reimburse failed'
   }
 
-  // notification reimburse done
+  yield call(
+    toastr.success,
+    'Successful refund',
+    toastrOptions
+  )
 
   yield put(contractActions.receiveReimburse(reimburseTx))
 }
@@ -208,11 +221,17 @@ function* createDispute({ type, payload: { contractAddress } }) {
     }
   } catch (err) {
     console.log(err)
+    toastr.error('Create dispute failed', toastrOptions)
+    throw 'Error create dispute failed'
   }
 
   yield put(push('/'))
 
-  // add notification
+  yield call(
+    toastr.success,
+    'Dispute creation successful',
+    toastrOptions
+  )
 
   yield put(contractActions.receiveDispute(disputeTx))
 }
@@ -253,13 +272,17 @@ function* createTimeout({
         from: accounts[0]
       })
     }
-
-    // notification pay in waiting
   } catch (err) {
     console.log(err)
+    toastr.error('Timeout failed', toastrOptions)
+    throw 'Error timeout failed'
   }
 
-  // notification callTimeoutPartyA done
+  yield call(
+    toastr.success,
+    'Timeout successful',
+    toastrOptions
+  )
 
   yield put(contractActions.receiveTimeout(timeoutTx))
 }
@@ -289,9 +312,15 @@ function* createEvidence({ type, payload: { evidence } }) {
     // notification send evidence in waiting
   } catch (err) {
     console.log(err)
+    toastr.error('Evidence creation failed', toastrOptions)
+    throw 'Error evidence creation failed'
   }
 
-  // notification evidence sent
+  yield call(
+    toastr.success,
+    'Evidence creation successful',
+    toastrOptions
+  )
 
   yield put(contractActions.receiveEvidence(evidenceTx))
 }
