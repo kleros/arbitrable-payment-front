@@ -3,6 +3,7 @@ import { applyMiddleware, compose, createStore } from 'redux'
 import { routerMiddleware } from 'react-router-redux'
 import createSagaMiddleware from 'redux-saga'
 import createHistory from 'history/createBrowserHistory'
+import ReactTooltip from 'react-tooltip'
 
 import rootReducer from '../reducers'
 import rootSaga from '../sagas'
@@ -53,6 +54,14 @@ export default function configureStore(
       return next(action)
     })
   }
+
+  // Reattach tooltips if necessary
+  middleware.push(store => next => action => {
+    const prevState = store.getState()
+    const result = next(action)
+    if (prevState !== store.getState()) ReactTooltip.rebuild()
+    return result
+  })
 
   middleware.push(routerMiddleware(history), sagaMiddleware)
   enhancers.unshift(applyMiddleware(...middleware))

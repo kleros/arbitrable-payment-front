@@ -18,3 +18,4 @@ beforeEach(() => {
 it('New contract test', async () => {
   expect(true)
 })
+

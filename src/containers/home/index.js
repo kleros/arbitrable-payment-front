@@ -75,7 +75,9 @@ class Home extends PureComponent {
       version,
       history
     } = this.props
+
     const { randomSeed } = this.state
+
     return (
       <div className="container">
         {renderIf([balance.loading], [balance.data], [balance.failedLoading], {

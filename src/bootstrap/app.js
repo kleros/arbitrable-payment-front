@@ -13,6 +13,7 @@ import Profile from '../containers/profile'
 import KlerosGitter from '../components/kleros-gitter'
 
 import Initializer from './initializer'
+import GlobalComponents from './global-components'
 
 import './app.css'
 
@@ -37,6 +38,7 @@ const App = ({ store, history, testElement }) => (
           </Switch>
           {testElement}
           <KlerosGitter />
+          <Route exact path="*" component={GlobalComponents} />
         </div>
       </ConnectedRouter>
     </Initializer>
