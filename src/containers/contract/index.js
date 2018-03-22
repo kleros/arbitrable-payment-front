@@ -11,6 +11,7 @@ import * as contractSelectors from '../../reducers/contract'
 import * as contractActions from '../../actions/contract'
 import { renderIf } from '../../utils/react-redux'
 import { redirect, shortAddress } from '../../utils/contract'
+import { DISPUTE_CREATED, DISPUTE_RESOLVED } from '../../constants/contract'
 
 import './contract.css'
 
@@ -173,6 +174,9 @@ class Contract extends PureComponent {
                       <div className="Contract-content-actions-button" onClick={() => redirect('/evidences/new', history)}>Send Evidence</div>
                     </div>
                     : <div/>
+                  }
+                  { contract.data.status !== DISPUTE_CREATED &&
+                    <div>Wainting the dispute resolution</div>
                   }
                   {
                     contract.data.evidences.map((evidence, i) =>
