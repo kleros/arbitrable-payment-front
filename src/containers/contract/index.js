@@ -175,8 +175,8 @@ class Contract extends PureComponent {
                     </div>
                     : <div/>
                   }
-                  { contract.data.status !== DISPUTE_CREATED &&
-                    <div>Wainting the dispute resolution</div>
+                  { contract.data.status === DISPUTE_CREATED &&
+                    <div><b>Wainting the dispute resolution</b></div>
                   }
                   {
                     contract.data.evidences.map((evidence, i) =>
