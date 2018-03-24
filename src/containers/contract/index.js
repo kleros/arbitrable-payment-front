@@ -92,11 +92,11 @@ class Contract extends PureComponent {
     )
   }
 
-  showEmptyContractEl = contract => contract.data.status === 4 || contract.data.amount.e === 0
+  showEmptyContractEl = contract => contract.data.amount.e === 0
 
-  hideEmptyContractEl = contract => {
-    return {"display":(contract.data.status === 4 || contract.data.amount.e === 0) ? "none" : "block"}
-  }
+  hideEmptyContractEl = contract => (
+    {"display":(contract.data.amount.e === 0) ? "none" : "block"}
+  )
 
   render() {
     const { loadingContract, contract, accounts, history } = this.props
@@ -137,16 +137,15 @@ class Contract extends PureComponent {
 
                   <div className="Contract-content-item Contract-content-item-mail">{contract.data.email}</div>
                   <div className="description Contract-content-item">{contract.data.description}</div>
-                  {contract.data.status !== 4 && !contract.data.partyAFee && !contract.data.partyBFee ?
+                  {contract.data.status !== DISPUTE_RESOLVED && !contract.data.partyAFee && !contract.data.partyBFee ?
                     <div className="Contract-content-actions">
                       <div style={this.hideEmptyContractEl(contract)} className="Contract-content-actions-button Contract-actions-button-left" onClick={this.createDispute}>Create dispute</div>
                       {contract.data.partyA === accounts.data[0] && <div style={this.hideEmptyContractEl(contract)} className="Contract-content-actions-button Contract-content-actions-button-right" onClick={this.createPay}>Pay</div>}
                       {contract.data.partyB === accounts.data[0] && <div style={this.hideEmptyContractEl(contract)} className="Contract-content-actions-button Contract-content-actions-button-right" onClick={this.createReimburse}>Reimburse</div>}
-                      {this.showEmptyContractEl(contract) && <div className="Contract-content-item"><b>The contract is closed.</b></div>}
                     </div>
                     : <div/>
                   }
-                  {contract.data.status !== 4 && !contract.data[`${party}Fee`] && contract.data[`${partyOther}Fee`] ?
+                  {contract.data.status !== DISPUTE_RESOLVED && !contract.data[`${party}Fee`] && contract.data[`${partyOther}Fee`] ?
                     <div>
                       <div className="Contract-content-waiting">
                         The other party raises a dispute.<br/>So as not to lose the dispute you must pay the fee.
@@ -157,27 +156,28 @@ class Contract extends PureComponent {
                     </div>
                     : <div/>
                   }
-                  {contract.data.status !== 4 && (Date.now() / 1000 | 0) < (contract.data.lastInteraction.toNumber() + contract.data.timeout) && contract.data[`${party}Fee`] && !contract.data[`${partyOther}Fee`] ?
+                  {contract.data.status !== DISPUTE_RESOLVED && (Date.now() / 1000 | 0) < (contract.data.lastInteraction.toNumber() + contract.data.timeout) && contract.data[`${party}Fee`] && !contract.data[`${partyOther}Fee`] ?
                     <div className="Contract-content-waiting">
                       Waiting pay fee from the other party<br/>({shortAddress(contract.data[`${partyOther}`])})
                     </div>
                     : <div/>
                   }
-                  {contract.data.status !== 4 && (Date.now() / 1000 | 0) >= (contract.data.lastInteraction.toNumber() + contract.data.timeout) && contract.data[`${party}Fee`] && !contract.data[`${partyOther}Fee`] ?
+                  {contract.data.status !== DISPUTE_RESOLVED && (Date.now() / 1000 | 0) >= (contract.data.lastInteraction.toNumber() + contract.data.timeout) && contract.data[`${party}Fee`] && !contract.data[`${partyOther}Fee`] ?
                     <div className="Contract-content-actions">
                       <div className="Contract-content-actions-button" onClick={this.timeout}>{`Timeout ${partyOther}`}</div>
                     </div>
                     : <div/>
                   }
-                  {contract.data.status !== 4 && contract.data.partyAFee && contract.data.partyBFee ?
+                  {contract.data.status !== DISPUTE_RESOLVED && contract.data.partyAFee && contract.data.partyBFee ?
                     <div className="Contract-content-actions">
                       <div className="Contract-content-actions-button" onClick={() => redirect('/evidences/new', history)}>Send Evidence</div>
                     </div>
                     : <div/>
                   }
                   { contract.data.status === DISPUTE_CREATED &&
-                    <div><b>Wainting the dispute resolution</b></div>
+                    <div><b>Waiting the dispute resolution</b></div>
                   }
+                  {this.showEmptyContractEl(contract) && <div className="Contract-content-item"><b>The contract is closed.</b></div>}
                   {
                     contract.data.evidences.map((evidence, i) =>
                       <div className="Contract-content-evidenceCard" onClick={() => window.location.replace(evidence.url)} key={i}>
