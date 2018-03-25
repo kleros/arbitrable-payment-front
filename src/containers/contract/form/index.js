@@ -119,7 +119,9 @@ class NewContract extends PureComponent {
           form &&
           form.createContractFormKey &&
           form.createContractFormKey.values &&
-          this.isAddress(form.createContractFormKey.values.partyB)
+          this.isAddress(form.createContractFormKey.values.partyB) &&
+          this.props.submitCreateContractForm() &&
+          this.setState({ step: this.state.step + 1 })
         )
       case 2:
         return (
