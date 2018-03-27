@@ -90,14 +90,14 @@ class Home extends PureComponent {
                     KLEROS
                   </div>
                   <div
-                    onClick={() => redirect('/profile', history)}
+                    onClick={redirect('/profile', history)}
                     className="flex-container-main-menu-items-item"
                   >
                     Profile
                   </div>
                   <div
                     className="flex-container-main-menu-items-item"
-                    onClick={() => redirect('/contracts/new', history)}
+                    onClick={redirect('/contracts/new', history)}
                   >
                     New contract
                   </div>

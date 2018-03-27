@@ -6,7 +6,7 @@
  * @param args
  */
 
-export const redirect = (url, history, ...args) => {
+export const redirect = (url, history, ...args) => () => {
   if (!args || args.length === 0) history.push(url)
   else {
     const allArgs = args.reduce((acc, arg) => `${acc}/${arg}`)
