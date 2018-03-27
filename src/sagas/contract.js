@@ -326,6 +326,30 @@ function* createEvidence({ type, payload: { evidence } }) {
 }
 
 /**
+ * Fetches dispute details.
+ * @param {object} { payload: contractAddress, disouteId } - The address of the contract and the dispute id to fetch details for.
+ */
+function* fetchDispute({ payload: { contractAddress, disputeId } }) {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  let dispute = null
+
+  try {
+    const dispute = yield call(
+      kleros.klerosPOC.getDispute,
+      process.env.REACT_APP_ARBITRATOR_ADDRESS_DEV,
+      disputeId
+    )
+  } catch (err) {
+    console.log(err)
+  }
+
+  yield put(contractActions.receiveGetdispute(dispute))
+}
+
+
+/**
  * The root of the wallet saga.
  * @export default walletSaga
  */
@@ -334,6 +358,7 @@ export default function* walletSaga() {
   yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
   yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract)
   yield takeLatest(contractActions.CREATE_DISPUTE, createDispute)
+  yield takeLatest(contractActions.FETCH_GETDISPUTE, fetchDispute)
   yield takeLatest(contractActions.CREATE_PAY, createPay)
   yield takeLatest(contractActions.CREATE_REIMBURSE, createReimburse)
   yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence)

@@ -286,6 +286,11 @@ class Contract extends PureComponent {
                       <b>The contract is closed.</b>
                     </div>
                   )}
+                  {contract.data.disputeId !== 0 && (
+                    <div>
+                      <b>Dispute id: {contract.data.disputeId}</b>
+                    </div>
+                  )}
                   {contract.data.evidences.map((evidence, i) => (
                     <div
                       className="Contract-content-evidenceCard"

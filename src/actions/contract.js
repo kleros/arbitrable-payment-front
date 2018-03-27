@@ -4,6 +4,7 @@ export const CREATE_CONTRACT = 'CREATE_CONTRACT'
 export const RECEIVE_CONTRACT = 'RECEIVE_CONTRACT'
 export const FETCH_CONTRACTS = 'FETCH_CONTRACTS'
 export const RECEIVE_CONTRACTS = 'RECEIVE_CONTRACTS'
+export const FETCH_GETDISPUTE = 'FETCH_GETDISPUTE'
 export const CREATE_DISPUTE = 'CREATE_DISPUTE'
 export const RECEIVE_DISPUTE = 'RECEIVE_DISPUTE'
 export const CREATE_PAY = 'CREATE_PAY'
@@ -32,6 +33,14 @@ export const fetchContract = contractAddress => ({
 export const receiveContract = contract => ({
   type: RECEIVE_CONTRACT,
   payload: { contract }
+})
+export const fetchGetdispute = (contractAddress, disputeId) => ({
+  type: FETCH_GETDISPUTE,
+  payload: { contractAddress, disputeId }
+})
+export const receiveGetdispute = dispute => ({
+  type: RECEIVE_DISPUTE,
+  payload: { dispute }
 })
 export const createDispute = contractAddress => ({
   type: CREATE_DISPUTE,

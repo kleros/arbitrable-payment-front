@@ -39,6 +39,11 @@ export default createReducer({
     loading: false,
     data: null,
     failedLoading: false
+  },
+  getdispute: {
+    loading: false,
+    data: null,
+    failedLoading: false
   }
 })
 
@@ -50,6 +55,7 @@ export const createReimburse = state => state.contract.reimburse.data
 export const createEvidence = state => state.contract.evidence.data
 export const createTimeout = state =>
   state.contract.timeout.data
+export const createGetdispute = state => state.contract.getdispute.data
 
 // Shapes
 export const contractShape = PropTypes.shape({
@@ -69,3 +75,15 @@ export const contractShape = PropTypes.shape({
   _id: PropTypes.string
 })
 export const disputeShape = createShape(PropTypes.string)
+export const getdisputeShape = PropTypes.shape({
+  arbitratedContract: PropTypes.string,
+  firstSession: PropTypes.number,
+  numberOfAppeals: PropTypes.string,
+  rulingChoices: PropTypes.string,
+  initialNumberJurors: PropTypes.number,
+  arbitrationFeePerJuror: PropTypes.string,
+  state: PropTypes.number,
+  voteCounters: PropTypes.string,
+  status: PropTypes.number,
+  _id: PropTypes.string
+})
