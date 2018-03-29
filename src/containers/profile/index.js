@@ -14,6 +14,7 @@ import { objMap } from '../../utils/functional'
 import { renderIf } from '../../utils/react-redux'
 import Identicon from '../../components/identicon'
 import { redirect, shortAddress } from '../../utils/contract'
+import { NavHeader } from '../nav-header'
 
 import './profile.css'
 
@@ -86,25 +87,7 @@ class Profile extends PureComponent {
           loading: <span>loading</span>,
           done: contracts.data && (
             <div className="flex-container-main" key={contract._id}>
-              <div className="flex-container-main-menu">
-                <div className="flex-container-main-menu-items">
-                  <div
-                    className="flex-container-main-menu-items-item flex-container-main-menu-items-kleros"
-                    onClick={() => redirect('/', history)}
-                  >
-                    KLEROS
-                  </div>
-                  <div className="flex-container-main-menu-items-item">
-                    Profile
-                  </div>
-                  <div
-                    className="flex-container-main-menu-items-item"
-                    onClick={() => redirect('/contracts/new', history)}
-                  >
-                    New contract
-                  </div>
-                </div>
-              </div>
+              <NavHeader history={history} />
               <div className="flex-container">
                 <div className="flex-item wide grow">
                   <div className="type">Profile</div>
