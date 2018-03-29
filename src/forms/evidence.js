@@ -1,5 +1,4 @@
 import { wizardForm } from '../utils/form-generator'
-import { required, number } from '../utils/validation'
 
 export const {
   Form: CreateEvidenceForm,

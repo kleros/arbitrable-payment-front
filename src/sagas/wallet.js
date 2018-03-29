@@ -64,6 +64,6 @@ export function* fetchVersion() {
  */
 export default function* walletSaga() {
   yield takeLatest(walletActions.FETCH_ACCOUNTS, fetchAccounts)
-  yield takeLatest(walletActions.FETCH_BALANCE, fetchBalance),
+  yield takeLatest(walletActions.FETCH_BALANCE, fetchBalance)
   yield takeLatest(walletActions.FETCH_VERSION, fetchVersion)
 }
