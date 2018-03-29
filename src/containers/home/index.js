@@ -9,7 +9,6 @@ import * as contractSelectors from '../../reducers/contract'
 import { NavHeader } from '../nav-header'
 import { ContractDisplayList } from '../contract-display-list'
 import { renderIf } from '../../utils/react-redux'
-import { redirect } from '../../utils/contract'
 
 import './home.css'
 
@@ -34,7 +33,6 @@ class Home extends PureComponent {
   static propTypes = {
     loadingContracts: PropTypes.bool,
     contract: contractSelectors.contractShape.isRequired,
-    creatingContract: PropTypes.bool,
     fetchContracts: PropTypes.func.isRequired,
 
     balance: walletSelectors.balanceShape.isRequired,

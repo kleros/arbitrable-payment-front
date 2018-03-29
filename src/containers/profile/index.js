@@ -8,7 +8,7 @@ import * as contractActions from '../../actions/contract'
 import * as walletSelectors from '../../reducers/wallet'
 import * as contractSelectors from '../../reducers/contract'
 import { renderIf } from '../../utils/react-redux'
-import { redirect, shortAddress } from '../../utils/contract'
+import { shortAddress } from '../../utils/contract'
 import { NavHeader } from '../nav-header'
 
 import './profile.css'
