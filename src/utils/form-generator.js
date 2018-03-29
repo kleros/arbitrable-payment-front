@@ -4,7 +4,7 @@ import TextareaInput from '../components/textarea-input'
 
 import createFormGenerator from './create-form-generator'
 
-export const {form, wizardForm} = createFormGenerator(
-  {textarea: TextareaInput, text: TextInput, number: TextInput},
+export const { form, wizardForm } = createFormGenerator(
+  { textarea: TextareaInput, text: TextInput, number: TextInput },
   configuredStore
 )

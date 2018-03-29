@@ -120,11 +120,7 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
     throw new Error('Error pay transaction')
   }
 
-  yield call(
-    toastr.success,
-    'Payment successful',
-    toastrOptions
-  )
+  yield call(toastr.success, 'Payment successful', toastrOptions)
 
   yield put(contractActions.receivePay(payTx))
 }
@@ -165,11 +161,7 @@ function* createReimburse({ type, payload: { contractAddress } }) {
     throw new Error('Error reimburse failed')
   }
 
-  yield call(
-    toastr.success,
-    'Successful refund',
-    toastrOptions
-  )
+  yield call(toastr.success, 'Successful refund', toastrOptions)
 
   yield put(contractActions.receiveReimburse(reimburseTx))
 }
@@ -227,11 +219,7 @@ function* createDispute({ type, payload: { contractAddress } }) {
 
   yield put(push('/'))
 
-  yield call(
-    toastr.success,
-    'Dispute creation successful',
-    toastrOptions
-  )
+  yield call(toastr.success, 'Dispute creation successful', toastrOptions)
 
   yield put(contractActions.receiveDispute(disputeTx))
 }
@@ -278,11 +266,7 @@ function* createTimeout({
     throw new Error('Error timeout failed')
   }
 
-  yield call(
-    toastr.success,
-    'Timeout successful',
-    toastrOptions
-  )
+  yield call(toastr.success, 'Timeout successful', toastrOptions)
 
   yield put(contractActions.receiveTimeout(timeoutTx))
 }
@@ -316,11 +300,7 @@ function* createEvidence({ type, payload: { evidence } }) {
     throw new Error('Error evidence creation failed')
   }
 
-  yield call(
-    toastr.success,
-    'Evidence creation successful',
-    toastrOptions
-  )
+  yield call(toastr.success, 'Evidence creation successful', toastrOptions)
 
   yield put(contractActions.receiveEvidence(evidenceTx))
 }

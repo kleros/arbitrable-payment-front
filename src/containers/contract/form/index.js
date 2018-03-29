@@ -8,7 +8,11 @@ import * as walletSelectors from '../../../reducers/wallet'
 import * as walletActions from '../../../actions/wallet'
 import * as contractSelectors from '../../../reducers/contract'
 import * as contractActions from '../../../actions/contract'
-import { CreateContractForm, getCreateContractFormIsInvalid, submitCreateContractForm } from '../../../forms/contract'
+import {
+  CreateContractForm,
+  getCreateContractFormIsInvalid,
+  submitCreateContractForm
+} from '../../../forms/contract'
 
 import './new-contract.css'
 
@@ -94,7 +98,7 @@ class NewContract extends PureComponent {
   }
 
   isEmail = email => {
-    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     return re.test(String(email).toLowerCase())
   }
 
@@ -148,10 +152,7 @@ class NewContract extends PureComponent {
   }
 
   render() {
-    const {
-      submitCreateContractForm,
-      createContract
-    } = this.props
+    const { submitCreateContractForm, createContract } = this.props
 
     const { step } = this.state
 

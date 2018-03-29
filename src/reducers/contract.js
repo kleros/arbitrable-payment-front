@@ -53,8 +53,7 @@ export const createDispute = state => state.contract.dispute.data
 export const createPay = state => state.contract.pay.data
 export const createReimburse = state => state.contract.reimburse.data
 export const createEvidence = state => state.contract.evidence.data
-export const createTimeout = state =>
-  state.contract.timeout.data
+export const createTimeout = state => state.contract.timeout.data
 export const createGetdispute = state => state.contract.getdispute.data
 
 // Shapes

@@ -61,13 +61,7 @@ class Home extends PureComponent {
   }
 
   render() {
-    const {
-      balance,
-      contract,
-      contracts,
-      accounts,
-      history
-    } = this.props
+    const { balance, contract, contracts, accounts, history } = this.props
 
     const { randomSeed } = this.state
 

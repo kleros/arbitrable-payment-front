@@ -12,5 +12,5 @@ export default combineReducers({
   form,
   toastr,
   wallet,
-  contract,
+  contract
 })

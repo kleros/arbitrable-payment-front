@@ -2,7 +2,7 @@ import React from 'react'
 
 import { redirect } from '../../utils/contract'
 
-export const NavHeader = ({history}) => (
+export const NavHeader = ({ history }) => (
   <div className="flex-container-main-menu">
     <div className="flex-container-main-menu-items">
       <div
@@ -11,8 +11,10 @@ export const NavHeader = ({history}) => (
       >
         KLEROS
       </div>
-      <div className="flex-container-main-menu-items-item"
-           onClick={redirect('/profile', history)}>
+      <div
+        className="flex-container-main-menu-items-item"
+        onClick={redirect('/profile', history)}
+      >
         Profile
       </div>
       <div
@@ -22,4 +24,5 @@ export const NavHeader = ({history}) => (
         New contract
       </div>
     </div>
-  </div>)
+  </div>
+)

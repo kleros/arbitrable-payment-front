@@ -30,10 +30,7 @@ export function makeRestartable(saga) {
   }
 }
 
-const rootSagas = [
-  walletSaga,
-  contractSaga
-].map(makeRestartable)
+const rootSagas = [walletSaga, contractSaga].map(makeRestartable)
 
 /**
  * The root saga.

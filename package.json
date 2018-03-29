@@ -7,16 +7,20 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "prettify": "prettier --config ./.prettierrc --write \"./*.{js,json}\" \"./{src,.storybook,stories}/**/*.{js,json}\"",
-    "lint": "eslint \"./*.js\" \"./{src,.storybook,stories}/**/*.js\" && stylelint \"./src/**/*.scss\" --syntax scss",
-    "lint:fix": "eslint --fix \"./*.js\" \"./{src,.storybook,stories}/**/*.js\" && stylelint --fix \"./src/**/*.scss\" --syntax scss",
+    "prettify":
+      "prettier --config ./.prettierrc --write \"./*.{js,json}\" \"./{src,.storybook,stories}/**/*.{js,json}\"",
+    "lint":
+      "eslint \"./*.js\" \"./{src,.storybook,stories}/**/*.js\" && stylelint \"./src/**/*.scss\" --syntax scss",
+    "lint:fix":
+      "eslint --fix \"./*.js\" \"./{src,.storybook,stories}/**/*.js\" && stylelint --fix \"./src/**/*.scss\" --syntax scss",
     "test": "react-scripts test --env=jsdom --coverage",
     "test:coveralls": "coveralls < ./coverage/lcov.info",
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "precommit": "lint-staged && yarn run lint && yarn test",
     "cz": "git-cz",
     "start:js": "react-scripts start",
-    "start:scss": "yarn run build:scss && node-sass-chokidar ./src/ -o ./src/ --watch --recursive",
+    "start:scss":
+      "yarn run build:scss && node-sass-chokidar ./src/ -o ./src/ --watch --recursive",
     "start:storybook": "start-storybook -p 9001 -c .storybook",
     "build:js": "react-scripts build",
     "build:scss": "node-sass-chokidar ./src/ -o ./src/",
@@ -26,15 +30,10 @@
     "storybook": "npm-run-all -p start:scss start:storybook"
   },
   "lint-staged": {
-    "*.{js,json}": [
-      "prettier --config ./.prettierrc --write",
-      "git add"
-    ]
+    "*.{js,json}": ["prettier --config ./.prettierrc --write", "git add"]
   },
   "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
+    "extends": ["@commitlint/config-conventional"]
   },
   "config": {
     "commitizen": {

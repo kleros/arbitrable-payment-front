@@ -55,13 +55,7 @@ class Profile extends PureComponent {
   }
 
   render() {
-    const {
-      balance,
-      contract,
-      contracts,
-      accounts,
-      history
-    } = this.props
+    const { balance, contract, contracts, accounts, history } = this.props
 
     return (
       <div className="container">

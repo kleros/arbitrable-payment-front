@@ -103,7 +103,7 @@ class Contract extends PureComponent {
     const timeout =
       contract.data.lastInteraction.toNumber() + contract.data.timeout
     const dateTime = (Date.now() / 1000) | 0
-    return (dateTime < timeout)
+    return dateTime < timeout
   }
 
   toUrl = url => () => window.location.replace(url)
