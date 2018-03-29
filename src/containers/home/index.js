@@ -10,6 +10,7 @@ import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
 import * as walletSelectors from '../../reducers/wallet'
 import * as contractSelectors from '../../reducers/contract'
+import { NavHeader } from '../nav-header'
 import { ContractDisplayList } from '../contract-display-list'
 import { objMap } from '../../utils/functional'
 import { renderIf } from '../../utils/react-redux'
@@ -84,25 +85,7 @@ class Home extends PureComponent {
           loading: <span>loading</span>,
           done: contracts.data && (
             <div className="flex-container-main" key={contract._id}>
-              <div className="flex-container-main-menu">
-                <div className="flex-container-main-menu-items">
-                  <div className="flex-container-main-menu-items-item flex-container-main-menu-items-kleros">
-                    KLEROS
-                  </div>
-                  <div
-                    onClick={redirect('/profile', history)}
-                    className="flex-container-main-menu-items-item"
-                  >
-                    Profile
-                  </div>
-                  <div
-                    className="flex-container-main-menu-items-item"
-                    onClick={redirect('/contracts/new', history)}
-                  >
-                    New contract
-                  </div>
-                </div>
-              </div>
+              <NavHeader history={history} />
               <ContractDisplayList
                 randomSeed={randomSeed}
                 contracts={contracts}
