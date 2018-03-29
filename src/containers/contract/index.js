@@ -100,12 +100,10 @@ class Contract extends PureComponent {
   })
 
   isTimeout = contract => {
-    console.log('contract', contract)
     const timeout =
       contract.data.lastInteraction.toNumber() + contract.data.timeout
     const dateTime = (Date.now() / 1000) | 0
-    if (dateTime < timeout) return true
-    return false
+    return (dateTime < timeout)
   }
 
   toUrl = url => () => window.location.replace(url)
