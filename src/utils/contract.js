@@ -7,7 +7,6 @@
  */
 
 export const redirect = (url, history, ...args) => () => {
-  console.log("I am here!");
   if (!args || args.length === 0) history.push(url)
   else {
     const allArgs = args.reduce((acc, arg) => `${acc}/${arg}`)
