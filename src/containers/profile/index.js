@@ -1,18 +1,13 @@
-import _ from 'lodash'
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { push } from 'react-router-redux'
 import Blockies from 'react-blockies'
 
 import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
 import * as walletSelectors from '../../reducers/wallet'
 import * as contractSelectors from '../../reducers/contract'
-import { objMap } from '../../utils/functional'
 import { renderIf } from '../../utils/react-redux'
-import Identicon from '../../components/identicon'
 import { redirect, shortAddress } from '../../utils/contract'
 import { NavHeader } from '../nav-header'
 
@@ -59,25 +54,12 @@ class Profile extends PureComponent {
     fetchVersion()
   }
 
-  shortAddress = address => {
-    const startAddress = address.substr(0, address.length - 36)
-    const endAddress = address.substr(37)
-    return `${startAddress}...${endAddress}`
-  }
-
-  getTotalContracts = totalContracts => {
-    this.setState({ totalContracts })
-    return totalContracts
-  }
-
   render() {
     const {
       balance,
       contract,
-      loadingContract,
       contracts,
       accounts,
-      version,
       history
     } = this.props
 

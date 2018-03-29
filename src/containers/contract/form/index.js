@@ -8,12 +8,7 @@ import * as walletSelectors from '../../../reducers/wallet'
 import * as walletActions from '../../../actions/wallet'
 import * as contractSelectors from '../../../reducers/contract'
 import * as contractActions from '../../../actions/contract'
-import {
-  CreateContractForm,
-  getCreateContractFormIsInvalid,
-  submitCreateContractForm
-} from '../../../forms/contract'
-import Button from '../../../components/button'
+import { CreateContractForm, getCreateContractFormIsInvalid, submitCreateContractForm } from '../../../forms/contract'
 
 import './new-contract.css'
 
@@ -99,13 +94,14 @@ class NewContract extends PureComponent {
   }
 
   isEmail = email => {
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     return re.test(String(email).toLowerCase())
   }
 
-  isFieldOk = step => {
-    const { form } = this.props
-    switch (step) {
+  isFieldOk = stp => {
+    const { form, submitCreateContractForm } = this.props
+    const { step } = this.state
+    switch (stp) {
       case 0:
         return (
           form &&
@@ -120,8 +116,8 @@ class NewContract extends PureComponent {
           form.createContractFormKey &&
           form.createContractFormKey.values &&
           this.isAddress(form.createContractFormKey.values.partyB) &&
-          this.props.submitCreateContractForm() &&
-          this.setState({ step: this.state.step + 1 })
+          submitCreateContractForm() &&
+          this.setState({ step: step + 1 })
         )
       case 2:
         return (
@@ -153,12 +149,11 @@ class NewContract extends PureComponent {
 
   render() {
     const {
-      createContractFormIsInvalid,
       submitCreateContractForm,
       createContract
     } = this.props
 
-    const { hasPrevPage, hasNextPage, step, allowNextStep } = this.state
+    const { step } = this.state
 
     return (
       <div className="container">

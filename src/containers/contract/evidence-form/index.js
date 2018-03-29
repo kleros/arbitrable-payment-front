@@ -7,15 +7,9 @@ import * as walletSelectors from '../../../reducers/wallet'
 import * as walletActions from '../../../actions/wallet'
 import * as contractSelectors from '../../../reducers/contract'
 import * as contractActions from '../../../actions/contract'
-import {
-  CreateEvidenceForm,
-  getCreateEvidenceFormIsInvalid,
-  submitCreateEvidenceForm
-} from '../../../forms/evidence'
-import Button from '../../../components/button'
+import { CreateEvidenceForm, getCreateEvidenceFormIsInvalid, submitCreateEvidenceForm } from '../../../forms/evidence'
 
 import './new-evidence.css'
-import { CreateContractForm } from '../../../forms/contract'
 
 const FINAL_STEP = 2
 
@@ -64,7 +58,7 @@ class NewEvidence extends PureComponent {
   }
 
   isUrl = url => {
-    const re = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/g
+    const re = /^(http:\/\/|https:\/\/)(www){0,1}[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/g
     return re.test(String(url).toLowerCase())
   }
 
@@ -101,13 +95,12 @@ class NewEvidence extends PureComponent {
 
   render() {
     const {
-      createEvidenceFormIsInvalid,
       submitCreateEvidenceForm,
       createEvidence,
       contract
     } = this.props
 
-    const { hasPrevPage, hasNextPage, step } = this.state
+    const { step } = this.state
 
     return (
       <div className="container">

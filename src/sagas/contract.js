@@ -1,17 +1,15 @@
 import unit from 'ethjs-unit'
 import { push } from 'react-router-redux'
-import { takeLatest, call, put, select } from 'redux-saga/effects'
+import { call, put, takeLatest } from 'redux-saga/effects'
 import { toastr } from 'react-redux-toastr'
 
 import kleros, { eth } from '../bootstrap/dapp-api'
 import * as contractActions from '../actions/contract'
-import * as contractSelectors from '../reducers/contract'
-import { receiveAction, errorAction } from '../utils/actions'
 import { ETH_NO_ACCOUNTS } from '../constants/errors'
 
 const toastrOptions = {
   timeOut: 3000,
-  showCloseButton: false,
+  showCloseButton: false
 }
 
 /**
@@ -119,7 +117,7 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
   } catch (err) {
     console.log(err)
     toastr.error('Pay transaction failed', toastrOptions)
-    throw 'Error pay transaction'
+    throw new Error('Error pay transaction')
   }
 
   yield call(
@@ -156,13 +154,15 @@ function* createReimburse({ type, payload: { contractAddress } }) {
       throw new Error('The dispute is already finished')
 
     // TODO add fn reimburse in the api
+    /**
     const reimburseTx = yield call(contract.reimburse, amount.Number(), {
       from: accounts[0]
     })
+     */
   } catch (err) {
     console.log(err)
     toastr.error('Reimburse failed', toastrOptions)
-    throw 'Error reimburse failed'
+    throw new Error('Error reimburse failed')
   }
 
   yield call(
@@ -222,7 +222,7 @@ function* createDispute({ type, payload: { contractAddress } }) {
   } catch (err) {
     console.log(err)
     toastr.error('Create dispute failed', toastrOptions)
-    throw 'Error create dispute failed'
+    throw new Error('Error create dispute failed')
   }
 
   yield put(push('/'))
@@ -275,7 +275,7 @@ function* createTimeout({
   } catch (err) {
     console.log(err)
     toastr.error('Timeout failed', toastrOptions)
-    throw 'Error timeout failed'
+    throw new Error('Error timeout failed')
   }
 
   yield call(
@@ -313,7 +313,7 @@ function* createEvidence({ type, payload: { evidence } }) {
   } catch (err) {
     console.log(err)
     toastr.error('Evidence creation failed', toastrOptions)
-    throw 'Error evidence creation failed'
+    throw new Error('Error evidence creation failed')
   }
 
   yield call(
@@ -336,7 +336,7 @@ function* fetchDispute({ payload: { contractAddress, disputeId } }) {
   let dispute = null
 
   try {
-    const dispute = yield call(
+    dispute = yield call(
       kleros.klerosPOC.getDispute,
       process.env.REACT_APP_ARBITRATOR_ADDRESS_DEV,
       disputeId
@@ -347,7 +347,6 @@ function* fetchDispute({ payload: { contractAddress, disputeId } }) {
 
   yield put(contractActions.receiveGetdispute(dispute))
 }
-
 
 /**
  * The root of the wallet saga.

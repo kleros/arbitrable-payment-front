@@ -1,8 +1,4 @@
-import setupIntegrationTest, {
-  flushPromises
-} from '../../bootstrap/setup-integration-test'
-
-import Profile from '.'
+import setupIntegrationTest from '../../bootstrap/setup-integration-test'
 
 let integration = {
   store: null,

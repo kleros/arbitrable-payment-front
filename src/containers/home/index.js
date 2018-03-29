@@ -1,10 +1,6 @@
-import _ from 'lodash'
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { push } from 'react-router-redux'
-import Blockies from 'react-blockies'
 
 import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
@@ -12,10 +8,8 @@ import * as walletSelectors from '../../reducers/wallet'
 import * as contractSelectors from '../../reducers/contract'
 import { NavHeader } from '../nav-header'
 import { ContractDisplayList } from '../contract-display-list'
-import { objMap } from '../../utils/functional'
 import { renderIf } from '../../utils/react-redux'
-import Identicon from '../../components/identicon'
-import { redirect, shortAddress } from '../../utils/contract'
+import { redirect } from '../../utils/contract'
 
 import './home.css'
 
@@ -70,10 +64,8 @@ class Home extends PureComponent {
     const {
       balance,
       contract,
-      loadingContract,
       contracts,
       accounts,
-      version,
       history
     } = this.props
 
