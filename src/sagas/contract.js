@@ -325,7 +325,7 @@ function* fetchDispute({ payload: { contractAddress, disputeId } }) {
     console.log(err)
   }
 
-  yield put(contractActions.receiveGetdispute(dispute))
+  yield put(contractActions.receiveDispute(dispute))
 }
 
 /**

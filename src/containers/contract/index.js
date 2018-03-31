@@ -24,6 +24,7 @@ class Contract extends PureComponent {
     accounts: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     history: ReactRouterPropTypes.history.isRequired,
     fetchContract: PropTypes.func.isRequired,
+    fetchGetdispute: PropTypes.func.isRequired,
     createDispute: PropTypes.func.isRequired,
     createTimeout: PropTypes.func.isRequired,
     createPay: PropTypes.func.isRequired,
@@ -42,7 +43,7 @@ class Contract extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { contract: prevContract } = this.props
+    const { contract: prevContract, fetchGetdispute, match } = this.props
     const { contract, accounts = [] } = nextProps
     if (prevContract !== contract) {
       if (
@@ -57,6 +58,9 @@ class Contract extends PureComponent {
       ) {
         this.setState({ party: 'partyB' })
         this.setState({ partyOther: 'partyA' })
+      }
+      if (contract.data && contract.data.disputeId) {
+        fetchGetdispute(match.params.contractAddress, contract.data.disputeId)
       }
     }
   }
@@ -326,6 +330,7 @@ export default connect(
   }),
   {
     fetchContract: contractActions.fetchContract,
+    fetchGetdispute: contractActions.fetchGetdispute,
     createDispute: contractActions.createDispute,
     createPay: contractActions.createPay,
     createReimburse: contractActions.createReimburse,

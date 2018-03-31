@@ -38,17 +38,17 @@ export const fetchGetdispute = (contractAddress, disputeId) => ({
   type: FETCH_GETDISPUTE,
   payload: { contractAddress, disputeId }
 })
-export const receiveGetdispute = dispute => ({
-  type: RECEIVE_DISPUTE,
-  payload: { dispute }
-})
 export const createDispute = contractAddress => ({
   type: CREATE_DISPUTE,
   payload: { contractAddress }
 })
-export const receiveDispute = disputeTx => ({
+/*
+  the dispute param can be a hash if it's a new dispute
+  or an object if the dispute exists
+*/
+export const receiveDispute = dispute => ({
   type: RECEIVE_DISPUTE,
-  payload: { disputeTx }
+  payload: { dispute }
 })
 export const createPay = (contractAddress, partyA, partyB) => ({
   type: CREATE_PAY,
