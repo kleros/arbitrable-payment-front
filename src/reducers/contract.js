@@ -15,6 +15,11 @@ export default createReducer({
     data: null,
     failedLoading: false
   },
+  appeal: {
+    loading: false,
+    data: null,
+    failedLoading: false
+  },
   pay: {
     loading: false,
     data: null,
@@ -39,12 +44,18 @@ export default createReducer({
     loading: false,
     data: null,
     failedLoading: false
+  },
+  ruling: {
+    loading: false,
+    data: null,
+    failedLoading: false
   }
 })
 
 // Selectors
 export const createContract = state => state.contract.contract.data
 export const createDispute = state => state.contract.dispute.data
+export const createAppeal = state => state.contract.appeal.data
 export const createPay = state => state.contract.pay.data
 export const createReimburse = state => state.contract.reimburse.data
 export const createEvidence = state => state.contract.evidence.data
@@ -67,4 +78,3 @@ export const contractShape = PropTypes.shape({
   timeout: PropTypes.number,
   _id: PropTypes.string
 })
-export const disputeShape = createShape(PropTypes.string)

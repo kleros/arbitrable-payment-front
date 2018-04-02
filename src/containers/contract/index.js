@@ -21,10 +21,12 @@ class Contract extends PureComponent {
   }
   static propTypes = {
     contract: contractSelectors.contractShape.isRequired,
+    ruling: PropTypes.number.isRequired,
     accounts: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     history: ReactRouterPropTypes.history.isRequired,
     fetchContract: PropTypes.func.isRequired,
     fetchGetdispute: PropTypes.func.isRequired,
+    fetchCurrentRulingForDispute: PropTypes.func.isRequired,
     createDispute: PropTypes.func.isRequired,
     createTimeout: PropTypes.func.isRequired,
     createPay: PropTypes.func.isRequired,
@@ -43,7 +45,12 @@ class Contract extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { contract: prevContract, fetchGetdispute, match } = this.props
+    const {
+      contract: prevContract,
+      fetchGetdispute,
+      fetchCurrentRulingForDispute,
+      match
+    } = this.props
     const { contract, accounts = [] } = nextProps
     if (prevContract !== contract) {
       if (
@@ -61,6 +68,16 @@ class Contract extends PureComponent {
       }
       if (contract.data && contract.data.disputeId) {
         fetchGetdispute(match.params.contractAddress, contract.data.disputeId)
+      }
+      if (
+        contract.data &&
+        contract.data.status === DISPUTE_RESOLVED &&
+        contract.data.disputeId
+      ) {
+        fetchCurrentRulingForDispute(
+          contract.data.disputeId,
+          contract.data.numberOfAppeals
+        )
       }
     }
   }
@@ -113,7 +130,7 @@ class Contract extends PureComponent {
   toUrl = url => () => window.location.replace(url)
 
   render() {
-    const { contract, accounts, history } = this.props
+    const { contract, accounts, ruling, history } = this.props
     const { partyOther, party } = this.state
     return (
       <div>
@@ -288,10 +305,15 @@ class Contract extends PureComponent {
                       <b>The contract is closed.</b>
                     </div>
                   )}
-                  {contract.data.disputeId !== 0 && (
+                  {contract.data.status === DISPUTE_RESOLVED &&
+                  contract.data.disputeId !== 0 ? (
                     <div>
-                      <b>Dispute id: {contract.data.disputeId}</b>
+                      <b>Ruling: {ruling.data === 0 && 'No ruling'}</b>
+                      <b>Ruling: {ruling.data === 1 && 'Party A wins'}</b>
+                      <b>Ruling: {ruling.data === 2 && 'Party B wins'}</b>
                     </div>
+                  ) : (
+                    <div />
                   )}
                   {contract.data.evidences.map((evidence, i) => (
                     <div
@@ -323,6 +345,7 @@ export default connect(
   state => ({
     contract: state.contract.contract,
     dispute: state.contract.dispute,
+    ruling: state.contract.currentRulingForDispute,
     pay: state.contract.pay,
     reimburse: state.contract.reimburse,
     timeout: state.contract.timeout,
@@ -331,6 +354,7 @@ export default connect(
   {
     fetchContract: contractActions.fetchContract,
     fetchGetdispute: contractActions.fetchGetdispute,
+    fetchCurrentRulingForDispute: contractActions.fetchCurrentRulingForDispute,
     createDispute: contractActions.createDispute,
     createPay: contractActions.createPay,
     createReimburse: contractActions.createReimburse,

@@ -1,7 +1,8 @@
 import unit from 'ethjs-unit'
 import { push } from 'react-router-redux'
-import { call, put, takeLatest } from 'redux-saga/effects'
 import { toastr } from 'react-redux-toastr'
+
+import { call, put, takeLatest } from 'redux-saga/effects'
 
 import kleros, { eth } from '../bootstrap/dapp-api'
 import * as contractActions from '../actions/contract'
@@ -225,6 +226,70 @@ function* createDispute({ type, payload: { contractAddress } }) {
 }
 
 /**
+ * Can appeal.
+ * @param {object} { payload: contractAddress } - The address of the contract.
+ */
+function* canAppeal({ type, payload: { contractAddress, disputeId } }) {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  let contract = null
+  let appealTx = null
+  let openDisputesForSession = null
+
+  try {
+    contract = yield call(kleros.arbitrableContract.getData, contractAddress)
+
+    openDisputesForSession = yield call(
+      kleros.arbitrableContract.getOpenDisputesForSession
+    )
+    // if not throw new Error('Error appeal not available')
+  } catch (err) {
+    console.log(err)
+    throw new Error('Error can appeal failed')
+  }
+
+  yield put(contractActions.fetchCanappeal(appealTx))
+}
+
+/**
+ * Raises an appeal.
+ * @param {object} { payload: contractAddress } - The address of the contract.
+ */
+function* createAppeal({ type, payload: { contractAddress, disputeId } }) {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  let appealTx = null
+  let openDisputesForSession = null
+
+  try {
+    openDisputesForSession = yield call(
+      kleros.arbitrableContract.getOpenDisputesForSession
+    )
+
+    if (openDisputesForSession.indexOf(disputeId)) {
+      openDisputesForSession = yield call(
+        kleros.arbitrableContract.appealRuling,
+        disputeId,
+        process.env.REACT_APP_ARBITRATOR_EXTRADATA
+      )
+    }
+    // if not throw new Error('Error appeal not available')
+  } catch (err) {
+    console.log(err)
+    toastr.error('Create dispute failed', toastrOptions)
+    throw new Error('Error create dispute failed')
+  }
+
+  yield put(push('/'))
+
+  yield call(toastr.success, 'Appeal creation successful', toastrOptions)
+
+  yield put(contractActions.receiveAppeal(appealTx))
+}
+
+/**
  * Call by PartyA to be to reimburse if partyB fails to pay the fee.
  * @param {object} { payload: contractAddress, partyA, partyB } - The address of the contract.
  */
@@ -329,6 +394,34 @@ function* fetchDispute({ payload: { contractAddress, disputeId } }) {
 }
 
 /**
+ * Get current ruling for a dispute.
+ * @param {number} disputeId - Index of dispute.
+ * @param {number} appeal - Index of appeal.
+ */
+function* fetchCurrentRulingForDispute({
+  type,
+  payload: { disputeId, appeal }
+}) {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  let ruling = null
+
+  try {
+    ruling = yield call(
+      kleros.arbitrableContract.currentRulingForDispute,
+      disputeId,
+      appeal
+    )
+  } catch (err) {
+    console.log(err)
+    throw new Error('Error current ruling failed')
+  }
+
+  yield put(contractActions.receiveCurrentRulingForDispute(ruling))
+}
+
+/**
  * The root of the wallet saga.
  * @export default walletSaga
  */
@@ -337,9 +430,15 @@ export default function* walletSaga() {
   yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
   yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract)
   yield takeLatest(contractActions.CREATE_DISPUTE, createDispute)
+  yield takeLatest(contractActions.CREATE_APPEAL, createAppeal)
+  yield takeLatest(contractActions.FETCH_CANAPPEAL, canAppeal)
   yield takeLatest(contractActions.FETCH_GETDISPUTE, fetchDispute)
   yield takeLatest(contractActions.CREATE_PAY, createPay)
   yield takeLatest(contractActions.CREATE_REIMBURSE, createReimburse)
   yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence)
   yield takeLatest(contractActions.CREATE_TIMEOUT, createTimeout)
+  yield takeLatest(
+    contractActions.FETCH_CURRENT_RULING_FOR_DISPUTE,
+    fetchCurrentRulingForDispute
+  )
 }
