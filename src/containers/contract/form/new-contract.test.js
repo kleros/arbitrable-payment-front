@@ -1,8 +1,4 @@
-import setupIntegrationTest, {
-  flushPromises
-} from '../../../bootstrap/setup-integration-test'
-
-import NewContract from '.'
+import setupIntegrationTest from '../../../bootstrap/setup-integration-test'
 
 let integration = {
   store: null,
@@ -18,4 +14,3 @@ beforeEach(() => {
 it('New contract test', async () => {
   expect(true)
 })
-

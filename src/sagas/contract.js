@@ -1,17 +1,16 @@
 import unit from 'ethjs-unit'
 import { push } from 'react-router-redux'
-import { takeLatest, call, put, select } from 'redux-saga/effects'
 import { toastr } from 'react-redux-toastr'
+
+import { call, put, takeLatest } from 'redux-saga/effects'
 
 import kleros, { eth } from '../bootstrap/dapp-api'
 import * as contractActions from '../actions/contract'
-import * as contractSelectors from '../reducers/contract'
-import { receiveAction, errorAction } from '../utils/actions'
 import { ETH_NO_ACCOUNTS } from '../constants/errors'
 
 const toastrOptions = {
   timeOut: 3000,
-  showCloseButton: false,
+  showCloseButton: false
 }
 
 /**
@@ -119,14 +118,10 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
   } catch (err) {
     console.log(err)
     toastr.error('Pay transaction failed', toastrOptions)
-    throw 'Error pay transaction'
+    throw new Error('Error pay transaction')
   }
 
-  yield call(
-    toastr.success,
-    'Payment successful',
-    toastrOptions
-  )
+  yield call(toastr.success, 'Payment successful', toastrOptions)
 
   yield put(contractActions.receivePay(payTx))
 }
@@ -156,20 +151,18 @@ function* createReimburse({ type, payload: { contractAddress } }) {
       throw new Error('The dispute is already finished')
 
     // TODO add fn reimburse in the api
+    /**
     const reimburseTx = yield call(contract.reimburse, amount.Number(), {
       from: accounts[0]
     })
+     */
   } catch (err) {
     console.log(err)
     toastr.error('Reimburse failed', toastrOptions)
-    throw 'Error reimburse failed'
+    throw new Error('Error reimburse failed')
   }
 
-  yield call(
-    toastr.success,
-    'Successful refund',
-    toastrOptions
-  )
+  yield call(toastr.success, 'Successful refund', toastrOptions)
 
   yield put(contractActions.receiveReimburse(reimburseTx))
 }
@@ -222,18 +215,78 @@ function* createDispute({ type, payload: { contractAddress } }) {
   } catch (err) {
     console.log(err)
     toastr.error('Create dispute failed', toastrOptions)
-    throw 'Error create dispute failed'
+    throw new Error('Error create dispute failed')
   }
 
   yield put(push('/'))
 
-  yield call(
-    toastr.success,
-    'Dispute creation successful',
-    toastrOptions
-  )
+  yield call(toastr.success, 'Dispute creation successful', toastrOptions)
 
   yield put(contractActions.receiveDispute(disputeTx))
+}
+
+/**
+ * Can appeal.
+ * @param {object} { payload: contractAddress } - The address of the contract.
+ */
+function* canAppeal({ type, payload: { contractAddress, disputeId } }) {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  let contract = null
+  let appealTx = null
+  let openDisputesForSession = null
+
+  try {
+    contract = yield call(kleros.arbitrableContract.getData, contractAddress)
+
+    openDisputesForSession = yield call(
+      kleros.arbitrableContract.getOpenDisputesForSession
+    )
+    // if not throw new Error('Error appeal not available')
+  } catch (err) {
+    console.log(err)
+    throw new Error('Error can appeal failed')
+  }
+
+  yield put(contractActions.fetchCanappeal(appealTx))
+}
+
+/**
+ * Raises an appeal.
+ * @param {object} { payload: contractAddress } - The address of the contract.
+ */
+function* createAppeal({ type, payload: { contractAddress, disputeId } }) {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  let appealTx = null
+  let openDisputesForSession = null
+
+  try {
+    openDisputesForSession = yield call(
+      kleros.arbitrableContract.getOpenDisputesForSession
+    )
+
+    if (openDisputesForSession.indexOf(disputeId)) {
+      openDisputesForSession = yield call(
+        kleros.arbitrableContract.appealRuling,
+        disputeId,
+        process.env.REACT_APP_ARBITRATOR_EXTRADATA
+      )
+    }
+    // if not throw new Error('Error appeal not available')
+  } catch (err) {
+    console.log(err)
+    toastr.error('Create dispute failed', toastrOptions)
+    throw new Error('Error create dispute failed')
+  }
+
+  yield put(push('/'))
+
+  yield call(toastr.success, 'Appeal creation successful', toastrOptions)
+
+  yield put(contractActions.receiveAppeal(appealTx))
 }
 
 /**
@@ -275,14 +328,10 @@ function* createTimeout({
   } catch (err) {
     console.log(err)
     toastr.error('Timeout failed', toastrOptions)
-    throw 'Error timeout failed'
+    throw new Error('Error timeout failed')
   }
 
-  yield call(
-    toastr.success,
-    'Timeout successful',
-    toastrOptions
-  )
+  yield call(toastr.success, 'Timeout successful', toastrOptions)
 
   yield put(contractActions.receiveTimeout(timeoutTx))
 }
@@ -313,16 +362,63 @@ function* createEvidence({ type, payload: { evidence } }) {
   } catch (err) {
     console.log(err)
     toastr.error('Evidence creation failed', toastrOptions)
-    throw 'Error evidence creation failed'
+    throw new Error('Error evidence creation failed')
   }
 
-  yield call(
-    toastr.success,
-    'Evidence creation successful',
-    toastrOptions
-  )
+  yield call(toastr.success, 'Evidence creation successful', toastrOptions)
 
   yield put(contractActions.receiveEvidence(evidenceTx))
+}
+
+/**
+ * Fetches dispute details.
+ * @param {object} { payload: contractAddress, disouteId } - The address of the contract and the dispute id to fetch details for.
+ */
+function* fetchDispute({ payload: { contractAddress, disputeId } }) {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  let dispute = null
+
+  try {
+    dispute = yield call(
+      kleros.klerosPOC.getDispute,
+      process.env.REACT_APP_ARBITRATOR_ADDRESS_DEV,
+      disputeId
+    )
+  } catch (err) {
+    console.log(err)
+  }
+
+  yield put(contractActions.receiveDispute(dispute))
+}
+
+/**
+ * Get current ruling for a dispute.
+ * @param {number} disputeId - Index of dispute.
+ * @param {number} appeal - Index of appeal.
+ */
+function* fetchCurrentRulingForDispute({
+  type,
+  payload: { disputeId, appeal }
+}) {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  let ruling = null
+
+  try {
+    ruling = yield call(
+      kleros.arbitrableContract.currentRulingForDispute,
+      disputeId,
+      appeal
+    )
+  } catch (err) {
+    console.log(err)
+    throw new Error('Error current ruling failed')
+  }
+
+  yield put(contractActions.receiveCurrentRulingForDispute(ruling))
 }
 
 /**
@@ -334,8 +430,15 @@ export default function* walletSaga() {
   yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
   yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract)
   yield takeLatest(contractActions.CREATE_DISPUTE, createDispute)
+  yield takeLatest(contractActions.CREATE_APPEAL, createAppeal)
+  yield takeLatest(contractActions.FETCH_CANAPPEAL, canAppeal)
+  yield takeLatest(contractActions.FETCH_GETDISPUTE, fetchDispute)
   yield takeLatest(contractActions.CREATE_PAY, createPay)
   yield takeLatest(contractActions.CREATE_REIMBURSE, createReimburse)
   yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence)
   yield takeLatest(contractActions.CREATE_TIMEOUT, createTimeout)
+  yield takeLatest(
+    contractActions.FETCH_CURRENT_RULING_FOR_DISPUTE,
+    fetchCurrentRulingForDispute
+  )
 }

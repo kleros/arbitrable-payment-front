@@ -9,6 +9,7 @@ const KlerosGitter = () => (
       target="_blank"
       href="https://gitter.im/kleros/Lobby"
       alt="Gitter kleros"
+      rel="noopener noreferrer"
     >
       <img className="Kleros-gitter-logo" src={logo} alt="Logo Kleros Gitter" />
     </a>

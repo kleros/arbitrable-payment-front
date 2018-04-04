@@ -1,20 +1,14 @@
-import _ from 'lodash'
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { push } from 'react-router-redux'
-import Blockies from 'react-blockies'
 
 import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
 import * as walletSelectors from '../../reducers/wallet'
 import * as contractSelectors from '../../reducers/contract'
+import { NavHeader } from '../nav-header'
 import { ContractDisplayList } from '../contract-display-list'
-import { objMap } from '../../utils/functional'
 import { renderIf } from '../../utils/react-redux'
-import Identicon from '../../components/identicon'
-import { redirect, shortAddress } from '../../utils/contract'
 
 import './home.css'
 
@@ -39,7 +33,6 @@ class Home extends PureComponent {
   static propTypes = {
     loadingContracts: PropTypes.bool,
     contract: contractSelectors.contractShape.isRequired,
-    creatingContract: PropTypes.bool,
     fetchContracts: PropTypes.func.isRequired,
 
     balance: walletSelectors.balanceShape.isRequired,
@@ -66,15 +59,7 @@ class Home extends PureComponent {
   }
 
   render() {
-    const {
-      balance,
-      contract,
-      loadingContract,
-      contracts,
-      accounts,
-      version,
-      history
-    } = this.props
+    const { balance, contract, contracts, accounts, history } = this.props
 
     const { randomSeed } = this.state
 
@@ -84,25 +69,7 @@ class Home extends PureComponent {
           loading: <span>loading</span>,
           done: contracts.data && (
             <div className="flex-container-main" key={contract._id}>
-              <div className="flex-container-main-menu">
-                <div className="flex-container-main-menu-items">
-                  <div className="flex-container-main-menu-items-item flex-container-main-menu-items-kleros">
-                    KLEROS
-                  </div>
-                  <div
-                    onClick={() => redirect('/profile', history)}
-                    className="flex-container-main-menu-items-item"
-                  >
-                    Profile
-                  </div>
-                  <div
-                    className="flex-container-main-menu-items-item"
-                    onClick={() => redirect('/contracts/new', history)}
-                  >
-                    New contract
-                  </div>
-                </div>
-              </div>
+              <NavHeader history={history} />
               <ContractDisplayList
                 randomSeed={randomSeed}
                 contracts={contracts}

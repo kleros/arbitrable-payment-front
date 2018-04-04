@@ -23,7 +23,7 @@ export const ContractDisplayList = ({
     {contract.creating && (
       <div
         className="flex-item wide grow"
-        onClick={() => redirect(`/contracts/${contract.address}`, history)}
+        onClick={redirect(`/contracts/${contract.address}`, history)}
       >
         <Blockies seed={randomSeed} size={10} scale={14} bgColor="#fff" />
         <div className="creationContentContract">
@@ -38,9 +38,7 @@ export const ContractDisplayList = ({
       !contracts.data.some(c => c.address === contract.data.address) && (
         <div
           className="flex-item wide contract grow"
-          onClick={() =>
-            redirect(`/contracts/${contract.data.address}`, history)
-          }
+          onClick={redirect(`/contracts/${contract.data.address}`, history)}
         >
           <div className="type">Owner</div>
           <Blockies
@@ -90,7 +88,7 @@ export const ContractDisplayList = ({
       <div
         className="flex-item wide contract grow"
         key={contract._id}
-        onClick={() => redirect(`/contracts/${contract.address}`, history)}
+        onClick={redirect(`/contracts/${contract.address}`, history)}
       >
         {contract.partyA === accounts.data[0] && (
           <div className="type">Owner</div>
@@ -133,7 +131,7 @@ export const ContractDisplayList = ({
         <div className="flex-container-main-newContract-container">
           <div
             className="flex-container-main-newContract-container-content"
-            onClick={() => redirect('/contracts/new', history)}
+            onClick={redirect('/contracts/new', history)}
           >
             New Contract
           </div>
