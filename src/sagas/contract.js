@@ -80,7 +80,7 @@ function* fetchContract({ payload: { contractAddress } }) {
       accounts[0].toLowerCase()
     )
   } catch (err) {
-      console.log(err)
+    console.log(err)
   }
 
   yield put(contractActions.receiveContract(contract))
@@ -175,8 +175,7 @@ function* createDispute({ type, payload: { contractAddress } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
-  let contract,
-    disputeTx = null
+  let contract, disputeTx
 
   try {
     contract = yield call(kleros.arbitrableContract.getData, contractAddress)
@@ -233,16 +232,11 @@ function* canAppeal({ type, payload: { contractAddress, disputeId } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
-  let contract = null
   let appealTx = null
-  let openDisputesForSession = null
 
   try {
-    contract = yield call(kleros.arbitrableContract.getData, contractAddress)
-
-    openDisputesForSession = yield call(
-      kleros.arbitrableContract.getOpenDisputesForSession
-    )
+    yield call(kleros.arbitrableContract.getData, contractAddress)
+    yield call(kleros.arbitrableContract.getOpenDisputesForSession)
     // if not throw new Error('Error appeal not available')
   } catch (err) {
     console.log(err)
