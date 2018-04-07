@@ -80,7 +80,7 @@ function* fetchContract({ payload: { contractAddress } }) {
       accounts[0].toLowerCase()
     )
   } catch (err) {
-    console.log(err)
+      console.log(err)
   }
 
   yield put(contractActions.receiveContract(contract))

@@ -10,6 +10,7 @@ import * as contractSelectors from '../../reducers/contract'
 import { renderIf } from '../../utils/react-redux'
 import { shortAddress } from '../../utils/contract'
 import { NavHeader } from '../nav-header'
+import { SharedKlerosFooter } from '../shared-kleros-footer'
 
 import './profile.css'
 
@@ -83,12 +84,7 @@ class Profile extends PureComponent {
                 </div>
               </div>
               <div className="flex-container-main-flex-grow" />
-              <div className="flex-container-main-footer">
-                Contracting front © 2018 powered by
-                <span className="flex-container-main-footer-kleros">
-                  &nbsp;Kleros
-                </span>
-              </div>
+              <SharedKlerosFooter />
             </div>
           ),
           failed: contract.failedLoading && 'failedLoading'
