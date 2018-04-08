@@ -122,7 +122,6 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
   }
 
   yield call(toastr.success, 'Payment successful', toastrOptions)
-
   yield put(contractActions.receivePay(payTx))
 }
 
@@ -163,7 +162,6 @@ function* createReimburse({ type, payload: { contractAddress } }) {
   }
 
   yield call(toastr.success, 'Successful refund', toastrOptions)
-
   yield put(contractActions.receiveReimburse(reimburseTx))
 }
 
@@ -175,8 +173,7 @@ function* createDispute({ type, payload: { contractAddress } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
-  let contract,
-    disputeTx = null
+  let contract, disputeTx
 
   try {
     contract = yield call(kleros.arbitrableContract.getData, contractAddress)
@@ -219,9 +216,7 @@ function* createDispute({ type, payload: { contractAddress } }) {
   }
 
   yield put(push('/'))
-
   yield call(toastr.success, 'Dispute creation successful', toastrOptions)
-
   yield put(contractActions.receiveDispute(disputeTx))
 }
 
@@ -233,16 +228,11 @@ function* canAppeal({ type, payload: { contractAddress, disputeId } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
-  let contract = null
   let appealTx = null
-  let openDisputesForSession = null
 
   try {
-    contract = yield call(kleros.arbitrableContract.getData, contractAddress)
-
-    openDisputesForSession = yield call(
-      kleros.arbitrableContract.getOpenDisputesForSession
-    )
+    yield call(kleros.arbitrableContract.getData, contractAddress)
+    yield call(kleros.arbitrableContract.getOpenDisputesForSession)
     // if not throw new Error('Error appeal not available')
   } catch (err) {
     console.log(err)
@@ -260,8 +250,7 @@ function* createAppeal({ type, payload: { contractAddress, disputeId } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
-  let appealTx = null
-  let openDisputesForSession = null
+  let appealTx, openDisputesForSession
 
   try {
     openDisputesForSession = yield call(
@@ -283,9 +272,7 @@ function* createAppeal({ type, payload: { contractAddress, disputeId } }) {
   }
 
   yield put(push('/'))
-
   yield call(toastr.success, 'Appeal creation successful', toastrOptions)
-
   yield put(contractActions.receiveAppeal(appealTx))
 }
 
@@ -332,7 +319,6 @@ function* createTimeout({
   }
 
   yield call(toastr.success, 'Timeout successful', toastrOptions)
-
   yield put(contractActions.receiveTimeout(timeoutTx))
 }
 
@@ -366,7 +352,6 @@ function* createEvidence({ type, payload: { evidence } }) {
   }
 
   yield call(toastr.success, 'Evidence creation successful', toastrOptions)
-
   yield put(contractActions.receiveEvidence(evidenceTx))
 }
 
