@@ -122,7 +122,7 @@ class Contract extends PureComponent {
 
   isTimeout = contract => {
     const timeout =
-      contract.data.lastInteraction.toNumber() + contract.data.timeout
+      contract.data.lastInteraction + contract.data.timeout
     const dateTime = (Date.now() / 1000) | 0
     return dateTime > timeout
   }

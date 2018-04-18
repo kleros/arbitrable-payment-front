@@ -6385,9 +6385,9 @@ klaw@^1.0.0:
   optionalDependencies:
     graceful-fs "^4.1.9"
 
-kleros-api@^0.0.63:
-  version "0.0.63"
-  resolved "https://registry.yarnpkg.com/kleros-api/-/kleros-api-0.0.63.tgz#e131f37cc14abd2839f3a9c98e11342f9a9868f7"
+kleros-api@^0.2.5:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/kleros-api/-/kleros-api-0.2.5.tgz#eb54a9ab2c50e649cffb8bea4e4290d32ea5db27"
   dependencies:
     babel-runtime "^6.26.0"
     kleros "^0.0.5"
