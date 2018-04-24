@@ -1,0 +1,23 @@
+/* @define PageNotFound */
+.PageNotFound {
+  &-message {
+    align-items: center;
+    display: flex;
+    flex: 1 1;
+    flex-direction: column;
+    justify-content: center;
+  }
+  &-message > h1 {
+    font-size: 152px;
+    letter-spacing: 15px;
+  }
+  &-message > h2 {
+    letter-spacing: 1px;
+  }
+  &-redirect {
+    padding: 25px;
+  }
+  &-redirect:hover {
+    color: gray;
+  }
+}

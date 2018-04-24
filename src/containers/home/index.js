@@ -9,6 +9,7 @@ import * as contractSelectors from '../../reducers/contract'
 import { NavHeader } from '../nav-header'
 import { ContractDisplayList } from '../contract-display-list'
 import { renderIf } from '../../utils/react-redux'
+import { HomeKlerosFooter } from '../home-kleros-footer'
 
 import './home.css'
 
@@ -26,7 +27,7 @@ class Home extends PureComponent {
         .toString()
     })
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     clearInterval(this.intervalId)
   }
 
@@ -45,23 +46,23 @@ class Home extends PureComponent {
     loadingContracts: false
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.intervalId = setInterval(this.randomSeed, 100)
-    const { fetchBalance, fetchContracts, fetchVersion } = this.props
+    const {fetchBalance, fetchContracts, fetchVersion} = this.props
     fetchBalance()
     fetchContracts()
     fetchVersion()
   }
 
   getTotalContracts = totalContracts => {
-    this.setState({ totalContracts })
+    this.setState({totalContracts})
     return totalContracts
   }
 
-  render() {
-    const { balance, contract, contracts, accounts, history } = this.props
+  render () {
+    const {balance, contract, contracts, accounts, history} = this.props
 
-    const { randomSeed } = this.state
+    const {randomSeed} = this.state
 
     return (
       <div className="container">
@@ -69,7 +70,7 @@ class Home extends PureComponent {
           loading: <span>loading</span>,
           done: contracts.data && (
             <div className="flex-container-main" key={contract._id}>
-              <NavHeader history={history} />
+              <NavHeader history={history}/>
               <ContractDisplayList
                 randomSeed={randomSeed}
                 contracts={contracts}
@@ -77,24 +78,8 @@ class Home extends PureComponent {
                 history={history}
                 accounts={accounts}
               />
-              <div className="flex-container-main-flex-grow" />
-              <div className="flex-container-main-footer">
-                <a
-                  href="http://www.wtfpl.net/"
-                  className="flex-container-main-footer-wtfpl"
-                >
-                  <img
-                    src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-badge-2.png"
-                    width="80"
-                    height="15"
-                    alt="WTFPL"
-                  />
-                </a>
-                &nbsp;&middot; 2018-2019 &middot; Arbitrable payment powered by
-                <span className="flex-container-main-footer-kleros">
-                  &nbsp;Kleros
-                </span>
-              </div>
+              <div className="flex-container-main-flex-grow"/>
+              <HomeKlerosFooter/>
             </div>
           ),
           failed: contract.failedLoading && 'failedLoading'
