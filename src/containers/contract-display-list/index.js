@@ -1,17 +1,11 @@
 import React from 'react'
 import Blockies from 'react-blockies'
+import PropTypes from 'prop-types'
+import ReactRouterPropTypes from 'react-router-prop-types'
 
 import { redirect, shortAddress } from '../../utils/contract'
+import * as contractSelectors from '../../reducers/contract'
 
-/**
- * Contract Display List Component
- * @param randomSeed
- * @param contract
- * @param props - e.g. must receive this.props with a history field
- * @param accounts
- * @returns {*}
- * @constructor
- */
 export const ContractDisplayList = ({
   accounts,
   contracts,
@@ -139,3 +133,9 @@ export const ContractDisplayList = ({
       )}
   </div>
 )
+
+ContractDisplayList.propTypes = {
+  accounts: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  contract: contractSelectors.contractShape.isRequired,
+  history: ReactRouterPropTypes.history.isRequired
+}

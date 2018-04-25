@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactRouterPropTypes from 'react-router-prop-types'
 
 import { redirect } from '../../utils/contract'
 
@@ -26,3 +27,7 @@ export const NavHeader = ({ history }) => (
     </div>
   </div>
 )
+
+NavHeader.propTypes = {
+  history: ReactRouterPropTypes.history.isRequired
+}

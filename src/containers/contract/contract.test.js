@@ -1,18 +1,7 @@
-import setupIntegrationTest, {
-  flushPromises
-} from '../../bootstrap/setup-integration-test'
-
-import Contract from '.'
-
-let integration = {
-  store: null,
-  history: null,
-  dispatchSpy: null,
-  mountApp: null
-}
+import setupIntegrationTest from '../../bootstrap/setup-integration-test'
 
 beforeEach(() => {
-  integration = setupIntegrationTest({ router: { location: '/contract' } })
+  setupIntegrationTest({ router: { location: '/contract' } })
 })
 
 it('New evidence test', async () => {

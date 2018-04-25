@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Blockies from 'react-blockies'
+import ReactRouterPropTypes from 'react-router-prop-types'
 
 import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
@@ -33,14 +34,13 @@ class Profile extends PureComponent {
   }
 
   static propTypes = {
-    loadingContracts: PropTypes.bool,
+    accounts: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     contract: contractSelectors.contractShape.isRequired,
-    creatingContract: PropTypes.bool,
     fetchContracts: PropTypes.func.isRequired,
     balance: walletSelectors.balanceShape.isRequired,
-    version: walletSelectors.versionShape.isRequired,
     fetchBalance: PropTypes.func.isRequired,
-    fetchVersion: PropTypes.func.isRequired
+    fetchVersion: PropTypes.func.isRequired,
+    history: ReactRouterPropTypes.history.isRequired
   }
 
   static defaultProps = {

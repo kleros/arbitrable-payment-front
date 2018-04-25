@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Stepper from 'react-stepper-horizontal'
 
-import * as walletSelectors from '../../../reducers/wallet'
 import * as walletActions from '../../../actions/wallet'
 import * as contractSelectors from '../../../reducers/contract'
 import * as contractActions from '../../../actions/contract'
@@ -19,12 +18,9 @@ const FINAL_STEP = 2
 
 class NewEvidence extends PureComponent {
   static propTypes = {
-    balance: walletSelectors.balanceShape.isRequired,
     contract: contractSelectors.contractShape.isRequired,
-    createEvidenceFormIsInvalid: PropTypes.bool.isRequired,
     fetchBalance: PropTypes.func.isRequired,
-    submitCreateEvidenceForm: PropTypes.func.isRequired,
-    createEvidence: PropTypes.func.isRequired
+    submitCreateEvidenceForm: PropTypes.func.isRequired
   }
 
   state = {
