@@ -20,7 +20,13 @@ class NewEvidence extends PureComponent {
   static propTypes = {
     contract: contractSelectors.contractShape.isRequired,
     fetchBalance: PropTypes.func.isRequired,
-    submitCreateEvidenceForm: PropTypes.func.isRequired
+    submitCreateEvidenceForm: PropTypes.func.isRequired,
+    form: PropTypes.shape({
+      formClassName: PropTypes.string,
+      fieldsClassName: PropTypes.string,
+      disabled: PropTypes.bool
+    }).isRequired,
+    createEvidence: PropTypes.func.isRequired
   }
 
   state = {

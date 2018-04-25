@@ -36,15 +36,13 @@ class Profile extends PureComponent {
   static propTypes = {
     accounts: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     contract: contractSelectors.contractShape.isRequired,
+    contracts: PropTypes.arrayOf(contractSelectors.contractShape.isRequired)
+      .isRequired,
     fetchContracts: PropTypes.func.isRequired,
     balance: walletSelectors.balanceShape.isRequired,
     fetchBalance: PropTypes.func.isRequired,
     fetchVersion: PropTypes.func.isRequired,
     history: ReactRouterPropTypes.history.isRequired
-  }
-
-  static defaultProps = {
-    loadingContracts: false
   }
 
   componentDidMount() {
