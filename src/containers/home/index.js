@@ -6,10 +6,10 @@ import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
 import * as walletSelectors from '../../reducers/wallet'
 import * as contractSelectors from '../../reducers/contract'
-import { NavHeader } from '../nav-header'
+import { NavHeader } from '../../components/nav-header'
 import { ContractDisplayList } from '../contract-display-list'
 import { renderIf } from '../../utils/react-redux'
-import { HomeKlerosFooter } from '../home-kleros-footer'
+import { HomeKlerosFooter } from '../../components/home-kleros-footer'
 
 import './home.css'
 
@@ -27,7 +27,7 @@ class Home extends PureComponent {
         .toString()
     })
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     clearInterval(this.intervalId)
   }
 
@@ -46,23 +46,23 @@ class Home extends PureComponent {
     loadingContracts: false
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.intervalId = setInterval(this.randomSeed, 100)
-    const {fetchBalance, fetchContracts, fetchVersion} = this.props
+    const { fetchBalance, fetchContracts, fetchVersion } = this.props
     fetchBalance()
     fetchContracts()
     fetchVersion()
   }
 
   getTotalContracts = totalContracts => {
-    this.setState({totalContracts})
+    this.setState({ totalContracts })
     return totalContracts
   }
 
-  render () {
-    const {balance, contract, contracts, accounts, history} = this.props
+  render() {
+    const { balance, contract, contracts, accounts, history } = this.props
 
-    const {randomSeed} = this.state
+    const { randomSeed } = this.state
 
     return (
       <div className="container">
@@ -70,7 +70,7 @@ class Home extends PureComponent {
           loading: <span>loading</span>,
           done: contracts.data && (
             <div className="flex-container-main" key={contract._id}>
-              <NavHeader history={history}/>
+              <NavHeader history={history} />
               <ContractDisplayList
                 randomSeed={randomSeed}
                 contracts={contracts}
@@ -78,8 +78,8 @@ class Home extends PureComponent {
                 history={history}
                 accounts={accounts}
               />
-              <div className="flex-container-main-flex-grow"/>
-              <HomeKlerosFooter/>
+              <div className="flex-container-main-flex-grow" />
+              <HomeKlerosFooter />
             </div>
           ),
           failed: contract.failedLoading && 'failedLoading'

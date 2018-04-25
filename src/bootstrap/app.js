@@ -18,7 +18,7 @@ import GlobalComponents from './global-components'
 
 import './app.css'
 
-const App = ({store, history, testElement}) => (
+const App = ({ store, history, testElement }) => (
   <Provider store={store}>
     <Initializer>
       <ConnectedRouter history={history}>
@@ -27,20 +27,20 @@ const App = ({store, history, testElement}) => (
             <title>Kleros Dapp</title>
           </Helmet>
           <Switch>
-            <Route exact path="/" component={Home}/>
-            <Route exact path="/profile" component={Profile}/>
-            <Route exact path="/contracts/new" component={NewContract}/>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/profile" component={Profile} />
+            <Route exact path="/contracts/new" component={NewContract} />
             <Route
               exact
               path="/contracts/:contractAddress"
               component={Contract}
             />
-            <Route exact path="/evidences/new" component={NewEvidence}/>
-            <Route component={PageNotFound}/>
+            <Route exact path="/evidences/new" component={NewEvidence} />
+            <Route component={PageNotFound} />
           </Switch>
           {testElement}
-          <KlerosGitter/>
-          <Route exact path="*" component={GlobalComponents}/>
+          <KlerosGitter />
+          <Route exact path="*" component={GlobalComponents} />
         </div>
       </ConnectedRouter>
     </Initializer>

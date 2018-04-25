@@ -14,8 +14,6 @@ export const HomeKlerosFooter = () => (
       />
     </a>
     &nbsp;&middot; 2018-2019 &middot; Arbitrable payment powered by
-    <span className="flex-container-main-footer-kleros">
-                  &nbsp;Kleros
-                </span>
+    <span className="flex-container-main-footer-kleros">&nbsp;Kleros</span>
   </div>
 )
