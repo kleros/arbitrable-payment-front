@@ -10,7 +10,7 @@ import * as contractSelectors from '../../reducers/contract'
 import { renderIf } from '../../utils/react-redux'
 import { shortAddress } from '../../utils/contract'
 import { NavHeader } from '../../components/nav-header'
-import { SharedKlerosFooter } from '../shared-kleros-footer'
+import { SharedKlerosFooter } from '../../components/shared-kleros-footer'
 
 import './profile.css'
 

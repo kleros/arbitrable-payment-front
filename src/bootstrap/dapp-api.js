@@ -26,7 +26,5 @@ const kleros = new Kleros(
 export default kleros
 
 eth.accounts((error, accounts) => {
-  kleros.watchForEvents(
-    accounts[0]
-  )
+  kleros.watchForEvents(accounts[0])
 })
