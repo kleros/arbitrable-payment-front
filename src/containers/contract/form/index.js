@@ -4,16 +4,13 @@ import { connect } from 'react-redux'
 import sha3 from 'crypto-js/sha3'
 import Stepper from 'react-stepper-horizontal'
 
-import * as walletSelectors from '../../../reducers/wallet'
 import * as walletActions from '../../../actions/wallet'
-import * as contractSelectors from '../../../reducers/contract'
 import * as contractActions from '../../../actions/contract'
 import {
   CreateContractForm,
   getCreateContractFormIsInvalid,
   submitCreateContractForm
 } from '../../../forms/contract'
-
 import { SharedKlerosFooter } from '../../shared-kleros-footer'
 import './new-contract.css'
 
@@ -21,12 +18,14 @@ const FINAL_STEP = 4
 
 class NewContract extends PureComponent {
   static propTypes = {
-    balance: walletSelectors.balanceShape.isRequired,
-    contract: contractSelectors.contractShape.isRequired,
-    createContractFormIsInvalid: PropTypes.bool.isRequired,
     fetchBalance: PropTypes.func.isRequired,
     submitCreateContractForm: PropTypes.func.isRequired,
-    createContract: PropTypes.func.isRequired
+    createContract: PropTypes.func.isRequired,
+    form: PropTypes.shape({
+      formClassName: PropTypes.string,
+      fieldsClassName: PropTypes.string,
+      disabled: PropTypes.bool
+    }).isRequired
   }
 
   state = {

@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import ReactRouterPropTypes from 'react-router-prop-types'
 
 import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
@@ -31,18 +32,14 @@ class Home extends PureComponent {
   }
 
   static propTypes = {
-    loadingContracts: PropTypes.bool,
+    accounts: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     contract: contractSelectors.contractShape.isRequired,
+    contracts: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     fetchContracts: PropTypes.func.isRequired,
-
     balance: walletSelectors.balanceShape.isRequired,
-    version: walletSelectors.versionShape.isRequired,
     fetchBalance: PropTypes.func.isRequired,
-    fetchVersion: PropTypes.func.isRequired
-  }
-
-  static defaultProps = {
-    loadingContracts: false
+    fetchVersion: PropTypes.func.isRequired,
+    history: ReactRouterPropTypes.history.isRequired
   }
 
   componentDidMount() {

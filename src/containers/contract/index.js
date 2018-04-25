@@ -21,8 +21,8 @@ class Contract extends PureComponent {
   }
   static propTypes = {
     contract: contractSelectors.contractShape.isRequired,
-    ruling: PropTypes.number.isRequired,
-    accounts: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    ruling: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    accounts: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     history: ReactRouterPropTypes.history.isRequired,
     fetchContract: PropTypes.func.isRequired,
     fetchGetdispute: PropTypes.func.isRequired,
@@ -37,6 +37,10 @@ class Contract extends PureComponent {
       params: PropTypes.shape({ contractAddress: PropTypes.string.isRequired })
         .isRequired
     }).isRequired
+  }
+
+  static defaultProps = {
+    ruling: {}
   }
 
   componentDidMount() {
@@ -121,8 +125,7 @@ class Contract extends PureComponent {
   })
 
   isTimeout = contract => {
-    const timeout =
-      contract.data.lastInteraction + contract.data.timeout
+    const timeout = contract.data.lastInteraction + contract.data.timeout
     const dateTime = (Date.now() / 1000) | 0
     return dateTime > timeout
   }

@@ -100,7 +100,6 @@
   box-sizing: border-box;
 
   padding: 20px;
-
 }
 
 .flex-item {
@@ -163,7 +162,6 @@
 }
 
 .creationContract {
-
 }
 
 .creationContentContract {
@@ -192,23 +190,23 @@
   max-width: 240px;
 }
 
-@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
   .flex-container {
     border: none;
   }
 
   .wide {
-    flex:1;
+    flex: 1;
     min-width: 280px;
   }
 }
 
-@keyframes placeHolderShimmer{
-  0%{
-    background-position: -468px 0
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -468px 0;
   }
-  100%{
-    background-position: 468px 0
+  100% {
+    background-position: 468px 0;
   }
 }
 

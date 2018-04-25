@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Blockies from 'react-blockies'
+import ReactRouterPropTypes from 'react-router-prop-types'
 
 import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
@@ -11,8 +12,6 @@ import { renderIf } from '../../utils/react-redux'
 import { shortAddress } from '../../utils/contract'
 import { NavHeader } from '../nav-header'
 import { SharedKlerosFooter } from '../shared-kleros-footer'
-
-import './profile.css'
 
 class Profile extends PureComponent {
   state = {
@@ -33,18 +32,14 @@ class Profile extends PureComponent {
   }
 
   static propTypes = {
-    loadingContracts: PropTypes.bool,
+    accounts: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     contract: contractSelectors.contractShape.isRequired,
-    creatingContract: PropTypes.bool,
+    contracts: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     fetchContracts: PropTypes.func.isRequired,
     balance: walletSelectors.balanceShape.isRequired,
-    version: walletSelectors.versionShape.isRequired,
     fetchBalance: PropTypes.func.isRequired,
-    fetchVersion: PropTypes.func.isRequired
-  }
-
-  static defaultProps = {
-    loadingContracts: false
+    fetchVersion: PropTypes.func.isRequired,
+    history: ReactRouterPropTypes.history.isRequired
   }
 
   componentDidMount() {
