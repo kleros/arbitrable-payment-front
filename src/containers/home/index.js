@@ -32,10 +32,9 @@ class Home extends PureComponent {
   }
 
   static propTypes = {
-    accounts: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    accounts: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     contract: contractSelectors.contractShape.isRequired,
-    contracts: PropTypes.arrayOf(contractSelectors.contractShape.isRequired)
-      .isRequired,
+    contracts: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     fetchContracts: PropTypes.func.isRequired,
     balance: walletSelectors.balanceShape.isRequired,
     fetchBalance: PropTypes.func.isRequired,

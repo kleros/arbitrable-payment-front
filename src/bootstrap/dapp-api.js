@@ -27,6 +27,6 @@ export default kleros
 
 eth.accounts((error, accounts) => {
   if (error) {
-  }
+  } /* eslint handle-callback-err: "warn" */
   kleros.watchForEvents(accounts[0])
 })

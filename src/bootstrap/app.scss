@@ -25,7 +25,9 @@ fieldset {
   border: none;
 }
 
-textarea, input, button {
+textarea,
+input,
+button {
   outline: none;
 }
 
@@ -52,7 +54,7 @@ textarea, input, button {
   animation-name: placeHolderShimmer;
   animation-timing-function: linear;
   background: #f6f7f8;
-  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+  background: linear-gradient(to right, #eee 8%, #ddd 18%, #eee 33%);
   background-size: 1000px 104px;
   border-radius: 4px;
 }
@@ -69,7 +71,7 @@ textarea, input, button {
   animation-name: placeHolderShimmer;
   animation-timing-function: linear;
   background: #f6f7f8;
-  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+  background: linear-gradient(to right, #eee 8%, #ddd 18%, #eee 33%);
   background-size: 1000px 104px;
   border-radius: 4px;
 }
@@ -82,8 +84,8 @@ textarea, input, button {
 
 .short {
   white-space: nowrap;
-  width: 100%;                   /* IE6 needs any width */
-  overflow: hidden;              /* "overflow" value must be different from  visible"*/
-  -o-text-overflow: ellipsis;    /* Opera < 11*/
-  text-overflow:    ellipsis;    /* IE, Safari (WebKit), Opera >= 11, FF > 6 */
+  width: 100%; /* IE6 needs any width */
+  overflow: hidden; /* "overflow" value must be different from  visible"*/
+  -o-text-overflow: ellipsis; /* Opera < 11*/
+  text-overflow: ellipsis; /* IE, Safari (WebKit), Opera >= 11, FF > 6 */
 }

@@ -135,10 +135,9 @@ export const ContractDisplayList = ({
 )
 
 ContractDisplayList.propTypes = {
-  accounts: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  accounts: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
   contract: contractSelectors.contractShape.isRequired,
   history: ReactRouterPropTypes.history.isRequired,
   randomSeed: PropTypes.string.isRequired,
-  contracts: PropTypes.arrayOf(contractSelectors.contractShape.isRequired)
-    .isRequired
+  contracts: PropTypes.object.isRequired // eslint-disable-line react/forbid-prop-types
 }

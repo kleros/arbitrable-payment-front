@@ -13,8 +13,6 @@ import { shortAddress } from '../../utils/contract'
 import { NavHeader } from '../nav-header'
 import { SharedKlerosFooter } from '../shared-kleros-footer'
 
-import './profile.css'
-
 class Profile extends PureComponent {
   state = {
     randomSeed: '',
@@ -34,10 +32,9 @@ class Profile extends PureComponent {
   }
 
   static propTypes = {
-    accounts: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    accounts: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     contract: contractSelectors.contractShape.isRequired,
-    contracts: PropTypes.arrayOf(contractSelectors.contractShape.isRequired)
-      .isRequired,
+    contracts: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     fetchContracts: PropTypes.func.isRequired,
     balance: walletSelectors.balanceShape.isRequired,
     fetchBalance: PropTypes.func.isRequired,
