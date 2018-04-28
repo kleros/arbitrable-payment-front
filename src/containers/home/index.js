@@ -6,9 +6,10 @@ import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
 import * as walletSelectors from '../../reducers/wallet'
 import * as contractSelectors from '../../reducers/contract'
-import { NavHeader } from '../nav-header'
+import { NavHeader } from '../../components/nav-header'
 import { ContractDisplayList } from '../contract-display-list'
 import { renderIf } from '../../utils/react-redux'
+import { HomeKlerosFooter } from '../../components/home-kleros-footer'
 
 import './home.css'
 
@@ -78,23 +79,7 @@ class Home extends PureComponent {
                 accounts={accounts}
               />
               <div className="flex-container-main-flex-grow" />
-              <div className="flex-container-main-footer">
-                <a
-                  href="http://www.wtfpl.net/"
-                  className="flex-container-main-footer-wtfpl"
-                >
-                  <img
-                    src="http://www.wtfpl.net/wp-content/uploads/2012/12/wtfpl-badge-2.png"
-                    width="80"
-                    height="15"
-                    alt="WTFPL"
-                  />
-                </a>
-                &nbsp;&middot; 2018-2019 &middot; Arbitrable payment powered by
-                <span className="flex-container-main-footer-kleros">
-                  &nbsp;Kleros
-                </span>
-              </div>
+              <HomeKlerosFooter />
             </div>
           ),
           failed: contract.failedLoading && 'failedLoading'

@@ -14,7 +14,7 @@ import {
   submitCreateContractForm
 } from '../../../forms/contract'
 
-import { SharedKlerosFooter } from '../../shared-kleros-footer'
+import { SharedKlerosFooter } from '../../../components/shared-kleros-footer'
 import './new-contract.css'
 
 const FINAL_STEP = 4
