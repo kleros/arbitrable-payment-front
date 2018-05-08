@@ -17,14 +17,8 @@ else
 
 export const eth = ethInstance
 
-const kleros = new Kleros(
+export const kleros = new Kleros(
   ethInstance.currentProvider,
   process.env.REACT_APP_STORE_PROVIDER,
   ARBITRATOR_ADDRESS
 )
-
-export default kleros
-
-eth.accounts((error, accounts) => {
-  kleros.watchForEvents(accounts[0])
-})

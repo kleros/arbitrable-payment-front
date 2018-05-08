@@ -10,6 +10,7 @@ export const RECEIVE_DISPUTE = 'RECEIVE_DISPUTE'
 export const CREATE_APPEAL = 'CREATE_APPEAL'
 export const RECEIVE_APPEAL = 'RECEIVE_APPEAL'
 export const FETCH_CANAPPEAL = 'FETCH_CANAPPEAL'
+export const RECEIVE_CANAPPEAL = 'RECEIVE_CANAPPEAL'
 export const CREATE_PAY = 'CREATE_PAY'
 export const RECEIVE_PAY = 'RECEIVE_PAY'
 export const CREATE_REIMBURSE = 'CREATE_REIMBURSE'
@@ -41,7 +42,7 @@ export const receiveContract = contract => ({
   type: RECEIVE_CONTRACT,
   payload: { contract }
 })
-export const fetchGetdispute = (contractAddress, disputeId) => ({
+export const fetchGetDispute = (contractAddress, disputeId) => ({
   type: FETCH_GETDISPUTE,
   payload: { contractAddress, disputeId }
 })
@@ -66,10 +67,15 @@ export const receiveAppeal = appealTx => ({
   type: RECEIVE_APPEAL,
   payload: { appealTx }
 })
-export const fetchCanappeal = (contractAddress, disputeId) => ({
+export const fetchCanAppeal = (contractAddress, disputeId) => ({
   type: FETCH_CANAPPEAL,
   payload: { contractAddress, disputeId }
 })
+export const receiveCanAppeal = canAppeal => ({
+  type: RECEIVE_CANAPPEAL,
+  payload: { canAppeal }
+})
+
 export const createPay = (contractAddress, partyA, partyB) => ({
   type: CREATE_PAY,
   payload: { contractAddress, partyA, partyB }
