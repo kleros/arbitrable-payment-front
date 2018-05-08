@@ -17,13 +17,18 @@ function* setToken() {
     : {}
 
   let token = authTokens[accounts[0]]
-
-  // either set auth token or create a new one
-  if (!token) {
-    yield call(newAuthToken)
-  } else {
-    yield call(kleros.auth.setAuthToken, token)
+  // Check to make sure saved token is valid.
+  if (token) {
+    const isValid = yield call(
+      kleros.auth.validateAuthToken,
+      accounts[0],
+      token
+    )
+    // If token is invalid set to null so we generate a new token.
+    if (!isValid) token = null
   }
+  // If we do not have a valid token saved create a new one
+  if (!token) yield call(newAuthToken)
 }
 
 /**
@@ -38,7 +43,7 @@ function* newAuthToken() {
     ? JSON.parse(storage.getItem('auth'))
     : {}
 
-  const signedToken = yield call(kleros.auth.validateNewAuthToken, accounts[0])
+  const signedToken = yield call(kleros.auth.getNewAuthToken, accounts[0])
   authTokens[accounts[0]] = signedToken
 
   storage.setItem('auth', JSON.stringify(authTokens))
