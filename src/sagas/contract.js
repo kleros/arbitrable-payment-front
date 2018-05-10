@@ -178,7 +178,7 @@ function* createDispute({ type, payload: { contractAddress } }) {
   let contract, disputeTx
 
   try {
-    contract = yield call(kleros.arbitrable.getData)
+    contract = yield call(kleros.arbitrable.getData, accounts[0].toLowerCase())
 
     let fee
     if (contract.partyA === accounts[0]) fee = contract.partyAFee
