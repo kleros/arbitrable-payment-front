@@ -14,6 +14,7 @@ import {
   submitCreateContractForm
 } from '../../../forms/contract'
 
+import { SharedKlerosFooter } from '../../../components/shared-kleros-footer'
 import './new-contract.css'
 
 const FINAL_STEP = 4
@@ -197,12 +198,7 @@ class NewContract extends PureComponent {
               )}
           </div>
         </div>
-        <div className="flex-container-main-footer">
-          Contracting front © 2018 powered by
-          <span className="flex-container-main-footer-kleros">
-            &nbsp;Kleros
-          </span>
-        </div>
+        <SharedKlerosFooter />
       </div>
     )
   }

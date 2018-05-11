@@ -4,7 +4,7 @@ import { toastr } from 'react-redux-toastr'
 
 import { call, put, takeLatest } from 'redux-saga/effects'
 
-import kleros, { eth } from '../bootstrap/dapp-api'
+import kleros, { eth, ARBITRATOR_ADDRESS } from '../bootstrap/dapp-api'
 import * as contractActions from '../actions/contract'
 import { ETH_NO_ACCOUNTS } from '../constants/errors'
 
@@ -26,12 +26,13 @@ function* createContract({ type, payload: { contract } }) {
   let newContract = null
 
   try {
+    // static method
     newContract = yield call(
-      kleros.arbitrableContract.deployContract,
+      kleros.arbitrable.deploy,
       accounts[0].toLowerCase(),
       unit.toWei(contract.payment, 'ether'),
       contract.description,
-      process.env.REACT_APP_ARBITRATOR_ADDRESS_DEV,
+      ARBITRATOR_ADDRESS,
       process.env.REACT_APP_ARBITRATOR_TIMEOUT,
       contract.partyB.toLowerCase(),
       process.env.REACT_APP_ARBITRATOR_EXTRADATA,
@@ -56,7 +57,7 @@ function* fetchContracts() {
   let contracts = []
 
   contracts = yield call(
-    kleros.arbitrator.getContractsForUser,
+    kleros.arbitrable.getContractsForUser,
     accounts[0].toLowerCase()
   )
 
@@ -71,14 +72,13 @@ function* fetchContract({ payload: { contractAddress } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
+  // Set contract instance
+  yield call(kleros.arbitrable.setContractInstance, contractAddress)
+
   let contract = null
 
   try {
-    contract = yield call(
-      kleros.arbitrableContract.getData,
-      contractAddress,
-      accounts[0].toLowerCase()
-    )
+    contract = yield call(kleros.arbitrable.getData, accounts[0].toLowerCase())
   } catch (err) {
     console.log(err)
   }
@@ -94,6 +94,9 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
+  // Set contract instance
+  yield call(kleros.arbitrable.setContractInstance, contractAddress)
+
   yield put(push('/'))
 
   let payTx = null
@@ -101,10 +104,7 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
   try {
     if (partyA !== accounts[0]) throw new Error('The caller must be the partyA')
 
-    const contract = yield call(
-      kleros.arbitrableContract._ArbitrableContract.load,
-      contractAddress
-    )
+    const contract = yield call(kleros.arbitrable.loadContract)
 
     // TODO get the amount from the api
     const amount = yield call(contract.amount.call)
@@ -122,7 +122,6 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
   }
 
   yield call(toastr.success, 'Payment successful', toastrOptions)
-
   yield put(contractActions.receivePay(payTx))
 }
 
@@ -134,15 +133,15 @@ function* createReimburse({ type, payload: { contractAddress } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
+  // Set contract instance
+  yield call(kleros.arbitrable.setContractInstance, contractAddress)
+
   yield put(push('/'))
 
   let reimburseTx = null
 
   try {
-    const contract = yield call(
-      kleros.arbitrableContract._ArbitrableContract.load,
-      contractAddress
-    )
+    const contract = yield call(kleros.arbitrable.loadContract)
 
     // TODO get the amount from the api
     const amount = yield call(contract.amount.call)
@@ -163,7 +162,6 @@ function* createReimburse({ type, payload: { contractAddress } }) {
   }
 
   yield call(toastr.success, 'Successful refund', toastrOptions)
-
   yield put(contractActions.receiveReimburse(reimburseTx))
 }
 
@@ -174,41 +172,35 @@ function* createReimburse({ type, payload: { contractAddress } }) {
 function* createDispute({ type, payload: { contractAddress } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+  // Set contract instance
+  yield call(kleros.arbitrable.setContractInstance, contractAddress)
 
-  let contract,
-    disputeTx = null
+  let contract, disputeTx
 
   try {
-    contract = yield call(kleros.arbitrableContract.getData, contractAddress)
+    contract = yield call(kleros.arbitrable.getData, accounts[0].toLowerCase())
 
     let fee
     if (contract.partyA === accounts[0]) fee = contract.partyAFee
     if (contract.partyB === accounts[0]) fee = contract.partyBFee
 
-    const court = yield call(
-      kleros.klerosPOC.load,
-      process.env.REACT_APP_ARBITRATOR_ADDRESS_DEV
-    )
-
     const arbitrationCost = yield call(
-      court.arbitrationCost,
+      kleros.arbitrator.getArbitrationCost,
       contract.arbitratorExtraData
     )
 
-    const cost = unit.fromWei(arbitrationCost.toNumber() - fee, 'ether')
+    const cost = arbitrationCost - fee
 
     if (accounts[0] === contract.partyA) {
       disputeTx = yield call(
-        kleros.disputes.raiseDisputePartyA,
+        kleros.arbitrable.payArbitrationFeeByPartyA,
         accounts[0],
-        contractAddress,
         cost
       )
     } else if (accounts[0] === contract.partyB) {
       disputeTx = yield call(
-        kleros.disputes.raiseDisputePartyB,
+        kleros.arbitrable.payArbitrationFeeByPartyB,
         accounts[0],
-        contractAddress,
         cost
       )
     }
@@ -219,9 +211,7 @@ function* createDispute({ type, payload: { contractAddress } }) {
   }
 
   yield put(push('/'))
-
   yield call(toastr.success, 'Dispute creation successful', toastrOptions)
-
   yield put(contractActions.receiveDispute(disputeTx))
 }
 
@@ -233,16 +223,11 @@ function* canAppeal({ type, payload: { contractAddress, disputeId } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
-  let contract = null
   let appealTx = null
-  let openDisputesForSession = null
 
   try {
-    contract = yield call(kleros.arbitrableContract.getData, contractAddress)
-
-    openDisputesForSession = yield call(
-      kleros.arbitrableContract.getOpenDisputesForSession
-    )
+    yield call(kleros.arbitrable.getData)
+    yield call(kleros.arbitrator.getOpenDisputesForSession)
     // if not throw new Error('Error appeal not available')
   } catch (err) {
     console.log(err)
@@ -260,19 +245,19 @@ function* createAppeal({ type, payload: { contractAddress, disputeId } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
-  let appealTx = null
-  let openDisputesForSession = null
+  let appealTx, openDisputesForSession
 
   try {
     openDisputesForSession = yield call(
-      kleros.arbitrableContract.getOpenDisputesForSession
+      kleros.arbitrator.getOpenDisputesForSession
     )
 
     if (openDisputesForSession.indexOf(disputeId)) {
       openDisputesForSession = yield call(
-        kleros.arbitrableContract.appealRuling,
+        kleros.arbitrator.appealRuling,
         disputeId,
-        process.env.REACT_APP_ARBITRATOR_EXTRADATA
+        process.env.REACT_APP_ARBITRATOR_EXTRADATA,
+        accounts[0]
       )
     }
     // if not throw new Error('Error appeal not available')
@@ -283,9 +268,7 @@ function* createAppeal({ type, payload: { contractAddress, disputeId } }) {
   }
 
   yield put(push('/'))
-
   yield call(toastr.success, 'Appeal creation successful', toastrOptions)
-
   yield put(contractActions.receiveAppeal(appealTx))
 }
 
@@ -305,10 +288,7 @@ function* createTimeout({
   let timeoutTx = null
 
   try {
-    const contract = yield call(
-      kleros.arbitrableContract._ArbitrableContract.load,
-      contractAddress
-    )
+    const contract = yield call(kleros.arbitrable.loadContract)
 
     // TODO get the amount from the api
     const amount = yield call(contract.amount.call)
@@ -332,7 +312,6 @@ function* createTimeout({
   }
 
   yield call(toastr.success, 'Timeout successful', toastrOptions)
-
   yield put(contractActions.receiveTimeout(timeoutTx))
 }
 
@@ -350,9 +329,8 @@ function* createEvidence({ type, payload: { evidence } }) {
 
   try {
     evidenceTx = yield call(
-      kleros.arbitrableContract.submitEvidence,
+      kleros.arbitrable.submitEvidence,
       accounts[0],
-      evidence.addressContract,
       evidence.name,
       evidence.description,
       evidence.url
@@ -366,7 +344,6 @@ function* createEvidence({ type, payload: { evidence } }) {
   }
 
   yield call(toastr.success, 'Evidence creation successful', toastrOptions)
-
   yield put(contractActions.receiveEvidence(evidenceTx))
 }
 
@@ -381,11 +358,7 @@ function* fetchDispute({ payload: { contractAddress, disputeId } }) {
   let dispute = null
 
   try {
-    dispute = yield call(
-      kleros.klerosPOC.getDispute,
-      process.env.REACT_APP_ARBITRATOR_ADDRESS_DEV,
-      disputeId
-    )
+    dispute = yield call(kleros.arbitrator.getDispute, disputeId)
   } catch (err) {
     console.log(err)
   }
@@ -409,7 +382,7 @@ function* fetchCurrentRulingForDispute({
 
   try {
     ruling = yield call(
-      kleros.arbitrableContract.currentRulingForDispute,
+      kleros.arbitrator.currentRulingForDispute,
       disputeId,
       appeal
     )

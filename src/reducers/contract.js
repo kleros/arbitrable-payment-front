@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 
 import createReducer from '../utils/create-reducer'
-import { createShape } from '../utils/react-redux'
 
 // Reducer
 export default createReducer({
