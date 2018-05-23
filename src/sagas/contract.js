@@ -1,10 +1,11 @@
 import unit from 'ethjs-unit'
+import _ from 'lodash'
 import { push } from 'react-router-redux'
 import { toastr } from 'react-redux-toastr'
 
 import { call, put, takeLatest } from 'redux-saga/effects'
 
-import kleros, { eth, ARBITRATOR_ADDRESS } from '../bootstrap/dapp-api'
+import { kleros, eth, ARBITRATOR_ADDRESS } from '../bootstrap/dapp-api'
 import * as contractActions from '../actions/contract'
 import { ETH_NO_ACCOUNTS } from '../constants/errors'
 
@@ -219,22 +220,26 @@ function* createDispute({ type, payload: { contractAddress } }) {
  * Can appeal.
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
-function* canAppeal({ type, payload: { contractAddress, disputeId } }) {
+function* canAppeal({ type, payload: { disputeId } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
-  let appealTx = null
+  let dispute, currentSession
 
   try {
-    yield call(kleros.arbitrable.getData)
-    yield call(kleros.arbitrator.getOpenDisputesForSession)
+    currentSession = yield call(kleros.arbitrator.getSession)
+    dispute = yield call(kleros.arbitrator.getDispute, disputeId)
     // if not throw new Error('Error appeal not available')
   } catch (err) {
     console.log(err)
     throw new Error('Error can appeal failed')
   }
 
-  yield put(contractActions.fetchCanappeal(appealTx))
+  yield put(
+    contractActions.receiveCanAppeal(
+      dispute.firstSession + dispute.numberOfAppeals === currentSession
+    )
+  )
 }
 
 /**
@@ -252,8 +257,15 @@ function* createAppeal({ type, payload: { contractAddress, disputeId } }) {
       kleros.arbitrator.getOpenDisputesForSession
     )
 
-    if (openDisputesForSession.indexOf(disputeId)) {
-      openDisputesForSession = yield call(
+    if (
+      _.findIndex(
+        openDisputesForSession,
+        dispute =>
+          dispute.disputeId === disputeId &&
+          dispute.arbitratorAddress === ARBITRATOR_ADDRESS
+      ) >= 0
+    ) {
+      yield call(
         kleros.arbitrator.appealRuling,
         disputeId,
         process.env.REACT_APP_ARBITRATOR_EXTRADATA,

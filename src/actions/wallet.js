@@ -11,5 +11,10 @@ export const FAIL_FETCH_VERSION = 'FAIL_FETCH_VERSION'
 
 // Action Creators
 export const fetchAccounts = () => ({ type: FETCH_ACCOUNTS })
+// Accounts
+export const receiveAccounts = _accounts => ({
+  type: RECEIVE_ACCOUNTS,
+  payload: { accounts: _accounts }
+})
 export const fetchBalance = () => ({ type: FETCH_BALANCE })
 export const fetchVersion = () => ({ type: FETCH_VERSION })
