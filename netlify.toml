@@ -10,7 +10,7 @@
     REACT_APP_ARBITRATOR_ADDRESS = "0xA2D6CC4eCec4B1189F61dF4dD0a4FE06dfad0dEc"
     REACT_APP_ARBITRATOR_EXTRADATA = "0"
     REACT_APP_ARBITRATOR_TIMEOUT = "172800"
-    REACT_APP_STORE_PROVIDER = "https://kleros.in"
+    REACT_APP_STORE_PROVIDER = "http://develop.kleros.in"
     YARN_FLAGS = "--no-ignore-optional"
 
 # Develop Branch Deploy context: All deploys that are not in
