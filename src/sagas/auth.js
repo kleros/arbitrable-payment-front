@@ -28,7 +28,7 @@ function* setToken() {
     if (!isValid) token = null
   }
   // If we do not have a valid token saved create a new one
-  if (!token) yield call(newAuthToken)
+  // if (!token) yield call(newAuthToken)
 }
 
 /**
