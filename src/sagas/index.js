@@ -4,7 +4,7 @@ import { spawn, call, all } from 'redux-saga/effects'
 
 import walletSaga from './wallet'
 import contractSaga from './contract'
-import notificationSaga from './notification'
+// import notificationSaga from './notification'
 import authSaga from './auth'
 
 /**
@@ -32,7 +32,7 @@ export function makeRestartable(saga) {
   }
 }
 
-const rootSagas = [walletSaga, contractSaga, notificationSaga, authSaga].map(
+const rootSagas = [walletSaga, contractSaga, authSaga].map(
   makeRestartable
 )
 

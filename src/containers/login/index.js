@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 
 import * as authActions from '../../actions/auth'
 import * as authSelectors from '../../reducers/auth'
-import { renderIf } from '../../utils/react-redux'
 import { HomeKlerosFooter } from '../../components/home-kleros-footer'
 import Button from '../../components/button'
 
@@ -14,11 +13,6 @@ class Login extends PureComponent {
   static propTypes = {
     token: authSelectors.tokenShape.isRequired,
     fetchNewAuthToken: PropTypes.func.isRequired,
-    validateAuthToken: PropTypes.func.isRequired
-  }
-
-  componentDidMount() {
-    this.props.validateAuthToken()
   }
 
   login() {
@@ -56,7 +50,6 @@ export default connect(
     token: state.auth.token
   }),
   {
-    fetchNewAuthToken: authActions.fetchNewAuthToken,
-    validateAuthToken: authActions.validateToken
+    fetchNewAuthToken: authActions.fetchNewAuthToken
   }
 )(Login)

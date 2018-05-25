@@ -1,48 +1,39 @@
-import { call, fork, takeLatest, put } from 'redux-saga/effects'
+import { call, fork, takeLatest, put, select } from 'redux-saga/effects'
 import { push } from 'react-router-redux'
 
 import * as authActions from '../actions/auth'
+import * as walletSelectors from '../reducers/wallet'
 import { kleros, eth } from '../bootstrap/dapp-api'
 import { ETH_NO_ACCOUNTS } from '../constants/errors'
 import { action } from '../utils/action'
-import { fetchSaga, updateSaga } from '../utils/saga'
+import { getAuthTokenForAccount, saveAuthTokenForAccount } from '../utils/auth'
 
 /**
  * Sets the users auth token.
  */
 function* setToken() {
+  // call eth directly so there isn't a race condition with accounts saga
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+  const account = accounts[0]
 
-  const storage = window.localStorage
-  const authTokens = storage.getItem('auth')
-    ? JSON.parse(storage.getItem('auth'))
-    : {}
-
-  let token = authTokens[accounts[0]]
+  let token = getAuthTokenForAccount(account)
   let isValid = false
   // Check to make sure saved token is valid.
   if (token) {
     isValid = yield call(
       kleros.auth.validateAuthToken,
-      accounts[0],
+      account,
       token
-    )
-
-    // update storage on validity of token
-    yield put(
-      action(
-        authActions.token.RECEIVE_UPDATED,
-        {
-          [authActions.token.self] : { isValid }
-        }
-      )
     )
   }
 
-  // if we either do not have a token or it is invalid, redirect
+  // if we either do not have a token or it is invalid, logOut
   if (!token || !isValid) {
-    yield put(push('/login'))
+    yield logOutUser()
+  } else {
+    // if token is valid go ahead and log in the user.
+    yield logInUser(account)
   }
 }
 
@@ -50,38 +41,49 @@ function* setToken() {
  * Generate a new auth token and store in local storage
  */
 function* newAuthToken() {
-  const accounts = yield call(eth.accounts)
-  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+  const account = yield select(walletSelectors.getAccount)
 
-  const storage = window.localStorage
-  const authTokens = storage.getItem('auth')
-    ? JSON.parse(storage.getItem('auth'))
-    : {}
-
-  const signedToken = yield call(kleros.auth.getNewAuthToken, accounts[0])
-  authTokens[accounts[0]] = signedToken
-
-  storage.setItem('auth', JSON.stringify(authTokens))
-
-  return { isValid: true }
+  const signedToken = yield call(kleros.auth.getNewAuthToken, account)
+  // save token and
+  saveAuthTokenForAccount(signedToken, account)
+  yield logInUser()
 }
 
-function* validateAuthToken() {
-  const accounts = yield call(eth.accounts)
-  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+function* logInUser(account) {
+  if (!account)
+    account = yield select(walletSelectors.getAccount)
+  console.log("start watching for events")
+  // start event listener
+  yield call(kleros.watchForEvents, account)
 
-  const storage = window.localStorage
-  const authTokens = storage.getItem('auth')
-    ? JSON.parse(storage.getItem('auth'))
-    : {}
-
-  let token = authTokens[accounts[0]]
-  const isValid = yield call(
-    kleros.auth.validateAuthToken,
-    accounts[0],
-    token
+  // update storage on validity of token
+  yield put(
+    action(
+      authActions.token.RECEIVE_UPDATED,
+      {
+        [authActions.token.self] : { isValid: true }
+      }
+    )
   )
-  return { isValid }
+}
+
+function* logOutUser() {
+  console.log("stop watching for events")
+  // stop event listener
+  yield call(kleros.stopWatchingForEvents)
+
+  // redirect to login
+  yield put(push('/login'))
+
+  // update storage on validity of token
+  yield put(
+    action(
+      authActions.token.RECEIVE_UPDATED,
+      {
+        [authActions.token.self] : { isValid: false }
+      }
+    )
+  )
 }
 
 /**
@@ -93,15 +95,16 @@ export default function* authSaga() {
 
   yield takeLatest(
     authActions.token.FETCH,
-    fetchSaga,
-    authActions.token,
     newAuthToken
   )
 
   yield takeLatest(
-    authActions.token.VALIDATE,
-    updateSaga,
-    authActions.token,
-    validateAuthToken
+    authActions.token.INVALID,
+    logOutUser
+  )
+
+  yield takeLatest(
+    authActions.token.VALID,
+    logInUser
   )
 }
