@@ -1,11 +1,9 @@
-export const FETCH_NEW_TOKEN = 'FETCH_NEW_TOKEN'
-export const RECEIVE_NEW_TOKEN = 'RECEIVE_NEW_TOKEN'
+import { createActions } from 'lessdux'
 
-export const fetchNewToken = () => ({
-  type: FETCH_NEW_TOKEN
-})
+export const token = {
+  ...createActions('TOKEN', { withUpdate: true }),
+  INVALID: 'TOKEN_INVALID',
+  VALID: 'TOKEN_VALID'
+}
 
-export const receiveNewToken = unsignedToken => ({
-  type: RECEIVE_NEW_TOKEN,
-  payload: { unsignedToken }
-})
+export const fetchNewAuthToken = () => ({ type: token.FETCH })

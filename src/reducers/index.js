@@ -5,6 +5,7 @@ import { reducer as toastr } from 'react-redux-toastr'
 
 import wallet from './wallet'
 import contract from './contract'
+import auth from './auth'
 
 // Export root reducer
 export default combineReducers({
@@ -12,5 +13,6 @@ export default combineReducers({
   form,
   toastr,
   wallet,
-  contract
+  contract,
+  auth
 })

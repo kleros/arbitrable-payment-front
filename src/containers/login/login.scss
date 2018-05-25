@@ -1,0 +1,21 @@
+@import '../../styles/colors.scss';
+
+.login-box {
+  width: 25%;
+  background-color: white;
+  padding: 25px;
+  position: relative;
+  top: 20vh;
+  margin: auto;
+  border-radius: 10px;
+}
+
+.login-box p {
+  font-size: 20px;
+  padding-bottom: 25px;
+}
+
+.login-box .login-btn {
+  width: 50%;
+  margin: auto;
+}

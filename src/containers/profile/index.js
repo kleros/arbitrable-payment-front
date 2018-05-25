@@ -38,9 +38,7 @@ class Profile extends PureComponent {
     creatingContract: PropTypes.bool,
     fetchContracts: PropTypes.func.isRequired,
     balance: walletSelectors.balanceShape.isRequired,
-    version: walletSelectors.versionShape.isRequired,
     fetchBalance: PropTypes.func.isRequired,
-    fetchVersion: PropTypes.func.isRequired
   }
 
   static defaultProps = {
@@ -49,10 +47,9 @@ class Profile extends PureComponent {
 
   componentDidMount() {
     this.intervalId = setInterval(this.randomSeed, 100)
-    const { fetchBalance, fetchContracts, fetchVersion } = this.props
+    const { fetchBalance, fetchContracts } = this.props
     fetchBalance()
     fetchContracts()
-    fetchVersion()
   }
 
   render() {
@@ -100,12 +97,10 @@ export default connect(
     contract: state.contract.contract,
     contracts: state.contract.contracts,
     accounts: state.wallet.accounts,
-    version: state.wallet.version
   }),
   {
     fetchBalance: walletActions.fetchBalance,
     fetchAccounts: walletActions.fetchAccounts,
     fetchContracts: contractActions.fetchContracts,
-    fetchVersion: walletActions.fetchVersion
   }
 )(Profile)
