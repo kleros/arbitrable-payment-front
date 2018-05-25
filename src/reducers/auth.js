@@ -1,22 +1,22 @@
 import PropTypes from 'prop-types'
+import createReducer, { createResource } from 'lessdux'
 
-import createReducer from '../utils/create-reducer'
-import { createShape } from '../utils/react-redux'
+// Shapes
+const {
+  shape: tokenShape,
+  initialState: tokenInitialState
+} = createResource(PropTypes.shape({
+  isValid: PropTypes.bool.isRequired
+}), { withUpdate: true })
+
+export { tokenShape }
+
+// default to invalid
+tokenInitialState.data = {
+  isValid: false
+}
 
 // Reducer
 export default createReducer({
-  tokenValid: {
-    loading: false,
-    data: null,
-    failedLoading: false
-  },
-  authToken: {
-    loading: false,
-    data: null,
-    failedLoading: false
-  }
+  token: tokenInitialState,
 })
-
-// Shapes
-export const tokenValidShape = createShape(PropTypes.bool)
-export const authTokenShape = createShape(PropTypes.string)

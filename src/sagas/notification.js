@@ -10,7 +10,7 @@ import * as authActions from '../actions/auth'
  */
 function* pushNotificationsListener() {
   // Start after fetching all notifications
-  while (yield take(authActions.FETCH_NEW_TOKEN)) {
+  while (yield take(authActions.token.FETCH)) {
     const accounts = yield call(eth.accounts) // Current account
     const account = accounts[0]
 

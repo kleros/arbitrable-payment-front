@@ -3,30 +3,32 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import * as authActions from '../../actions/auth'
+import * as authSelectors from '../../reducers/auth'
 import { renderIf } from '../../utils/react-redux'
 import { HomeKlerosFooter } from '../../components/home-kleros-footer'
+import Button from '../../components/button'
 
 import './login.css'
 
 class Login extends PureComponent {
   static propTypes = {
-    authToken: PropTypes.string,
-    fetchNewToken: PropTypes.func.isRequired,
+    token: authSelectors.tokenShape.isRequired,
+    fetchNewAuthToken: PropTypes.func.isRequired,
+    validateAuthToken: PropTypes.func.isRequired
   }
 
-  static defaultProps = {
-    validatingToken: false
+  componentDidMount() {
+    this.props.validateAuthToken()
   }
 
   login() {
-    const { fetchNewToken } = this.props
-    fetchNewToken()
+    this.props.fetchNewAuthToken()
   }
 
-  getDerivedStateFromProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     // redirect to home if we are logged in
-    if (nextProps.tokenValid)
-      console.log("redirect here....")
+    if (nextProps.token.data.isValid)
+      this.props.history.push('/')
   }
 
   render() {
@@ -34,12 +36,12 @@ class Login extends PureComponent {
       <div className="container">
         <div className="flex-container-main">
           <div className="login-box">
-            <p>In order to use the Kleros Juror User Interface you need to
+            <p>In order to use this Kleros interface you need to
             sign an auth token so that you can safely interact with our off-chain storage server.
             This server stores non-essential dispute metadata to improve the user experience of the
             dashboard. Please click login and sign the token with your web3 client to continue. Thanks!
             </p>
-            <div className="login-btn" onClick={() => this.login()}>Login</div>
+            <Button onClick={this.login.bind(this)} className="login-btn">Login</Button>
           </div>
           <div className="flex-container-main-flex-grow" />
           <HomeKlerosFooter />
@@ -51,9 +53,10 @@ class Login extends PureComponent {
 
 export default connect(
   state => ({
-    tokenValid: state.auth.tokenValid
+    token: state.auth.token
   }),
   {
-    fetchNewToken: authActions.fetchNewToken
+    fetchNewAuthToken: authActions.fetchNewAuthToken,
+    validateAuthToken: authActions.validateToken
   }
 )(Login)

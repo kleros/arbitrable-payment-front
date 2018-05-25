@@ -1,8 +1,11 @@
-import { call, fork, takeLatest } from 'redux-saga/effects'
+import { call, fork, takeLatest, put } from 'redux-saga/effects'
+import { push } from 'react-router-redux'
 
+import * as authActions from '../actions/auth'
 import { kleros, eth } from '../bootstrap/dapp-api'
 import { ETH_NO_ACCOUNTS } from '../constants/errors'
-import * as authActions from '../actions/auth'
+import { action } from '../utils/action'
+import { fetchSaga, updateSaga } from '../utils/saga'
 
 /**
  * Sets the users auth token.
@@ -17,18 +20,30 @@ function* setToken() {
     : {}
 
   let token = authTokens[accounts[0]]
+  let isValid = false
   // Check to make sure saved token is valid.
   if (token) {
-    const isValid = yield call(
+    isValid = yield call(
       kleros.auth.validateAuthToken,
       accounts[0],
       token
     )
-    // If token is invalid set to null so we generate a new token.
-    if (!isValid) token = null
+
+    // update storage on validity of token
+    yield put(
+      action(
+        authActions.token.RECEIVE_UPDATED,
+        {
+          [authActions.token.self] : { isValid }
+        }
+      )
+    )
   }
-  // If we do not have a valid token saved create a new one
-  // if (!token) yield call(newAuthToken)
+
+  // if we either do not have a token or it is invalid, redirect
+  if (!token || !isValid) {
+    yield put(push('/login'))
+  }
 }
 
 /**
@@ -47,6 +62,26 @@ function* newAuthToken() {
   authTokens[accounts[0]] = signedToken
 
   storage.setItem('auth', JSON.stringify(authTokens))
+
+  return { isValid: true }
+}
+
+function* validateAuthToken() {
+  const accounts = yield call(eth.accounts)
+  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
+  const storage = window.localStorage
+  const authTokens = storage.getItem('auth')
+    ? JSON.parse(storage.getItem('auth'))
+    : {}
+
+  let token = authTokens[accounts[0]]
+  const isValid = yield call(
+    kleros.auth.validateAuthToken,
+    accounts[0],
+    token
+  )
+  return { isValid }
 }
 
 /**
@@ -56,5 +91,17 @@ export default function* authSaga() {
   // Listeners
   yield fork(setToken)
 
-  yield takeLatest(authActions.FETCH_NEW_TOKEN, newAuthToken)
+  yield takeLatest(
+    authActions.token.FETCH,
+    fetchSaga,
+    authActions.token,
+    newAuthToken
+  )
+
+  yield takeLatest(
+    authActions.token.VALIDATE,
+    updateSaga,
+    authActions.token,
+    validateAuthToken
+  )
 }
