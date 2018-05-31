@@ -1,5 +1,6 @@
 import unit from 'ethjs-unit'
 import _ from 'lodash'
+import Eth from 'ethjs'
 import { push } from 'react-router-redux'
 import { toastr } from 'react-redux-toastr'
 
@@ -25,14 +26,13 @@ function* createContract({ type, payload: { contract } }) {
   yield put(push('/'))
 
   let newContract = null
-
   try {
     // static method
     newContract = yield call(
       kleros.arbitrable.deploy,
       accounts[0].toLowerCase(),
       unit.toWei(contract.payment, 'ether'),
-      contract.description,
+      Eth.keccak256(contract.description),
       ARBITRATOR_ADDRESS,
       process.env.REACT_APP_ARBITRATOR_TIMEOUT,
       contract.partyB.toLowerCase(),
