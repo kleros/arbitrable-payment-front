@@ -62,7 +62,17 @@ function* fetchContracts() {
     accounts[0].toLowerCase()
   )
 
-  yield put(contractActions.receiveContracts(contracts.reverse()))
+  const contractsData = []
+  for (let contract of contracts) {
+    yield call(kleros.arbitrable.setContractInstance, contract.address)
+    const data = yield call(
+      kleros.arbitrable.getData, accounts[0].toLowerCase()
+    )
+
+    contractsData.push(data)
+  }
+
+  yield put(contractActions.receiveContracts(contractsData.reverse()))
 }
 
 /**
