@@ -280,6 +280,11 @@ class Contract extends PureComponent {
                   ) : (
                     <div />
                   )}
+                  {contract.data.status === DISPUTE_CREATED && (
+                    <div className="Contract-content-actions-waiting">
+                      <b>Waiting the dispute resolution</b>
+                    </div>
+                  )}
                   {contract.data.status !== DISPUTE_RESOLVED &&
                   contract.data.partyAFee &&
                   contract.data.partyBFee ? (
@@ -294,11 +299,6 @@ class Contract extends PureComponent {
                   ) : (
                     <div />
                   )}
-                  {contract.data.status === DISPUTE_CREATED && (
-                    <div>
-                      <b>Waiting the dispute resolution</b>
-                    </div>
-                  )}
                   {this.showEmptyContractEl(contract) && (
                     <div className="Contract-content-item">
                       <b>The contract is closed.</b>
@@ -306,10 +306,12 @@ class Contract extends PureComponent {
                   )}
                   {contract.data.status === DISPUTE_RESOLVED &&
                   contract.data.disputeId !== 0 ? (
-                    <div>
-                      <b>Ruling: {ruling.data === 0 && 'No ruling'}</b>
-                      <b>Ruling: {ruling.data === 1 && 'Party A wins'}</b>
-                      <b>Ruling: {ruling.data === 2 && 'Party B wins'}</b>
+                    <div className="Contract-content-actions-ruling">
+                      <b>
+                        {ruling.data === 0 && 'No ruling'}
+                        {ruling.data === 1 && 'Party A wins'}
+                        {ruling.data === 2 && 'Party B wins'}
+                      </b>
                     </div>
                   ) : (
                     <div />
