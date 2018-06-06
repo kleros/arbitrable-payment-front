@@ -10,7 +10,11 @@ import * as contractSelectors from '../../reducers/contract'
 import * as contractActions from '../../actions/contract'
 import { renderIf } from '../../utils/react-redux'
 import { redirect, shortAddress } from '../../utils/contract'
-import { DISPUTE_CREATED, DISPUTE_RESOLVED } from '../../constants/contract'
+import {
+  DISPUTE_CREATED,
+  DISPUTE_RESOLVED,
+  DISPUTE_APPEAL
+} from '../../constants/contract'
 
 import './contract.css'
 
@@ -312,6 +316,19 @@ class Contract extends PureComponent {
                         {ruling.data === 1 && 'Party A wins'}
                         {ruling.data === 2 && 'Party B wins'}
                       </b>
+                    </div>
+                  ) : (
+                    <div />
+                  )}
+                  {contract.data.status === DISPUTE_APPEAL &&
+                  contract.data.disputeId !== 0 ? (
+                    <div className="Contract-content-actions">
+                      <div
+                        className="Contract-content-actions-button"
+                        onClick={this.appeal}
+                      >
+                        Raise appeal
+                      </div>
                     </div>
                   ) : (
                     <div />
