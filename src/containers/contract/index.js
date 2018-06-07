@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import _ from 'lodash'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Blockies from 'react-blockies'
@@ -32,6 +33,8 @@ class Contract extends PureComponent {
     fetchGetDispute: PropTypes.func.isRequired,
     fetchCurrentRulingForDispute: PropTypes.func.isRequired,
     createDispute: PropTypes.func.isRequired,
+    createAppeal: PropTypes.func.isRequired,
+    canAppeal: PropTypes.func.isRequired,
     createTimeout: PropTypes.func.isRequired,
     createPay: PropTypes.func.isRequired,
     createReimburse: PropTypes.func.isRequired,
@@ -109,6 +112,18 @@ class Contract extends PureComponent {
     )
   }
 
+  canAppeal = () => {
+    const { contract, canAppeal, match } = this.props
+    if (_.has(contract, 'contract.dispute.id'))
+      return canAppeal(match.params.contractAddress, contract.dispute.id)
+    else return false
+  }
+
+  createAppeal = () => {
+    const { contract, createAppeal, match } = this.props
+    createAppeal(match.params.contractAddress, contract.dispute.id)
+  }
+
   timeout = () => {
     const { contract, createTimeout, match } = this.props
     createTimeout(
@@ -118,10 +133,12 @@ class Contract extends PureComponent {
     )
   }
 
-  showEmptyContractEl = contract => contract.data.amount.e === 0
+  showEmptyContractEl = contract =>
+    contract.data.amount && contract.data.amount.e === 0
 
   hideEmptyContractEl = contract => ({
-    display: contract.data.amount.e === 0 ? 'none' : 'block'
+    display:
+      contract.data.amount && contract.data.amount.e === 0 ? 'none' : 'block'
   })
 
   isTimeout = contract => {
@@ -133,7 +150,7 @@ class Contract extends PureComponent {
   toUrl = url => () => window.location.replace(url)
 
   render() {
-    const { contract, accounts, ruling, history } = this.props
+    const { contract, accounts, ruling, history, match } = this.props
     const { partyOther, party } = this.state
     return (
       <div>
@@ -240,7 +257,7 @@ class Contract extends PureComponent {
                   !contract.data[`${party}Fee`] &&
                   contract.data[`${partyOther}Fee`] ? (
                     <div>
-                      <div className="Contract-content-waiting">
+                      <div className="Contract-content-actions-waiting">
                         The other party raises a dispute.<br />
                         So as not to lose the dispute you must pay the fee.
                       </div>
@@ -261,8 +278,8 @@ class Contract extends PureComponent {
                   !this.isTimeout(contract) &&
                   contract.data[`${party}Fee`] &&
                   !contract.data[`${partyOther}Fee`] ? (
-                    <div className="Contract-content-waiting">
-                      Waiting pay fee from the other party<br />
+                    <div className="Contract-content-actions-waiting">
+                      Waiting pay fee from the other party
                       ({shortAddress(contract.data[`${partyOther}`])})
                     </div>
                   ) : (
@@ -320,12 +337,14 @@ class Contract extends PureComponent {
                   ) : (
                     <div />
                   )}
-                  {contract.data.status === DISPUTE_APPEAL &&
-                  contract.data.disputeId !== 0 ? (
+                  {this.canAppeal(
+                    match.params.contractAddress,
+                    contract.data.disputeId
+                  ) ? (
                     <div className="Contract-content-actions">
                       <div
                         className="Contract-content-actions-button"
-                        onClick={this.appeal}
+                        onClick={this.createAppeal}
                       >
                         Raise appeal
                       </div>
@@ -374,6 +393,8 @@ export default connect(
     fetchGetDispute: contractActions.fetchGetDispute,
     fetchCurrentRulingForDispute: contractActions.fetchCurrentRulingForDispute,
     createDispute: contractActions.createDispute,
+    canAppeal: contractActions.fetchCanAppeal,
+    createAppeal: contractActions.createAppeal,
     createPay: contractActions.createPay,
     createReimburse: contractActions.createReimburse,
     fetchAccounts: walletActions.fetchAccounts,
