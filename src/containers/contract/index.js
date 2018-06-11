@@ -237,8 +237,9 @@ class Contract extends PureComponent {
                   contract.data[`${partyOther}Fee`] ? (
                     <div>
                       <div className="Contract-content-waiting">
-                        The other party raises a dispute.<br />
-                        So as not to lose the dispute you must pay the fee.
+                        The other party has raised a dispute.<br />
+                        In order to not forfeit the dispute pay the arbitration
+                        fee. You will be refunded the fee if you win the dispute.
                       </div>
                       <div className="Contract-content-actions">
                         <div
@@ -258,7 +259,7 @@ class Contract extends PureComponent {
                   contract.data[`${party}Fee`] &&
                   !contract.data[`${partyOther}Fee`] ? (
                     <div className="Contract-content-waiting">
-                      Waiting pay fee from the other party<br />
+                      Waiting for other party to pay the fee.<br />
                       ({shortAddress(contract.data[`${partyOther}`])})
                     </div>
                   ) : (
@@ -316,7 +317,7 @@ class Contract extends PureComponent {
                   ) : (
                     <div />
                   )}
-                  {contract.data.evidences.map((evidence, i) => (
+                  {contract.data.evidence.map((evidence, i) => (
                     <div
                       className="Contract-content-evidenceCard"
                       onClick={this.toUrl(evidence.url)}
