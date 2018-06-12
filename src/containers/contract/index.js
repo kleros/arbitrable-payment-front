@@ -71,8 +71,7 @@ class Contract extends PureComponent {
       }
       if (
         contract.data &&
-        contract.data.status === DISPUTE_RESOLVED &&
-        contract.data.disputeId
+        contract.data.status === DISPUTE_RESOLVED
       ) {
         fetchCurrentRulingForDispute(
           contract.data.disputeId,
@@ -305,13 +304,12 @@ class Contract extends PureComponent {
                       <b>The contract is closed.</b>
                     </div>
                   )}
-                  {contract.data.status === DISPUTE_RESOLVED &&
-                  contract.data.disputeId !== 0 ? (
+                  {contract.data.status === DISPUTE_RESOLVED ? (
                     <div className="Contract-content-actions-ruling">
                       <b>
-                        {ruling.data === 0 && 'No ruling'}
-                        {ruling.data === 1 && 'Party A wins'}
-                        {ruling.data === 2 && 'Party B wins'}
+                        {ruling === 0 && 'No ruling'}
+                        {ruling === 1 && 'Party A wins'}
+                        {ruling === 2 && 'Party B wins'}
                       </b>
                     </div>
                   ) : (
