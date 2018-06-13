@@ -44,8 +44,7 @@ function* createContract({ type, payload: { contract } }) {
   } catch (err) {
     console.log(err)
   }
-
-  yield put(contractActions.receiveContract(newContract))
+  yield call(fetchContract, { payload: { contractAddress: newContract.address } })
 }
 
 /**
@@ -69,7 +68,7 @@ function* fetchContracts() {
       kleros.arbitrable.getData, accounts[0].toLowerCase()
     )
 
-    contractsData.push(data)
+    if (data.arbitrator === ARBITRATOR_ADDRESS) contractsData.push(data)
   }
 
   yield put(contractActions.receiveContracts(contractsData.reverse()))
@@ -93,8 +92,12 @@ function* fetchContract({ payload: { contractAddress } }) {
   } catch (err) {
     console.log(err)
   }
+  const disputeData = yield call(
+    kleros.arbitrator.getDispute,
+    contract.disputeId
+  )
 
-  yield put(contractActions.receiveContract(contract))
+  yield put(contractActions.receiveContract({ ...disputeData, ...contract }))
 }
 
 /**
@@ -199,6 +202,7 @@ function* createDispute({ type, payload: { contractAddress } }) {
       kleros.arbitrator.getArbitrationCost,
       contract.arbitratorExtraData
     )
+
 
     const cost = arbitrationCost - fee
 
