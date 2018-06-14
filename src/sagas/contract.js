@@ -65,7 +65,8 @@ function* fetchContracts() {
   for (let contract of contracts) {
     yield call(kleros.arbitrable.setContractInstance, contract.address)
     const data = yield call(
-      kleros.arbitrable.getData, accounts[0].toLowerCase()
+      kleros.arbitrable.getData,
+      accounts[0].toLowerCase()
     )
 
     if (data.arbitrator === ARBITRATOR_ADDRESS) contractsData.push(data)
@@ -97,7 +98,40 @@ function* fetchContract({ payload: { contractAddress } }) {
     contract.disputeId
   )
 
-  yield put(contractActions.receiveContract({ ...disputeData, ...contract }))
+  let rulingData = null
+
+  if (contract.status === 4) {
+    try {
+      rulingData = yield call(
+        kleros.arbitrator.currentRulingForDispute,
+        contract.disputeId,
+        disputeData.numberOfAppeals
+      )
+    } catch (err) {
+      console.log(err)
+      throw new Error('Error current ruling failed')
+    }
+  }
+
+  let currentSession
+
+  try {
+    currentSession = yield call(kleros.arbitrator.getSession)
+  } catch (err) {
+    console.log(err)
+    throw new Error('Error can appeal failed')
+  }
+
+  yield put(
+    contractActions.receiveContract({
+      ruling: rulingData,
+      canAppeal:
+        disputeData.firstSession + disputeData.numberOfAppeals ===
+          currentSession || false,
+      ...disputeData,
+      ...contract
+    })
+  )
 }
 
 /**
@@ -228,32 +262,6 @@ function* createDispute({ type, payload: { contractAddress } }) {
   yield put(push('/'))
   yield call(toastr.success, 'Dispute creation successful', toastrOptions)
   yield put(contractActions.receiveDispute(disputeTx))
-}
-
-/**
- * Can appeal.
- * @param {object} { payload: contractAddress } - The address of the contract.
- */
-function* canAppeal({ type, payload: { disputeId } }) {
-  const accounts = yield call(eth.accounts)
-  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
-
-  let dispute, currentSession
-
-  try {
-    currentSession = yield call(kleros.arbitrator.getSession)
-    dispute = yield call(kleros.arbitrator.getDispute, disputeId)
-    // if not throw new Error('Error appeal not available')
-  } catch (err) {
-    console.log(err)
-    throw new Error('Error can appeal failed')
-  }
-
-  yield put(
-    contractActions.receiveCanAppeal(
-      dispute.firstSession + dispute.numberOfAppeals === currentSession
-    )
-  )
 }
 
 /**
@@ -393,34 +401,6 @@ function* fetchDispute({ payload: { contractAddress, disputeId } }) {
 }
 
 /**
- * Get current ruling for a dispute.
- * @param {number} disputeId - Index of dispute.
- * @param {number} appeal - Index of appeal.
- */
-function* fetchCurrentRulingForDispute({
-  type,
-  payload: { disputeId, appeal }
-}) {
-  const accounts = yield call(eth.accounts)
-  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
-
-  let ruling = null
-
-  try {
-    ruling = yield call(
-      kleros.arbitrator.currentRulingForDispute,
-      disputeId,
-      appeal
-    )
-  } catch (err) {
-    console.log(err)
-    throw new Error('Error current ruling failed')
-  }
-
-  yield put(contractActions.receiveCurrentRulingForDispute(ruling))
-}
-
-/**
  * The root of the wallet saga.
  * @export default walletSaga
  */
@@ -430,14 +410,9 @@ export default function* walletSaga() {
   yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract)
   yield takeLatest(contractActions.CREATE_DISPUTE, createDispute)
   yield takeLatest(contractActions.CREATE_APPEAL, createAppeal)
-  yield takeLatest(contractActions.FETCH_CANAPPEAL, canAppeal)
   yield takeLatest(contractActions.FETCH_GETDISPUTE, fetchDispute)
   yield takeLatest(contractActions.CREATE_PAY, createPay)
   yield takeLatest(contractActions.CREATE_REIMBURSE, createReimburse)
   yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence)
   yield takeLatest(contractActions.CREATE_TIMEOUT, createTimeout)
-  yield takeLatest(
-    contractActions.FETCH_CURRENT_RULING_FOR_DISPUTE,
-    fetchCurrentRulingForDispute
-  )
 }

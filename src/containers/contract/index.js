@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import Blockies from 'react-blockies'
 import { ClipLoader } from 'react-spinners'
 import ReactRouterPropTypes from 'react-router-prop-types'
+import { connect } from 'react-redux'
 
 import * as walletActions from '../../actions/wallet'
-import * as contractSelectors from '../../reducers/contract'
 import * as contractActions from '../../actions/contract'
+import * as contractSelectors from '../../reducers/contract'
 import { renderIf } from '../../utils/react-redux'
 import { redirect, shortAddress } from '../../utils/contract'
 import { DISPUTE_CREATED, DISPUTE_RESOLVED } from '../../constants/contract'
@@ -21,13 +21,11 @@ class Contract extends PureComponent {
   }
   static propTypes = {
     contract: contractSelectors.contractShape.isRequired,
-    ruling: PropTypes.number.isRequired,
     accounts: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     history: ReactRouterPropTypes.history.isRequired,
     fetchContract: PropTypes.func.isRequired,
-    fetchGetDispute: PropTypes.func.isRequired,
-    fetchCurrentRulingForDispute: PropTypes.func.isRequired,
     createDispute: PropTypes.func.isRequired,
+    createAppeal: PropTypes.func.isRequired,
     createTimeout: PropTypes.func.isRequired,
     createPay: PropTypes.func.isRequired,
     createReimburse: PropTypes.func.isRequired,
@@ -45,12 +43,7 @@ class Contract extends PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      contract: prevContract,
-      fetchGetDispute,
-      fetchCurrentRulingForDispute,
-      match
-    } = this.props
+    const { contract: prevContract } = this.props
     const { contract, accounts = [] } = nextProps
     if (prevContract !== contract) {
       if (
@@ -66,24 +59,17 @@ class Contract extends PureComponent {
         this.setState({ party: 'partyB' })
         this.setState({ partyOther: 'partyA' })
       }
-      if (contract.data && contract.data.disputeId) {
-        fetchGetDispute(match.params.contractAddress, contract.data.disputeId)
-      }
-      if (
-        contract.data &&
-        contract.data.status === DISPUTE_RESOLVED
-      ) {
-        fetchCurrentRulingForDispute(
-          contract.data.disputeId,
-          contract.data.numberOfAppeals
-        )
-      }
     }
   }
 
   createDispute = () => {
     const { createDispute, match } = this.props
     createDispute(match.params.contractAddress)
+  }
+
+  createAppeal = () => {
+    const { contract, createAppeal, match } = this.props
+    createAppeal(match.params.contractAddress, contract.dispute.id)
   }
 
   createPay = () => {
@@ -113,10 +99,12 @@ class Contract extends PureComponent {
     )
   }
 
-  showEmptyContractEl = contract => contract.data.amount.e === 0
+  showEmptyContractEl = contract =>
+    contract.data.amount && contract.data.amount.e === 0
 
   hideEmptyContractEl = contract => ({
-    display: contract.data.amount.e === 0 ? 'none' : 'block'
+    display:
+      contract.data.amount && contract.data.amount.e === 0 ? 'none' : 'block'
   })
 
   isTimeout = contract => {
@@ -128,7 +116,7 @@ class Contract extends PureComponent {
   toUrl = url => () => window.location.replace(url)
 
   render() {
-    const { contract, accounts, ruling, history } = this.props
+    const { contract, accounts, history } = this.props
     const { partyOther, party } = this.state
     return (
       <div>
@@ -235,7 +223,7 @@ class Contract extends PureComponent {
                   !contract.data[`${party}Fee`] &&
                   contract.data[`${partyOther}Fee`] ? (
                     <div>
-                      <div className="Contract-content-waiting">
+                      <div className="Contract-content-actions-waiting">
                         The other party has raised a dispute.<br />
                         In order to not forfeit the dispute pay the arbitration
                         fee. You will be refunded the fee if you win the dispute.
@@ -257,7 +245,7 @@ class Contract extends PureComponent {
                   !this.isTimeout(contract) &&
                   contract.data[`${party}Fee`] &&
                   !contract.data[`${partyOther}Fee`] ? (
-                    <div className="Contract-content-waiting">
+                    <div className="Contract-content-actions-waiting">
                       Waiting for other party to pay the fee.<br />
                       ({shortAddress(contract.data[`${partyOther}`])})
                     </div>
@@ -299,7 +287,7 @@ class Contract extends PureComponent {
                   ) : (
                     <div />
                   )}
-                  {this.showEmptyContractEl(contract) && (
+                  {this.showEmptyContractEl(contract) === true && (
                     <div className="Contract-content-item">
                       <b>The contract is closed.</b>
                     </div>
@@ -307,10 +295,22 @@ class Contract extends PureComponent {
                   {contract.data.status === DISPUTE_RESOLVED ? (
                     <div className="Contract-content-actions-ruling">
                       <b>
-                        {ruling === 0 && 'No ruling'}
-                        {ruling === 1 && 'Party A wins'}
-                        {ruling === 2 && 'Party B wins'}
+                        {contract.data.ruling === 0 && 'No ruling'}
+                        {contract.data.ruling === 1 && 'Party A wins'}
+                        {contract.data.ruling === 2 && 'Party B wins'}
                       </b>
+                    </div>
+                  ) : (
+                    <div />
+                  )}
+                  {contract.data.canAppeal ? (
+                    <div className="Contract-content-actions">
+                      <button
+                        className="Contract-content-actions-button"
+                        onClick={this.createAppeal}
+                      >
+                        Raise appeal
+                      </button>
                     </div>
                   ) : (
                     <div />
@@ -345,7 +345,6 @@ export default connect(
   state => ({
     contract: state.contract.contract,
     dispute: state.contract.dispute,
-    ruling: state.contract.currentRulingForDispute,
     pay: state.contract.pay,
     reimburse: state.contract.reimburse,
     timeout: state.contract.timeout,
@@ -354,8 +353,8 @@ export default connect(
   {
     fetchContract: contractActions.fetchContract,
     fetchGetDispute: contractActions.fetchGetDispute,
-    fetchCurrentRulingForDispute: contractActions.fetchCurrentRulingForDispute,
     createDispute: contractActions.createDispute,
+    createAppeal: contractActions.createAppeal,
     createPay: contractActions.createPay,
     createReimburse: contractActions.createReimburse,
     fetchAccounts: walletActions.fetchAccounts,
