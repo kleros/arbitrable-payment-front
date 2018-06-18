@@ -388,6 +388,17 @@ function* fetchDispute({ payload: { contractAddress, disputeId } }) {
 }
 
 /**
+ * Fetches the arbitrator's data.
+ */
+export function* fetchArbitratorData() {
+  const arbitratorData = yield call(kleros.arbitrator.getData)
+
+  console.log('arbitratorData',arbitratorData)
+
+  yield put(contractActions.receiveArbitrator(arbitratorData))
+}
+
+/**
  * The root of the wallet saga.
  * @export default walletSaga
  */
@@ -402,4 +413,5 @@ export default function* walletSaga() {
   yield takeLatest(contractActions.CREATE_REIMBURSE, createReimburse)
   yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence)
   yield takeLatest(contractActions.CREATE_TIMEOUT, createTimeout)
+  yield takeLatest(contractActions.FETCH_ARBITRATOR, fetchArbitratorData)
 }

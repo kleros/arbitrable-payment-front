@@ -48,6 +48,11 @@ export default createReducer({
     loading: false,
     data: null,
     failedLoading: false
+  },
+  arbitrator: {
+    loading: false,
+    data: null,
+    failedLoading: false
   }
 })
 

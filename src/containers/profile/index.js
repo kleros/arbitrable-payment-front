@@ -11,6 +11,7 @@ import { renderIf } from '../../utils/react-redux'
 import { shortAddress } from '../../utils/contract'
 import { NavHeader } from '../../components/nav-header'
 import { SharedKlerosFooter } from '../../components/shared-kleros-footer'
+import * as arbitratorConstants from '../../constants/arbitrator'
 
 import './profile.css'
 
@@ -37,6 +38,7 @@ class Profile extends PureComponent {
     contract: contractSelectors.contractShape.isRequired,
     creatingContract: PropTypes.bool,
     fetchContracts: PropTypes.func.isRequired,
+    fetchArbitrator: PropTypes.func.isRequired,
     balance: walletSelectors.balanceShape.isRequired,
     version: walletSelectors.versionShape.isRequired,
     fetchBalance: PropTypes.func.isRequired,
@@ -49,14 +51,27 @@ class Profile extends PureComponent {
 
   componentDidMount() {
     this.intervalId = setInterval(this.randomSeed, 100)
-    const { fetchBalance, fetchContracts, fetchVersion } = this.props
+    const {
+      fetchBalance,
+      fetchContracts,
+      fetchVersion,
+      fetchArbitrator
+    } = this.props
     fetchBalance()
     fetchContracts()
     fetchVersion()
+    fetchArbitrator()
   }
 
   render() {
-    const { balance, contract, contracts, accounts, history } = this.props
+    const {
+      balance,
+      contract,
+      contracts,
+      accounts,
+      history,
+      arbitrator
+    } = this.props
 
     return (
       <div className="container">
@@ -77,8 +92,11 @@ class Profile extends PureComponent {
                       {Number(balance.data).toFixed(3)} ETH
                     </div>
                     <div className="nbContracts">
-                      {contract.data && contracts.data.length + 1}
-                      {!contract.data && contracts.data.length} contracts
+                      {contracts.data.length} contracts
+                    </div>
+                    <div>
+                      Period:{' '}
+                      {arbitrator.data && arbitratorConstants.PERIOD_ENUM[arbitrator.data.period]}{' '}
                     </div>
                   </div>
                 </div>
@@ -99,6 +117,7 @@ export default connect(
     balance: state.wallet.balance,
     contract: state.contract.contract,
     contracts: state.contract.contracts,
+    arbitrator: state.contract.arbitrator,
     accounts: state.wallet.accounts,
     version: state.wallet.version
   }),
@@ -106,6 +125,7 @@ export default connect(
     fetchBalance: walletActions.fetchBalance,
     fetchAccounts: walletActions.fetchAccounts,
     fetchContracts: contractActions.fetchContracts,
+    fetchArbitrator: contractActions.fetchArbitrator,
     fetchVersion: walletActions.fetchVersion
   }
 )(Profile)

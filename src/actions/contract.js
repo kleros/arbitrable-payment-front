@@ -17,6 +17,8 @@ export const CREATE_EVIDENCE = 'CREATE_EVIDENCE'
 export const RECEIVE_EVIDENCE = 'RECEIVE_EVIDENCE'
 export const CREATE_TIMEOUT = 'CREATE_TIMEOUT'
 export const RECEIVE_TIMEOUT = 'RECEIVE_TIMEOUT'
+export const FETCH_ARBITRATOR = 'FETCH_ARBITRATOR'
+export const RECEIVE_ARBITRATOR = 'RECEIVE_ARBITRATOR'
 
 // Action Creators
 export const createContract = contract => ({
@@ -93,4 +95,11 @@ export const createTimeout = (contractAddress, partyA, partyB) => ({
 export const receiveTimeout = timeout => ({
   type: RECEIVE_TIMEOUT,
   payload: { timeout }
+})
+export const fetchArbitrator = () => ({
+  type: FETCH_ARBITRATOR
+})
+export const receiveArbitrator = arbitrator => ({
+  type: RECEIVE_ARBITRATOR,
+  payload: { arbitrator }
 })
