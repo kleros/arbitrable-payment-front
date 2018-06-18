@@ -44,7 +44,9 @@ function* createContract({ type, payload: { contract } }) {
   } catch (err) {
     console.log(err)
   }
-  yield call(fetchContract, { payload: { contractAddress: newContract.address } })
+  yield call(fetchContract, {
+    payload: { contractAddress: newContract.address }
+  })
 }
 
 /**
@@ -87,39 +89,25 @@ function* fetchContract({ payload: { contractAddress } }) {
   yield call(kleros.arbitrable.setContractInstance, contractAddress)
 
   let contract = null
+  let rulingData = null
+  let currentSession = null
+  let disputeData = null
 
   try {
     contract = yield call(kleros.arbitrable.getData, accounts[0].toLowerCase())
-  } catch (err) {
-    console.log(err)
-  }
-  const disputeData = yield call(
-    kleros.arbitrator.getDispute,
-    contract.disputeId
-  )
 
-  let rulingData = null
+    disputeData = yield call(kleros.arbitrator.getDispute, contract.disputeId)
 
-  if (contract.status === 4) {
-    try {
+    if (contract.status === 4)
       rulingData = yield call(
         kleros.arbitrator.currentRulingForDispute,
         contract.disputeId,
         disputeData.numberOfAppeals
       )
-    } catch (err) {
-      console.log(err)
-      throw new Error('Error current ruling failed')
-    }
-  }
 
-  let currentSession
-
-  try {
     currentSession = yield call(kleros.arbitrator.getSession)
   } catch (err) {
     console.log(err)
-    throw new Error('Error can appeal failed')
   }
 
   yield put(
@@ -236,7 +224,6 @@ function* createDispute({ type, payload: { contractAddress } }) {
       kleros.arbitrator.getArbitrationCost,
       contract.arbitratorExtraData
     )
-
 
     const cost = arbitrationCost - fee
 

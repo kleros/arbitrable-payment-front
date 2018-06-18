@@ -21,7 +21,6 @@ class Contract extends PureComponent {
   }
   static propTypes = {
     contract: contractSelectors.contractShape.isRequired,
-    accounts: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     history: ReactRouterPropTypes.history.isRequired,
     fetchContract: PropTypes.func.isRequired,
     createDispute: PropTypes.func.isRequired,
@@ -226,7 +225,8 @@ class Contract extends PureComponent {
                       <div className="Contract-content-actions-waiting">
                         The other party has raised a dispute.<br />
                         In order to not forfeit the dispute pay the arbitration
-                        fee. You will be refunded the fee if you win the dispute.
+                        fee. You will be refunded the fee if you win the
+                        dispute.
                       </div>
                       <div className="Contract-content-actions">
                         <div
