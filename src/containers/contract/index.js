@@ -11,6 +11,7 @@ import * as contractSelectors from '../../reducers/contract'
 import { renderIf } from '../../utils/react-redux'
 import { redirect, shortAddress } from '../../utils/contract'
 import { DISPUTE_CREATED, DISPUTE_RESOLVED } from '../../constants/contract'
+import * as arbitratorConstants from '../../constants/arbitrator'
 
 import './contract.css'
 
@@ -37,8 +38,9 @@ class Contract extends PureComponent {
   }
 
   componentDidMount() {
-    const { match, fetchContract } = this.props
+    const { match, fetchContract, fetchArbitrator } = this.props
     fetchContract(match.params.contractAddress)
+    fetchArbitrator()
   }
 
   componentWillReceiveProps(nextProps) {
@@ -115,7 +117,7 @@ class Contract extends PureComponent {
   toUrl = url => () => window.location.replace(url)
 
   render() {
-    const { contract, accounts, history } = this.props
+    const { contract, accounts, arbitrator, history } = this.props
     const { partyOther, party } = this.state
     return (
       <div>
@@ -303,7 +305,7 @@ class Contract extends PureComponent {
                   ) : (
                     <div />
                   )}
-                  {contract.data.canAppeal ? (
+                  {arbitratorConstants.PERIOD_ENUM[arbitrator.data.period] === 'appeal' && contract.data.canAppeal ? (
                     <div className="Contract-content-actions">
                       <button
                         className="Contract-content-actions-button"
@@ -345,6 +347,7 @@ export default connect(
   state => ({
     contract: state.contract.contract,
     dispute: state.contract.dispute,
+    arbitrator: state.contract.arbitrator,
     pay: state.contract.pay,
     reimburse: state.contract.reimburse,
     timeout: state.contract.timeout,
@@ -358,6 +361,7 @@ export default connect(
     createPay: contractActions.createPay,
     createReimburse: contractActions.createReimburse,
     fetchAccounts: walletActions.fetchAccounts,
+    fetchArbitrator: contractActions.fetchArbitrator,
     createTimeout: contractActions.createTimeout
   }
 )(Contract)
