@@ -1,5 +1,4 @@
 import unit from 'ethjs-unit'
-import _ from 'lodash'
 import Eth from 'ethjs'
 import { push } from 'react-router-redux'
 import { toastr } from 'react-redux-toastr'
@@ -259,38 +258,39 @@ function* createAppeal({ type, payload: { contractAddress, disputeId } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
 
-  let appealTx, openDisputesForSession
+  let raiseAppealByPartyATxObj
 
   try {
-    openDisputesForSession = yield call(
-      kleros.arbitrator.getOpenDisputesForSession
+    // Set contract instance
+    yield call(kleros.arbitrable.setContractInstance, contractAddress)
+
+    const contract = yield call(
+      kleros.arbitrable.getData,
+      accounts[0].toLowerCase()
     )
 
-    if (
-      _.findIndex(
-        openDisputesForSession,
-        dispute =>
-          dispute.disputeId === disputeId &&
-          dispute.arbitratorAddress === ARBITRATOR_ADDRESS
-      ) >= 0
-    ) {
-      yield call(
-        kleros.arbitrator.appealRuling,
-        disputeId,
-        process.env.REACT_APP_ARBITRATOR_EXTRADATA,
-        accounts[0]
-      )
-    }
-    // if not throw new Error('Error appeal not available')
+    const appealCost = yield call(
+      kleros.arbitrator.getAppealCost,
+      0,
+      contract.arbitratorExtraData
+    )
+
+    // raise appeal party A
+    raiseAppealByPartyATxObj = yield call(
+      kleros.arbitrable.appeal,
+      accounts[0].toLowerCase(),
+      contract.arbitratorExtraData,
+      appealCost
+    )
   } catch (err) {
     console.log(err)
-    toastr.error('Create dispute failed', toastrOptions)
-    throw new Error('Error create dispute failed')
+    toastr.error('Create appeal failed', toastrOptions)
+    throw new Error('Error create appeal failed')
   }
 
   yield put(push('/'))
   yield call(toastr.success, 'Appeal creation successful', toastrOptions)
-  yield put(contractActions.receiveAppeal(appealTx))
+  yield put(contractActions.receiveAppeal(raiseAppealByPartyATxObj))
 }
 
 /**
@@ -392,8 +392,6 @@ function* fetchDispute({ payload: { contractAddress, disputeId } }) {
  */
 export function* fetchArbitratorData() {
   const arbitratorData = yield call(kleros.arbitrator.getData)
-
-  console.log('arbitratorData',arbitratorData)
 
   yield put(contractActions.receiveArbitrator(arbitratorData))
 }

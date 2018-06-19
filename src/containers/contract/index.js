@@ -70,7 +70,7 @@ class Contract extends PureComponent {
 
   createAppeal = () => {
     const { contract, createAppeal, match } = this.props
-    createAppeal(match.params.contractAddress, contract.dispute.id)
+    createAppeal(match.params.contractAddress, contract.data.disputeId)
   }
 
   createPay = () => {
@@ -119,6 +119,8 @@ class Contract extends PureComponent {
   render() {
     const { contract, accounts, arbitrator, history } = this.props
     const { partyOther, party } = this.state
+    const ruling = ['no ruling', 'partyA', 'partyB']
+
     return (
       <div>
         {renderIf(
@@ -270,10 +272,38 @@ class Contract extends PureComponent {
                   ) : (
                     <div />
                   )}
-                  {contract.data.status === DISPUTE_CREATED && (
+                  {contract.data.status === DISPUTE_CREATED && contract.data.canAppeal === false ? (
                     <div className="Contract-content-actions-waiting">
                       <b>Waiting the dispute resolution</b>
                     </div>
+                  ) : (
+                    <div />
+                  )}
+                  {contract.data.status === DISPUTE_CREATED && contract.data.canAppeal === true ? (
+                    <div className="Contract-content-actions-waiting">
+                      {contract.data.rulingChoices === 0 && 'No ruling'}
+                      {contract.data.rulingChoices === 1 && 'Party A wins (appeal available)'}
+                      {contract.data.rulingChoices === 2 && 'Party B wins (appeal available)'}
+                    </div>
+                  ) : (
+                    <div />
+                  )}
+                  {console.log(this.state)}
+                  {arbitrator.data &&
+                  party !== ruling[contract.data.rulingChoices] &&
+                  arbitratorConstants.PERIOD_ENUM[arbitrator.data.period] ===
+                    'appeal' &&
+                  contract.data.canAppeal ? (
+                    <div className="Contract-content-actions">
+                      <button
+                        className="Contract-content-actions-button"
+                        onClick={this.createAppeal}
+                      >
+                        Raise appeal
+                      </button>
+                    </div>
+                  ) : (
+                    <div />
                   )}
                   {contract.data.status !== DISPUTE_RESOLVED &&
                   contract.data.partyAFee &&
@@ -301,21 +331,6 @@ class Contract extends PureComponent {
                         {contract.data.ruling === 1 && 'Party A wins'}
                         {contract.data.ruling === 2 && 'Party B wins'}
                       </b>
-                    </div>
-                  ) : (
-                    <div />
-                  )}
-                  {arbitrator.data &&
-                  arbitratorConstants.PERIOD_ENUM[arbitrator.data.period] ===
-                    'appeal' &&
-                  contract.data.canAppeal ? (
-                    <div className="Contract-content-actions">
-                      <button
-                        className="Contract-content-actions-button"
-                        onClick={this.createAppeal}
-                      >
-                        Raise appeal
-                      </button>
                     </div>
                   ) : (
                     <div />
