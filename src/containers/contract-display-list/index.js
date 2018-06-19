@@ -2,6 +2,7 @@ import React from 'react'
 import Blockies from 'react-blockies'
 
 import { redirect, shortAddress } from '../../utils/contract'
+import statusContract from '../../utils/status-contract'
 
 /**
  * Contract Display List Component
@@ -86,14 +87,21 @@ export const ContractDisplayList = ({
 
     {contracts.data.map((contract, i) => (
       <div
-        className="flex-item wide contract grow"
+        className={`flex-item wide contract grow ${statusContract(contract, accounts.data[0]).class}`}
         key={contract._id}
         onClick={redirect(`/contracts/${contract.address}`, history)}
       >
         {contract.partyA === accounts.data[0] && (
-          <div className="type">Owner</div>
+          <div className="type">
+            Owner{statusContract(contract, accounts.data[0]).status}
+          </div>
         )}
-        <Blockies seed={contract.address} size={10} scale={14} bgColor="#fff" />
+        <Blockies
+          seed={contract.address}
+          size={10}
+          scale={14}
+          bgColor={statusContract(contract, accounts.data[0]).color}
+        />
         <div className="content">
           <div className="address short">{contract.title}</div>
           <div className="partyB">
