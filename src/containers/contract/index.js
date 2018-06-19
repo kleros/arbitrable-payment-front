@@ -305,7 +305,10 @@ class Contract extends PureComponent {
                   ) : (
                     <div />
                   )}
-                  {arbitratorConstants.PERIOD_ENUM[arbitrator.data.period] === 'appeal' && contract.data.canAppeal ? (
+                  {arbitrator.data &&
+                  arbitratorConstants.PERIOD_ENUM[arbitrator.data.period] ===
+                    'appeal' &&
+                  contract.data.canAppeal ? (
                     <div className="Contract-content-actions">
                       <button
                         className="Contract-content-actions-button"
