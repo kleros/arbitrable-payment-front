@@ -283,8 +283,8 @@ class Contract extends PureComponent {
                     <div className="Contract-content-actions-waiting">
                       {_.isNull(contract.data.ruling) && 'Dispute Active'}
                       {contract.data.ruling === 0 && 'No Ruling'}
-                      {contract.data.ruling === 1 && 'Party A wins (appeal available)'}
-                      {contract.data.ruling === 2 && 'Party B wins (appeal available)'}
+                      {contract.data.ruling === 1 && 'Party A wins'}
+                      {contract.data.ruling === 2 && 'Party B wins'}
                     </div>
                   ) : (
                     <div />
