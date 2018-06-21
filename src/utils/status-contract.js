@@ -7,7 +7,7 @@
 export default function statusContract(contract, accountAddress) {
   if (contract.partyBFee > 0 && contract.partyBFee > 0) {
     return {
-      color: '#ff66ff',
+      color: '#f2f2f2',
       status: ' @ evidence',
       class: 'evidence'
     }
