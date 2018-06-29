@@ -1,24 +1,40 @@
 import React from 'react'
 
 import { redirect } from '../../utils/contract'
+import './nav-header.css'
+import logo from './logo_kleros.png'
+
 
 export const NavHeader = ({ history }) => (
   <div className="flex-container-main-menu">
-    <div className="flex-container-main-menu-items">
+    <div
+      className="flex-container-main-menu-left"
+    >
       <div
-        className="flex-container-main-menu-items-item flex-container-main-menu-items-kleros"
-        onClick={redirect('/', history)}
+        className="flex-container-main-menu-left-home"
+        onClick={redirect('/profile', history)}
       >
-        KLEROS
+        Home
       </div>
+    </div>
+
+    <div
+      className="flex-container-main-menu-center"
+    >
+      <img className="navHeader-logo" src={logo} alt="Logo Kleros" />
+    </div>
+
+    <div
+      className="flex-container-main-menu-right"
+    >
       <div
-        className="flex-container-main-menu-items-item"
+        className="flex-container-main-menu-right-item"
         onClick={redirect('/profile', history)}
       >
         Profile
       </div>
       <div
-        className="flex-container-main-menu-items-item"
+        className="flex-container-main-menu-right-item"
         onClick={redirect('/contracts/new', history)}
       >
         New contract

@@ -10,7 +10,6 @@ import NewContract from '../containers/contract/form'
 import NewEvidence from '../containers/contract/evidence-form'
 import Contract from '../containers/contract'
 import Profile from '../containers/profile'
-import KlerosGitter from '../components/kleros-gitter'
 import PageNotFound from '../components/page-not-found'
 
 import Initializer from './initializer'
@@ -39,7 +38,6 @@ const App = ({ store, history, testElement }) => (
             <Route component={PageNotFound} />
           </Switch>
           {testElement}
-          <KlerosGitter />
           <Route exact path="*" component={GlobalComponents} />
         </div>
       </ConnectedRouter>
