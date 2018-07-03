@@ -14,7 +14,6 @@ import {
 } from '../../../forms/contract'
 import Stepper from '../../../components/stepper'
 
-import { SharedKlerosFooter } from '../../../components/shared-kleros-footer'
 import './new-contract.css'
 
 const FINAL_STEP = 4
@@ -198,7 +197,6 @@ class NewContract extends PureComponent {
               )}
           </div>
         </div>
-        <SharedKlerosFooter />
       </div>
     )
   }

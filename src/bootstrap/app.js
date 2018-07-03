@@ -11,6 +11,7 @@ import NewEvidence from '../containers/contract/evidence-form'
 import Contract from '../containers/contract'
 import Profile from '../containers/profile'
 import PageNotFound from '../components/page-not-found'
+import { KlerosFooter } from '../components/kleros-footer'
 
 import Initializer from './initializer'
 import GlobalComponents from './global-components'
@@ -37,6 +38,7 @@ const App = ({ store, history, testElement }) => (
             <Route exact path="/evidences/new" component={NewEvidence} />
             <Route component={PageNotFound} />
           </Switch>
+          <KlerosFooter />
           {testElement}
           <Route exact path="*" component={GlobalComponents} />
         </div>

@@ -9,7 +9,6 @@ import * as contractSelectors from '../../reducers/contract'
 import { NavHeader } from '../../components/nav-header'
 import { ContractDisplayList } from '../contract-display-list'
 import { renderIf } from '../../utils/react-redux'
-import { HomeKlerosFooter } from '../../components/home-kleros-footer'
 
 import './home.css'
 
@@ -79,7 +78,6 @@ class Home extends PureComponent {
                 accounts={accounts}
               />
               <div className="flex-container-main-flex-grow" />
-              <HomeKlerosFooter />
             </div>
           ),
           failed: contract.failedLoading && 'failedLoading'
