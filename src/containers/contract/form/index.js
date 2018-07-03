@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import sha3 from 'crypto-js/sha3'
-import Stepper from 'react-stepper-horizontal'
 
 import * as walletSelectors from '../../../reducers/wallet'
 import * as walletActions from '../../../actions/wallet'
@@ -13,8 +12,8 @@ import {
   getCreateContractFormIsInvalid,
   submitCreateContractForm
 } from '../../../forms/contract'
+import Stepper from '../../../components/stepper'
 
-import { SharedKlerosFooter } from '../../../components/shared-kleros-footer'
 import './new-contract.css'
 
 const FINAL_STEP = 4
@@ -162,11 +161,11 @@ class NewContract extends PureComponent {
         <div>
           <Stepper
             steps={[
-              { title: 'Title' },
-              { title: 'Address PartyB' },
-              { title: 'Payment' },
-              { title: 'Email' },
-              { title: 'Description' }
+              'Title',
+              'Address PartyB',
+              'Payment',
+              'Email',
+              'Description'
             ]}
             activeStep={step}
           />
@@ -198,7 +197,6 @@ class NewContract extends PureComponent {
               )}
           </div>
         </div>
-        <SharedKlerosFooter />
       </div>
     )
   }

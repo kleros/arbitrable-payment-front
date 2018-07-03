@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import Stepper from 'react-stepper-horizontal'
 
 import * as walletSelectors from '../../../reducers/wallet'
 import * as walletActions from '../../../actions/wallet'
@@ -12,6 +11,7 @@ import {
   getCreateEvidenceFormIsInvalid,
   submitCreateEvidenceForm
 } from '../../../forms/evidence'
+import Stepper from '../../../components/stepper'
 
 import './new-evidence.css'
 
@@ -107,9 +107,9 @@ class NewEvidence extends PureComponent {
         <div>
           <Stepper
             steps={[
-              { title: 'Name' },
-              { title: 'Description' },
-              { title: 'Url' }
+              'Name',
+              'Description',
+              'Url'
             ]}
             activeStep={step}
           />

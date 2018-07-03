@@ -10,7 +10,6 @@ import * as contractSelectors from '../../reducers/contract'
 import { renderIf } from '../../utils/react-redux'
 import { shortAddress } from '../../utils/contract'
 import { NavHeader } from '../../components/nav-header'
-import { SharedKlerosFooter } from '../../components/shared-kleros-footer'
 import * as arbitratorConstants from '../../constants/arbitrator'
 
 import './profile.css'
@@ -102,7 +101,6 @@ class Profile extends PureComponent {
                 </div>
               </div>
               <div className="flex-container-main-flex-grow" />
-              <SharedKlerosFooter />
             </div>
           ),
           failed: contract.failedLoading && 'failedLoading'
