@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 
 import { NavHeader } from '../nav-header'
-import { HomeKlerosFooter } from '../home-kleros-footer'
+import { KlerosFooter } from '../kleros-footer'
 import { redirect } from '../../utils/contract'
 
 import './page-note-found.css'
@@ -28,7 +28,7 @@ class PageNotFound extends PureComponent {
               </div>
             </div>
           </div>
-          <HomeKlerosFooter />
+          <KlerosFooter />
         </div>
       </div>
     )
