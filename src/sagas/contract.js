@@ -132,8 +132,6 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
   // Set contract instance
   yield call(kleros.arbitrable.setContractInstance, contractAddress)
 
-  yield put(push('/'))
-
   let payTx = null
 
   try {
@@ -156,6 +154,7 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
     throw new Error('Error pay transaction')
   }
 
+  yield put(push('/'))
   yield call(toastr.success, 'Payment successful', toastrOptions)
   yield put(contractActions.receivePay(payTx))
 }
@@ -170,8 +169,6 @@ function* createReimburse({ type, payload: { contractAddress } }) {
 
   // Set contract instance
   yield call(kleros.arbitrable.setContractInstance, contractAddress)
-
-  yield put(push('/'))
 
   let reimburseTx = null
 
@@ -196,6 +193,7 @@ function* createReimburse({ type, payload: { contractAddress } }) {
     throw new Error('Error reimburse failed')
   }
 
+  yield put(push('/'))
   yield call(toastr.success, 'Successful refund', toastrOptions)
   yield put(contractActions.receiveReimburse(reimburseTx))
 }
@@ -207,6 +205,7 @@ function* createReimburse({ type, payload: { contractAddress } }) {
 function* createDispute({ type, payload: { contractAddress } }) {
   const accounts = yield call(eth.accounts)
   if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+
   // Set contract instance
   yield call(kleros.arbitrable.setContractInstance, contractAddress)
 

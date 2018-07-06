@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import Blockies from 'react-blockies'
-import { ClipLoader } from 'react-spinners'
+import { ClipLoader, BeatLoader, ScaleLoader } from 'react-spinners'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { connect } from 'react-redux'
 import _ from 'lodash'
@@ -118,7 +118,17 @@ class Contract extends PureComponent {
   toUrl = url => () => window.location.replace(url)
 
   render() {
-    const { contract, accounts, arbitrator, history } = this.props
+    const {
+      contract,
+      accounts,
+      arbitrator,
+      dispute,
+      reimburse,
+      pay,
+      appeal,
+      evidence,
+      history
+    } = this.props
     const { partyOther, party } = this.state
     const ruling = ['no ruling', 'partyA', 'partyB']
     return (
@@ -195,7 +205,11 @@ class Contract extends PureComponent {
                     <div className="Contract-content-actions">
                       <div
                         style={this.hideEmptyContractEl(contract)}
-                        className="Contract-content-actions-button Contract-actions-button-left"
+                        className={`Contract-content-actions-button Contract-content-actions-button-left ${
+                          dispute.creating
+                            ? 'Contract-content-actions-button-is-loading'
+                            : ''
+                        }`}
                         onClick={this.createDispute}
                       >
                         Create dispute
@@ -203,7 +217,11 @@ class Contract extends PureComponent {
                       {contract.data.partyA === accounts.data[0] && (
                         <div
                           style={this.hideEmptyContractEl(contract)}
-                          className="Contract-content-actions-button Contract-content-actions-button-right"
+                          className={`Contract-content-actions-button Contract-content-actions-button-right ${
+                            pay.creating
+                              ? 'Contract-content-actions-button-is-loading'
+                              : ''
+                          }`}
                           onClick={this.createPay}
                         >
                           Pay
@@ -212,7 +230,11 @@ class Contract extends PureComponent {
                       {contract.data.partyB === accounts.data[0] && (
                         <div
                           style={this.hideEmptyContractEl(contract)}
-                          className="Contract-content-actions-button Contract-content-actions-button-right"
+                          className={`Contract-content-actions-button Contract-content-actions-button-right ${
+                            reimburse.creating
+                              ? 'Contract-content-actions-button-is-loading'
+                              : ''
+                          }`}
                           onClick={this.createReimburse}
                         >
                           Reimburse
@@ -234,7 +256,11 @@ class Contract extends PureComponent {
                       </div>
                       <div className="Contract-content-actions">
                         <div
-                          className="Contract-content-actions-button"
+                          className={`Contract-content-actions-button ${
+                            dispute.creating
+                              ? 'Contract-content-actions-button-is-loading'
+                              : ''
+                          }`}
                           onClick={this.createDispute}
                         >
                           Pay the fee
@@ -296,7 +322,11 @@ class Contract extends PureComponent {
                   contract.data.canAppeal ? (
                     <div className="Contract-content-actions">
                       <button
-                        className="Contract-content-actions-button"
+                        className={`Contract-content-actions-button ${
+                          appeal.creating
+                            ? 'Contract-content-actions-button-is-loading'
+                            : ''
+                        }`}
                         onClick={this.createAppeal}
                       >
                         Raise appeal
@@ -310,7 +340,11 @@ class Contract extends PureComponent {
                   contract.data.partyBFee ? (
                     <div className="Contract-content-actions">
                       <div
-                        className="Contract-content-actions-button"
+                        className={`Contract-content-actions-button ${
+                          evidence.creating
+                            ? 'Contract-content-actions-button-is-loading'
+                            : ''
+                        }`}
                         onClick={redirect('/evidences/new', history)}
                       >
                         Send Evidence
@@ -368,6 +402,8 @@ export default connect(
     arbitrator: state.contract.arbitrator,
     pay: state.contract.pay,
     reimburse: state.contract.reimburse,
+    appeal: state.contract.appeal,
+    evidence: state.contract.evidence,
     timeout: state.contract.timeout,
     accounts: state.wallet.accounts
   }),

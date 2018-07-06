@@ -59,23 +59,30 @@
       width: 100%;
       &-button {
         flex: 1;
-        background: #f5f5f5;
+        background: #444;
         padding: 10px;
         margin-top: 20px;
         text-align: center;
         cursor: pointer;
         font-weight: bold;
-        color: gray;
+        color: #fff;
         border-radius: 3px;
+        &-is-loading {
+          background: linear-gradient(to right, #ff9933 50%, #444 50%);
+          background-size: 200% 100%;
+          background-position: right bottom;
+          animation: progressFill 16s -.1s ease-in-out forwards;
+     
+          @keyframes progressFill {
+            from { background-position: right bottom;}
+            to   { background-position: left bottom;}
+          }
+        }
         &-left {
           margin-right: 2px;
         }
-
         &-right {
           margin-left: 2px;
-        }
-        &:hover {
-          color: #000;
         }
       }
       &-waiting {

@@ -87,8 +87,10 @@ export const ContractDisplayList = ({
 
     {contracts.data.map((contract, i) => (
       <div
-        className={`flex-item wide contract grow ${statusContract(contract, accounts.data[0]).class}`}
-        key={contract._id}
+        className={`flex-item wide contract grow ${
+          statusContract(contract, accounts.data[0]).class
+        }`}
+        key={i}
         onClick={redirect(`/contracts/${contract.address}`, history)}
       >
         {contract.partyA === accounts.data[0] && (
