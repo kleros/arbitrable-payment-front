@@ -20,7 +20,7 @@ const Stepper = ({ steps, activeStep, className }) => {
           ) : (
             <div
               key={i}
-              className={`Stepper-step ${className} ${
+              className={`Stepper-step ${
                 activeStep >= i ? 'Stepper-activeStep' : ''
               }`}
             >
