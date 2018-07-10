@@ -80,8 +80,7 @@ class Profile extends PureComponent {
             <div className="flex-container-main" key={contract._id}>
               <NavHeader history={history} />
               <div className="flex-container">
-                <div className="flex-item wide grow">
-                  <div className="type">Profile</div>
+                <div className="flex-item wide">
                   <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff" />
                   <div className="content">
                     <div className="address">

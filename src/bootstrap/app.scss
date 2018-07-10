@@ -88,3 +88,11 @@ textarea, input, button {
   -o-text-overflow: ellipsis;    /* Opera < 11*/
   text-overflow:    ellipsis;    /* IE, Safari (WebKit), Opera >= 11, FF > 6 */
 }
+
+.flex-container-main-footer {
+  background: rgba(0, 0, 0, 0.246);
+  color: rgba(128, 128, 128, 0.767);
+  text-align: center;
+  line-height: 50px;
+  font-size: 12px;
+}

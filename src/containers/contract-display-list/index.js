@@ -1,5 +1,6 @@
 import React from 'react'
 import Blockies from 'react-blockies'
+import { ScaleLoader } from 'react-spinners'
 
 import { redirect, shortAddress } from '../../utils/contract'
 import statusContract from '../../utils/status-contract'
@@ -23,13 +24,10 @@ export const ContractDisplayList = ({
   <div className="flex-container">
     {contract.creating && (
       <div
-        className="flex-item wide grow"
+        className="flex-item2 loader-contract"
         onClick={redirect(`/contracts/${contract.address}`, history)}
       >
-        <Blockies seed={randomSeed} size={10} scale={14} bgColor="#fff" />
-        <div className="creationContentContract">
-          <div>Contract creation</div>
-        </div>
+        <ScaleLoader color={'white'} loading={1} />
       </div>
     )}
 
@@ -38,99 +36,39 @@ export const ContractDisplayList = ({
       contract.data.title &&
       !contracts.data.some(c => c.address === contract.data.address) && (
         <div
-          className="flex-item wide contract grow"
+          className="flex-item2"
           onClick={redirect(`/contracts/${contract.data.address}`, history)}
         >
           <div className="type">Owner</div>
-          <Blockies
-            seed={contract.data.address}
-            size={10}
-            scale={14}
-            bgColor="#fff"
-          />
 
           <div className="content">
             <div className="address">{contract.data.title}</div>
-            <div className="partyB">
-              <div className="identicon">
-                <Blockies
-                  seed={contract.data.partyA}
-                  size={5}
-                  scale={4}
-                  bgColor="#f5f5f5"
-                />
-              </div>
-              <div className="content">
-                {shortAddress(contract.data.partyA)}
-              </div>
+          </div>
 
-              <div>&nbsp;&nbsp;</div>
-
-              <div className="identicon">
-                <Blockies
-                  seed={contract.data.partyB}
-                  size={5}
-                  scale={4}
-                  bgColor="#f5f5f5"
-                />
-              </div>
-              <div className="content">
-                {shortAddress(contract.data.partyB)}
-              </div>
-            </div>
-            <div className="description">
-              {contract.data.description.slice(0, 50)}
-            </div>
+          <div className="status">
+            {statusContract(contract, accounts.data[0]).status}
           </div>
         </div>
       )}
 
     {contracts.data.map((contract, i) => (
       <div
-        className={`flex-item wide contract grow ${
-          statusContract(contract, accounts.data[0]).class
-        }`}
+        className={`flex-item2`}
         key={i}
         onClick={redirect(`/contracts/${contract.address}`, history)}
       >
-        {contract.partyA === accounts.data[0] && (
+        {contract.partyA === accounts.data[0] ? (
           <div className="type">
-            Owner{statusContract(contract, accounts.data[0]).status}
+            Owner
           </div>
+        ) : (
+          <div />
         )}
-        <Blockies
-          seed={contract.address}
-          size={10}
-          scale={14}
-          bgColor={statusContract(contract, accounts.data[0]).color}
-        />
         <div className="content">
-          <div className="address short">{contract.title}</div>
-          <div className="partyB">
-            <div className="identicon">
-              <Blockies
-                seed={contract.partyA}
-                size={5}
-                scale={4}
-                bgColor="#f5f5f5"
-              />
-            </div>
-            <div className="content">{shortAddress(contract.partyA)}</div>
-
-            <div>&nbsp;&nbsp;</div>
-
-            <div className="identicon">
-              <Blockies
-                seed={contract.partyB}
-                size={5}
-                scale={4}
-                bgColor="#f5f5f5"
-              />
-            </div>
-
-            <div className="content">{shortAddress(contract.partyB)}</div>
-          </div>
-          <div className="description">{contract.description.slice(0, 50)}</div>
+          <div className="address">{contract.title}</div>
+        </div>
+        <div className="status">
+            {statusContract(contract, accounts.data[0]).status}
         </div>
       </div>
     ))}

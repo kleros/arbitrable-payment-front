@@ -8,7 +8,7 @@ export default function statusContract(contract, accountAddress) {
   if (contract.partyBFee > 0 && contract.partyBFee > 0) {
     return {
       color: '#66ccff',
-      status: ' @ evidence',
+      status: 'evidence',
       class: 'evidence'
     }
   }
@@ -19,7 +19,7 @@ export default function statusContract(contract, accountAddress) {
   ) {
     return {
       color: '#ff9933',
-      status: ' @ payFee',
+      status: 'pay fee',
       class: 'payFee'
     }
   }
@@ -30,21 +30,21 @@ export default function statusContract(contract, accountAddress) {
   ) {
     return {
       color: '#ff9933',
-      status: ' @ payFee',
+      status: 'pay fee',
       class: 'payFee'
     }
   }
   if (contract.partyB === accountAddress && contract.partyBFee > 0) {
     return {
       color: '#ffcc66',
-      status: ' @ waitFee',
+      status: 'wait fee',
       class: 'waitFee'
     }
   }
   if (contract.partyA === accountAddress && contract.partyAFee > 0) {
     return {
       color: '#ffcc66',
-      status: ' @ waitFee',
+      status: 'wait fee',
       class: 'waitFee'
     }
   }

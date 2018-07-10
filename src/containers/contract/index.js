@@ -160,7 +160,7 @@ class Contract extends PureComponent {
                         bgColor="#f5f5f5"
                       />
                     </div>
-                    <div className="Contract-content-address-address short">
+                    <div className="Contract-content-address-address">
                       {contract.data.title}
                     </div>
                   </div>
