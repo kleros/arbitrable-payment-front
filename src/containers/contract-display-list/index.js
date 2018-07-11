@@ -1,6 +1,6 @@
 import React from 'react'
-import Blockies from 'react-blockies'
 import { ScaleLoader } from 'react-spinners'
+import FA from 'react-fontawesome'
 
 import { redirect, shortAddress } from '../../utils/contract'
 import statusContract from '../../utils/status-contract'
@@ -76,13 +76,11 @@ export const ContractDisplayList = ({
     {contracts.data.length === 0 &&
       !(contract.data && contract.data.address) &&
       !contract.creating && (
-        <div className="flex-container-main-newContract-container">
-          <div
-            className="flex-container-main-newContract-container-content"
-            onClick={redirect('/contracts/new', history)}
-          >
-            New Contract
-          </div>
+        <div
+          className="flex-item2 newContract"
+          onClick={redirect('/contracts/new', history)}
+        >
+          <FA name="plus" size="2x"/>
         </div>
       )}
   </div>
