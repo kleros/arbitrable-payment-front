@@ -1,11 +1,6 @@
 /* @define Stepper */
 .Stepper {
-  display: flex;
-  justify-content: space-around;
-  flex-flow: row wrap;
-  align-items: stretch;
-  margin: 10px 20px;
-  align-items: center;
+
   &-step {
     background: #6e6e6e;
     color: #fff;

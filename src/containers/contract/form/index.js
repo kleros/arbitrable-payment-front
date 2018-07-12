@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import sha3 from 'crypto-js/sha3'
+import Stepper from 'flex-react-stepper'
 
 import * as walletSelectors from '../../../reducers/wallet'
 import * as walletActions from '../../../actions/wallet'
@@ -12,7 +13,6 @@ import {
   getCreateContractFormIsInvalid,
   submitCreateContractForm
 } from '../../../forms/contract'
-import Stepper from '../../../components/stepper'
 
 import './new-contract.css'
 
