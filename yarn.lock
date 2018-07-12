@@ -5047,9 +5047,9 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
-flex-react-stepper@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/flex-react-stepper/-/flex-react-stepper-0.0.6.tgz#05b7bbdf3342883665064553896f59f2711cc070"
+flex-react-stepper@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/flex-react-stepper/-/flex-react-stepper-0.0.7.tgz#314cf029abff4556d92a9f760b39ae301cb62c2b"
   dependencies:
     prop-types "^15.6.0"
     react-style-proptype "^3.2.1"
