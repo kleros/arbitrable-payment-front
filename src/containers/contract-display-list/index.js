@@ -58,9 +58,7 @@ export const ContractDisplayList = ({
         onClick={redirect(`/contracts/${contract.address}`, history)}
       >
         {contract.partyA === accounts.data[0] ? (
-          <div className="type">
-            Owner
-          </div>
+          <div className="type">Owner</div>
         ) : (
           <div />
         )}
@@ -68,7 +66,7 @@ export const ContractDisplayList = ({
           <div className="address">{contract.title}</div>
         </div>
         <div className="status">
-            {statusContract(contract, accounts.data[0]).status}
+          {statusContract(contract, accounts.data[0]).status}
         </div>
       </div>
     ))}
@@ -80,7 +78,7 @@ export const ContractDisplayList = ({
           className="flex-item2 newContract"
           onClick={redirect('/contracts/new', history)}
         >
-          <FA name="plus" size="2x"/>
+          <FA name="plus" size="2x" />
         </div>
       )}
   </div>
