@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import Blockies from 'react-blockies'
-import { ClipLoader, BeatLoader, ScaleLoader } from 'react-spinners'
+import { ClipLoader } from 'react-spinners'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { connect } from 'react-redux'
 import _ from 'lodash'

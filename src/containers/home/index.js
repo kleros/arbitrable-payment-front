@@ -6,7 +6,6 @@ import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
 import * as walletSelectors from '../../reducers/wallet'
 import * as contractSelectors from '../../reducers/contract'
-import { NavHeader } from '../../components/nav-header'
 import { ContractDisplayList } from '../contract-display-list'
 import { renderIf } from '../../utils/react-redux'
 
@@ -69,7 +68,6 @@ class Home extends PureComponent {
           loading: <span>loading</span>,
           done: contracts.data && (
             <div className="flex-container-main" key={contract._id}>
-              <NavHeader history={history} />
               <ContractDisplayList
                 randomSeed={randomSeed}
                 contracts={contracts}

@@ -9,7 +9,6 @@ import * as walletSelectors from '../../reducers/wallet'
 import * as contractSelectors from '../../reducers/contract'
 import { renderIf } from '../../utils/react-redux'
 import { shortAddress } from '../../utils/contract'
-import { NavHeader } from '../../components/nav-header'
 import * as arbitratorConstants from '../../constants/arbitrator'
 
 import './profile.css'
@@ -78,7 +77,6 @@ class Profile extends PureComponent {
           loading: <span>loading</span>,
           done: contracts.data && (
             <div className="flex-container-main" key={contract._id}>
-              <NavHeader history={history} />
               <div className="flex-container">
                 <div className="flex-item wide">
                   <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff" />

@@ -8,7 +8,7 @@
   background-repeat: no-repeat;
   background-size: 70%;
   background-attachment: fixed;
-  min-height: calc(100vh - 50px);
+  min-height: calc(100vh - 100px);
 }
 
 .flex-container-main {
@@ -16,7 +16,7 @@
   flex-direction: column;
   box-sizing: content-box;
   color: #444;
-  min-height: calc(100vh - 50px);
+  min-height: calc(100vh - 100px);
 
   &-menu {
     display: flex;
@@ -25,6 +25,7 @@
     background: linear-gradient(229deg, rgba(71, 207, 114, 0.527), rgba(0, 88, 171, 0.431));
     padding: 0 20px;
     color: #fff;
+    font-family: 'Open Sans Condensed', sans-serif;
     &-left {
       flex: 1;
       &-home {
@@ -251,7 +252,7 @@
 }
 
 .description {
-  border-left: 1px solid #475053;
+  border-left: 1px solid #fff;
   margin-top: 10px;
   padding: 0 30px 0 8px;
   font-size: 15px;

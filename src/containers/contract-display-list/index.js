@@ -7,7 +7,6 @@ import statusContract from '../../utils/status-contract'
 
 /**
  * Contract Display List Component
- * @param randomSeed
  * @param contract
  * @param props - e.g. must receive this.props with a history field
  * @param accounts
@@ -18,8 +17,7 @@ export const ContractDisplayList = ({
   accounts,
   contracts,
   contract,
-  history,
-  randomSeed
+  history
 }) => (
   <div className="flex-container">
     {contract.creating && (
