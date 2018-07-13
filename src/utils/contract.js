@@ -16,3 +16,17 @@ export const redirect = (url, history, ...args) => () => {
 
 export const shortAddress = address =>
   `${address.substr(0, address.length - 36)}...${address.substr(37)}`
+
+export const createMetaEvidence = (partyAAddress, partyBAddress) => {
+  return {
+    type: 'Escrow Contract Disupte',
+    rulingOptions: {
+      titles: ['Vote for Party A', 'Vote for Party B'],
+      descriptions: ['Select to return funds to Party A', 'Select to release funds to Party B'],
+    }
+    aliases: {
+      [partyAAddress]: 'Party A',
+      [partyBAddress]: 'Party B'
+    }
+  }
+}
