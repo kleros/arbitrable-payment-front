@@ -15,11 +15,14 @@ body,
 }
 
 #router-root {
-  background: $background;
   display: flex;
   flex-direction: column;
   font-family: sans-serif;
   min-height: 100vh;
+  background: url('./back_kleros.png') #1A1B23;
+  background-repeat: no-repeat;
+  background-size: 70%;
+  background-attachment: fixed;
 }
 
 fieldset {
