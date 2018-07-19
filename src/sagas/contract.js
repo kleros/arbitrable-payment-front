@@ -31,7 +31,7 @@ function* createContract({ type, payload: { contract } }) {
       kleros.arbitrable.deploy,
       accounts[0].toLowerCase(),
       unit.toWei(contract.payment, 'ether'),
-      web3.keccak256(contract.description),
+      web3.utils.keccak256(contract.description),
       ARBITRATOR_ADDRESS,
       process.env.REACT_APP_ARBITRATOR_TIMEOUT,
       contract.partyB.toLowerCase(),
@@ -43,7 +43,7 @@ function* createContract({ type, payload: { contract } }) {
   } catch (err) {
     console.log(err)
   }
-  yield call(fetchContract, {
+  return yield call(fetchContract, {
     payload: { contractAddress: newContract.address }
   })
 }
@@ -109,16 +109,14 @@ function* fetchContract({ payload: { contractAddress } }) {
     console.log(err)
   }
 
-  yield put(
-    contractActions.receiveContract({
-      ruling: rulingData,
-      canAppeal:
-        disputeData.firstSession + disputeData.numberOfAppeals ===
-          currentSession || false,
-      ...disputeData,
-      ...contract
-    })
-  )
+  return {
+    ruling: rulingData,
+    canAppeal:
+      disputeData.firstSession + disputeData.numberOfAppeals ===
+        currentSession || false,
+    ...disputeData,
+    ...contract
+  }
 }
 
 /**
@@ -400,8 +398,13 @@ export function* fetchArbitratorData() {
  * @export default walletSaga
  */
 export default function* walletSaga() {
-  yield takeLatest(contractActions.CREATE_CONTRACT, createContract)
-  //yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
+  yield takeLatest(
+    contractActions.contract.CREATE,
+    lessduxSaga,
+    'create',
+    contractActions.contract,
+    createContract
+  )
   yield takeLatest(
     contractActions.contracts.FETCH,
     lessduxSaga,
@@ -409,7 +412,6 @@ export default function* walletSaga() {
     contractActions.contracts,
     fetchContracts
   )
-  yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract)
   yield takeLatest(contractActions.CREATE_DISPUTE, createDispute)
   yield takeLatest(contractActions.CREATE_APPEAL, createAppeal)
   yield takeLatest(contractActions.FETCH_GETDISPUTE, fetchDispute)

@@ -1,10 +1,6 @@
 import { createActions } from 'lessdux'
 
 // Actions
-export const FETCH_CONTRACT = 'FETCH_CONTRACT'
-export const CREATE_CONTRACT = 'CREATE_CONTRACT'
-export const RECEIVE_CONTRACT = 'RECEIVE_CONTRACT'
-
 export const FETCH_GETDISPUTE = 'FETCH_GETDISPUTE'
 export const CREATE_DISPUTE = 'CREATE_DISPUTE'
 export const RECEIVE_DISPUTE = 'RECEIVE_DISPUTE'
@@ -22,19 +18,6 @@ export const FETCH_ARBITRATOR = 'FETCH_ARBITRATOR'
 export const RECEIVE_ARBITRATOR = 'RECEIVE_ARBITRATOR'
 
 // Action Creators
-export const createContract = contract => ({
-  type: CREATE_CONTRACT,
-  payload: { contract }
-})
-
-export const fetchContract = contractAddress => ({
-  type: FETCH_CONTRACT,
-  payload: { contractAddress }
-})
-export const receiveContract = contract => ({
-  type: RECEIVE_CONTRACT,
-  payload: { contract }
-})
 export const fetchGetDispute = (contractAddress, disputeId) => ({
   type: FETCH_GETDISPUTE,
   payload: { contractAddress, disputeId }
@@ -101,7 +84,6 @@ export const receiveArbitrator = arbitrator => ({
   payload: { arbitrator }
 })
 
-
 /* Actions */
 
 // Contracts
@@ -111,3 +93,20 @@ export const contracts = createActions('CONTRACTS')
 
 // Contracts
 export const fetchContracts = () => ({ type: contracts.FETCH })
+
+// Contract
+export const contract = {
+  ...createActions('CONTRACT', {
+    withCreate: true
+  })
+}
+
+export const createContract = contract => ({
+  type: contract.CREATE,
+  payload: { contract }
+})
+
+export const fetchContract = contractAddress => ({
+  type: contract.FETCH,
+  payload: { contractAddress }
+})
