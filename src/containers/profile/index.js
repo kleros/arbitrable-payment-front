@@ -38,9 +38,7 @@ class Profile extends PureComponent {
     fetchContracts: PropTypes.func.isRequired,
     fetchArbitrator: PropTypes.func.isRequired,
     balance: walletSelectors.balanceShape.isRequired,
-    version: walletSelectors.versionShape.isRequired,
-    fetchBalance: PropTypes.func.isRequired,
-    fetchVersion: PropTypes.func.isRequired
+    fetchBalance: PropTypes.func.isRequired
   }
 
   static defaultProps = {
@@ -113,14 +111,12 @@ export default connect(
     contract: state.contract.contract,
     contracts: state.contract.contracts,
     arbitrator: state.contract.arbitrator,
-    accounts: state.wallet.accounts,
-    version: state.wallet.version
+    accounts: state.wallet.accounts
   }),
   {
     fetchBalance: walletActions.fetchBalance,
     fetchAccounts: walletActions.fetchAccounts,
     fetchContracts: contractActions.fetchContracts,
-    fetchArbitrator: contractActions.fetchArbitrator,
-    fetchVersion: walletActions.fetchVersion
+    fetchArbitrator: contractActions.fetchArbitrator
   }
 )(Profile)

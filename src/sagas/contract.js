@@ -1,13 +1,13 @@
 import unit from 'ethjs-unit'
-import Eth from 'ethjs'
 import { push } from 'react-router-redux'
 import { toastr } from 'react-redux-toastr'
 
 import { call, put, takeLatest } from 'redux-saga/effects'
 
-import { kleros, eth, ARBITRATOR_ADDRESS } from '../bootstrap/dapp-api'
+import { kleros, web3, ARBITRATOR_ADDRESS } from '../bootstrap/dapp-api'
 import * as contractActions from '../actions/contract'
-import { ETH_NO_ACCOUNTS } from '../constants/errors'
+import * as errorConstants from '../constants/errors'
+import { lessduxSaga } from '../utils/saga'
 
 const toastrOptions = {
   timeOut: 3000,
@@ -19,8 +19,8 @@ const toastrOptions = {
  * @param {object} { payload: contract } - The contract to create.
  */
 function* createContract({ type, payload: { contract } }) {
-  const accounts = yield call(eth.accounts)
-  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+  const accounts = yield call(web3.eth.getAccounts)
+  if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   yield put(push('/'))
 
@@ -31,7 +31,7 @@ function* createContract({ type, payload: { contract } }) {
       kleros.arbitrable.deploy,
       accounts[0].toLowerCase(),
       unit.toWei(contract.payment, 'ether'),
-      Eth.keccak256(contract.description),
+      web3.keccak256(contract.description),
       ARBITRATOR_ADDRESS,
       process.env.REACT_APP_ARBITRATOR_TIMEOUT,
       contract.partyB.toLowerCase(),
@@ -52,8 +52,8 @@ function* createContract({ type, payload: { contract } }) {
  * Fetches contracts for the current user and puts them in the store.
  */
 function* fetchContracts() {
-  const accounts = yield call(eth.accounts)
-  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+  const accounts = yield call(web3.eth.getAccounts)
+  if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   let contracts = []
 
@@ -73,7 +73,7 @@ function* fetchContracts() {
     if (data.arbitrator === ARBITRATOR_ADDRESS) contractsData.push(data)
   }
 
-  yield put(contractActions.receiveContracts(contractsData.reverse()))
+  return contractsData.reverse()
 }
 
 /**
@@ -81,8 +81,8 @@ function* fetchContracts() {
  * @param {object} { payload: contractAddress } - The address of the contract to fetch details for.
  */
 function* fetchContract({ payload: { contractAddress } }) {
-  const accounts = yield call(eth.accounts)
-  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+  const accounts = yield call(web3.eth.getAccounts)
+  if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   // Set contract instance
   yield call(kleros.arbitrable.setContractInstance, contractAddress)
@@ -126,8 +126,8 @@ function* fetchContract({ payload: { contractAddress } }) {
  * @param {object} { payload: contractAddress, partyA, partyB } - The address of the contract.
  */
 function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
-  const accounts = yield call(eth.accounts)
-  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+  const accounts = yield call(web3.eth.getAccounts)
+  if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   // Set contract instance
   yield call(kleros.arbitrable.setContractInstance, contractAddress)
@@ -164,8 +164,8 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
 function* createReimburse({ type, payload: { contractAddress } }) {
-  const accounts = yield call(eth.accounts)
-  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+  const accounts = yield call(web3.eth.getAccounts)
+  if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   // Set contract instance
   yield call(kleros.arbitrable.setContractInstance, contractAddress)
@@ -203,8 +203,8 @@ function* createReimburse({ type, payload: { contractAddress } }) {
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
 function* createDispute({ type, payload: { contractAddress } }) {
-  const accounts = yield call(eth.accounts)
-  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+  const accounts = yield call(web3.eth.getAccounts)
+  if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   // Set contract instance
   yield call(kleros.arbitrable.setContractInstance, contractAddress)
@@ -254,8 +254,8 @@ function* createDispute({ type, payload: { contractAddress } }) {
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
 function* createAppeal({ type, payload: { contractAddress, disputeId } }) {
-  const accounts = yield call(eth.accounts)
-  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+  const accounts = yield call(web3.eth.getAccounts)
+  if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   let raiseAppealByPartyATxObj
 
@@ -300,8 +300,8 @@ function* createTimeout({
   type,
   payload: { contractAddress, partyA, partyB }
 }) {
-  const accounts = yield call(eth.accounts)
-  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+  const accounts = yield call(web3.eth.getAccounts)
+  if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   yield put(push('/'))
 
@@ -340,8 +340,8 @@ function* createTimeout({
  * @param {object} { payload: evidence } - Evidence.
  */
 function* createEvidence({ type, payload: { evidence } }) {
-  const accounts = yield call(eth.accounts)
-  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+  const accounts = yield call(web3.eth.getAccounts)
+  if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   yield put(push('/'))
 
@@ -372,8 +372,8 @@ function* createEvidence({ type, payload: { evidence } }) {
  * @param {object} { payload: contractAddress, disouteId } - The address of the contract and the dispute id to fetch details for.
  */
 function* fetchDispute({ payload: { contractAddress, disputeId } }) {
-  const accounts = yield call(eth.accounts)
-  if (!accounts[0]) throw new Error(ETH_NO_ACCOUNTS)
+  const accounts = yield call(web3.eth.getAccounts)
+  if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   let dispute = null
 
@@ -401,7 +401,14 @@ export function* fetchArbitratorData() {
  */
 export default function* walletSaga() {
   yield takeLatest(contractActions.CREATE_CONTRACT, createContract)
-  yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
+  //yield takeLatest(contractActions.FETCH_CONTRACTS, fetchContracts)
+  yield takeLatest(
+    contractActions.contracts.FETCH,
+    lessduxSaga,
+    'fetch',
+    contractActions.contracts,
+    fetchContracts
+  )
   yield takeLatest(contractActions.FETCH_CONTRACT, fetchContract)
   yield takeLatest(contractActions.CREATE_DISPUTE, createDispute)
   yield takeLatest(contractActions.CREATE_APPEAL, createAppeal)

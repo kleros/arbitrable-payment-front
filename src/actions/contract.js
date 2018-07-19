@@ -1,9 +1,10 @@
+import { createActions } from 'lessdux'
+
 // Actions
 export const FETCH_CONTRACT = 'FETCH_CONTRACT'
 export const CREATE_CONTRACT = 'CREATE_CONTRACT'
 export const RECEIVE_CONTRACT = 'RECEIVE_CONTRACT'
-export const FETCH_CONTRACTS = 'FETCH_CONTRACTS'
-export const RECEIVE_CONTRACTS = 'RECEIVE_CONTRACTS'
+
 export const FETCH_GETDISPUTE = 'FETCH_GETDISPUTE'
 export const CREATE_DISPUTE = 'CREATE_DISPUTE'
 export const RECEIVE_DISPUTE = 'RECEIVE_DISPUTE'
@@ -25,11 +26,7 @@ export const createContract = contract => ({
   type: CREATE_CONTRACT,
   payload: { contract }
 })
-export const fetchContracts = () => ({ type: FETCH_CONTRACTS })
-export const receiveContracts = contracts => ({
-  type: RECEIVE_CONTRACTS,
-  payload: { contracts }
-})
+
 export const fetchContract = contractAddress => ({
   type: FETCH_CONTRACT,
   payload: { contractAddress }
@@ -103,3 +100,14 @@ export const receiveArbitrator = arbitrator => ({
   type: RECEIVE_ARBITRATOR,
   payload: { arbitrator }
 })
+
+
+/* Actions */
+
+// Contracts
+export const contracts = createActions('CONTRACTS')
+
+/* Action Creators */
+
+// Contracts
+export const fetchContracts = () => ({ type: contracts.FETCH })

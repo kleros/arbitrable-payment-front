@@ -1,7 +1,5 @@
 import React, { PureComponent } from 'react'
 
-import { NavHeader } from '../nav-header'
-import { KlerosFooter } from '../kleros-footer'
 import { redirect } from '../../utils/contract'
 
 import './page-note-found.css'
@@ -15,7 +13,6 @@ class PageNotFound extends PureComponent {
     return (
       <div className="container">
         <div className="flex-container-main">
-          <NavHeader history={history} />
           <div className="flex-container-main-flex-grow">
             <div className="PageNotFound-message">
               <h1>404</h1>
@@ -28,7 +25,6 @@ class PageNotFound extends PureComponent {
               </div>
             </div>
           </div>
-          <KlerosFooter />
         </div>
       </div>
     )

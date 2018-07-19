@@ -32,7 +32,9 @@ export const ContractDisplayList = ({
     {contract.data &&
       contract.data.address &&
       contract.data.title &&
-      !contracts.data.some(c => c.address === contract.data.address) && (
+      !contracts.data.some(
+        c => c.address === contract.data.address
+      ) && (
         <div
           className="flex-item2"
           onClick={redirect(`/contracts/${contract.data.address}`, history)}
@@ -55,7 +57,7 @@ export const ContractDisplayList = ({
         key={i}
         onClick={redirect(`/contracts/${contract.address}`, history)}
       >
-        {contract.partyA === accounts.data[0] ? (
+        {contract.partyA === accounts.data[0].toLowerCase() ? (
           <div className="type">Owner</div>
         ) : (
           <div />
