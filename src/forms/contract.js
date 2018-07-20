@@ -12,6 +12,11 @@ export const {
     }
   },
   step2: {
+    description: {
+      type: 'textarea'
+    }
+  },
+  step3: {
     partyB: {
       type: 'text',
       props: {
@@ -19,7 +24,7 @@ export const {
       }
     }
   },
-  step3: {
+  step4: {
     payment: {
       type: 'number',
       props: {
@@ -29,14 +34,17 @@ export const {
       validate: [required, number]
     }
   },
-  step4: {
+  step5: {
     email: {
       type: 'text'
     }
   },
-  step5: {
-    description: {
-      type: 'textarea'
+  step6: {
+    fileURI: {
+      type: 'text',
+      props: {
+        placeholder: 'URI of Contract'
+      }
     }
   }
 })

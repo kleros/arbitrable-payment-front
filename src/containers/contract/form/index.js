@@ -16,7 +16,7 @@ import {
 
 import './new-contract.css'
 
-const FINAL_STEP = 4
+const FINAL_STEP = 5
 
 class NewContract extends PureComponent {
   static propTypes = {
@@ -119,11 +119,19 @@ class NewContract extends PureComponent {
           form &&
           form.createContractFormKey &&
           form.createContractFormKey.values &&
+          form.createContractFormKey.values.description !== '' &&
+          form.createContractFormKey.values.description != null
+        )
+      case 2:
+        return (
+          form &&
+          form.createContractFormKey &&
+          form.createContractFormKey.values &&
           this.isAddress(form.createContractFormKey.values.partyB) &&
           submitCreateContractForm() &&
           this.setState({ step: step + 1 })
         )
-      case 2:
+      case 3:
         return (
           form &&
           form.createContractFormKey &&
@@ -131,20 +139,20 @@ class NewContract extends PureComponent {
           !isNaN(form.createContractFormKey.values.payment) &&
           form.createContractFormKey.values.payment > 0
         )
-      case 3:
+      case 4:
         return (
           form &&
           form.createContractFormKey &&
           form.createContractFormKey.values &&
           this.isEmail(form.createContractFormKey.values.email)
         )
-      case 4:
+      case 5:
         return (
           form &&
           form.createContractFormKey &&
           form.createContractFormKey.values &&
-          form.createContractFormKey.values.description !== '' &&
-          form.createContractFormKey.values.description != null
+          form.createContractFormKey.values.fileURI !== '' &&
+          form.createContractFormKey.values.fileURI != null
         )
       default:
         return false
@@ -162,10 +170,11 @@ class NewContract extends PureComponent {
           <Stepper
             steps={[
               'Title',
+              'Description',
               'Address PartyB',
               'Payment',
               'Email',
-              'Description'
+              'Contract URL'
             ]}
             activeStep={step}
           />

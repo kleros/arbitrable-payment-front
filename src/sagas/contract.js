@@ -24,7 +24,13 @@ function* createContract({ type, payload: { contractReceived } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
-  const metaEvidence = createMetaEvidence(accounts[0], contract.partyB)
+  const metaEvidence = createMetaEvidence(
+    accounts[0],
+    contract.partyB,
+    contract.title,
+    contract.description,
+    contract.fileURI
+  )
 
   yield put(push('/'))
 
@@ -34,15 +40,12 @@ function* createContract({ type, payload: { contractReceived } }) {
     newContract = yield call(
       kleros.arbitrable.deploy,
       accounts[0].toLowerCase(),
-      unit.toWei(contractReceived.payment, 'ether'),
-      web3.utils.keccak256(contractReceived.description),
+      unit.toWei(contract.payment, 'ether'),
       ARBITRATOR_ADDRESS,
       process.env.REACT_APP_ARBITRATOR_TIMEOUT,
       contractReceived.partyB.toLowerCase(),
       process.env.REACT_APP_ARBITRATOR_EXTRADATA,
       contractReceived.email,
-      contractReceived.title,
-      contractReceived.description,
       metaEvidence
     )
   } catch (err) {
