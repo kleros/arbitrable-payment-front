@@ -201,14 +201,14 @@ function* createReimburse({ type, payload: { contractAddress } }) {
  * Raises dispute.
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
-function* createDispute({ payload: contractAddress }) {
+function* createDispute({ payload: { contractAddress } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
-
+  console.log(contractAddress)
   // Set contract instance
   yield call(kleros.arbitrable.setContractInstance, contractAddress)
 
-  let contract, disputeTx, dispute, disputeId
+  let contract, disputeTx
 
   try {
     contract = yield call(kleros.arbitrable.getData, accounts[0].toLowerCase())
@@ -222,27 +222,22 @@ function* createDispute({ payload: contractAddress }) {
       contract.arbitratorExtraData
     )
 
+    console.log(arbitrationCost)
+
     const cost = arbitrationCost - fee
 
     if (accounts[0].toLowerCase() === contract.partyA) {
       disputeTx = yield call(
         kleros.arbitrable.payArbitrationFeeByPartyA,
-        accounts[0].toLowerCase(),
+        accounts[0],
         cost
       )
-
-      dispute = yield call(web3.eth.getTransactionReceipt, disputeTx)
-
-      yield call(console.log, 'dispute', dispute)
     } else if (accounts[0].toLowerCase() === contract.partyB) {
       disputeTx = yield call(
         kleros.arbitrable.payArbitrationFeeByPartyB,
-        accounts[0].toLowerCase(),
+        accounts[0],
         cost
       )
-
-      dispute = yield call(web3.eth.getTransactionReceipt, disputeTx)
-      yield call(console.log, 'dispute', dispute)
     }
   } catch (err) {
     console.log(err)
@@ -252,9 +247,6 @@ function* createDispute({ payload: contractAddress }) {
 
   yield put(push('/'))
   yield call(toastr.success, 'Dispute creation successful', toastrOptions)
-  // return yield call(fetchDispute, {
-  //   payload: { disputeId }
-  // })
 }
 
 /**
