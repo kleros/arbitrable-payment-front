@@ -7,20 +7,16 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "prettify":
-      "prettier --config ./.prettierrc --write \"./*.{js,json}\" \"./{src,.storybook,stories}/**/*.{js,json}\"",
-    "lint":
-      "eslint \"./*.js\" \"./{src,.storybook,stories}/**/*.js\" && stylelint \"./src/**/*.scss\" --syntax scss",
-    "lint:fix":
-      "eslint --fix \"./*.js\" \"./{src,.storybook,stories}/**/*.js\" && stylelint --fix \"./src/**/*.scss\" --syntax scss",
+    "prettify": "prettier --config ./.prettierrc --write \"./*.{js,json}\" \"./{src,.storybook,stories}/**/*.{js,json}\"",
+    "lint": "eslint \"./*.js\" \"./{src,.storybook,stories}/**/*.js\" && stylelint \"./src/**/*.scss\" --syntax scss",
+    "lint:fix": "eslint --fix \"./*.js\" \"./{src,.storybook,stories}/**/*.js\" && stylelint --fix \"./src/**/*.scss\" --syntax scss",
     "test": "react-scripts test --env=jsdom --coverage",
     "test:coveralls": "coveralls < ./coverage/lcov.info",
     "commitmsg": "commitlint -e $GIT_PARAMS",
     "precommit": "lint-staged && yarn run lint && yarn test",
     "cz": "git-cz",
     "start:js": "react-scripts start",
-    "start:scss":
-      "yarn run build:scss && node-sass-chokidar ./src/ -o ./src/ --watch --recursive",
+    "start:scss": "yarn run build:scss && node-sass-chokidar ./src/ -o ./src/ --watch --recursive",
     "start:storybook": "start-storybook -p 9001 -c .storybook",
     "build:js": "react-scripts build",
     "build:scss": "node-sass-chokidar ./src/ -o ./src/",
@@ -30,10 +26,15 @@
     "storybook": "npm-run-all -p start:scss start:storybook"
   },
   "lint-staged": {
-    "*.{js,json}": ["prettier --config ./.prettierrc --write", "git add"]
+    "*.{js,json}": [
+      "prettier --config ./.prettierrc --write",
+      "git add"
+    ]
   },
   "commitlint": {
-    "extends": ["@commitlint/config-conventional"]
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "config": {
     "commitizen": {
@@ -51,11 +52,12 @@
   },
   "dependencies": {
     "crypto-js": "^3.1.9-1",
-    "ethjs": "^0.3.3",
     "ethjs-unit": "^0.1.6",
     "flex-react-stepper": "^0.0.7",
+    "ganache-cli": "^6.1.6",
     "history": "^4.7.2",
     "kleros-api": "^0.9.1",
+    "lessdux": "^0.7.3",
     "lodash": "^4.17.4",
     "normalize.css": "^8.0.0",
     "react": "^16.2.0",
@@ -74,7 +76,8 @@
     "react-tooltip": "^3.4.0",
     "redux": "^3.7.2",
     "redux-form": "^7.2.1",
-    "redux-saga": "^0.16.0"
+    "redux-saga": "^0.16.0",
+    "web3": "^1.0.0-beta.34"
   },
   "devDependencies": {
     "@commitlint/cli": "^6.0.2",
@@ -101,7 +104,6 @@
     "eslint-plugin-react": "^7.5.1",
     "eslint-plugin-standard": "^3.0.1",
     "eslint-plugin-unicorn": "^3.0.1",
-    "ethereumjs-testrpc": "^6.0.3",
     "husky": "^0.14.3",
     "jest-enzyme": "^4.0.2",
     "lint-staged": "^6.0.1",

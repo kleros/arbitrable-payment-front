@@ -214,7 +214,7 @@ class Contract extends PureComponent {
                       >
                         Create dispute
                       </div>
-                      {contract.data.partyA === accounts.data[0] && (
+                      {contract.data.partyA === accounts.data[0].toLowerCase() && (
                         <div
                           style={this.hideEmptyContractEl(contract)}
                           className={`Contract-content-actions-button Contract-content-actions-button-right ${
@@ -227,7 +227,7 @@ class Contract extends PureComponent {
                           Pay
                         </div>
                       )}
-                      {contract.data.partyB === accounts.data[0] && (
+                      {contract.data.partyB === accounts.data[0].toLowerCase() && (
                         <div
                           style={this.hideEmptyContractEl(contract)}
                           className={`Contract-content-actions-button Contract-content-actions-button-right ${
@@ -409,7 +409,6 @@ export default connect(
   }),
   {
     fetchContract: contractActions.fetchContract,
-    fetchGetDispute: contractActions.fetchGetDispute,
     createDispute: contractActions.createDispute,
     createAppeal: contractActions.createAppeal,
     createPay: contractActions.createPay,

@@ -13,20 +13,7 @@ import './home.css'
 
 class Home extends PureComponent {
   state = {
-    randomSeed: '',
     totalContracts: 0
-  }
-
-  randomSeed = () =>
-    this.setState({
-      randomSeed: Math.random()
-        .toString(36)
-        .substring(6)
-        .toString()
-    })
-
-  componentWillUnmount() {
-    clearInterval(this.intervalId)
   }
 
   static propTypes = {
@@ -35,9 +22,7 @@ class Home extends PureComponent {
     fetchContracts: PropTypes.func.isRequired,
 
     balance: walletSelectors.balanceShape.isRequired,
-    version: walletSelectors.versionShape.isRequired,
-    fetchBalance: PropTypes.func.isRequired,
-    fetchVersion: PropTypes.func.isRequired
+    fetchBalance: PropTypes.func.isRequired
   }
 
   static defaultProps = {
@@ -45,11 +30,9 @@ class Home extends PureComponent {
   }
 
   componentDidMount() {
-    this.intervalId = setInterval(this.randomSeed, 100)
-    const { fetchBalance, fetchContracts, fetchVersion } = this.props
+    const { fetchBalance, fetchContracts, fetchAccounts } = this.props
     fetchBalance()
     fetchContracts()
-    fetchVersion()
   }
 
   getTotalContracts = totalContracts => {
@@ -69,7 +52,6 @@ class Home extends PureComponent {
           done: contracts.data && (
             <div className="flex-container-main" key={contract._id}>
               <ContractDisplayList
-                randomSeed={randomSeed}
                 contracts={contracts}
                 contract={contract}
                 history={history}
@@ -90,13 +72,10 @@ export default connect(
     balance: state.wallet.balance,
     contract: state.contract.contract,
     contracts: state.contract.contracts,
-    accounts: state.wallet.accounts,
-    version: state.wallet.version
+    accounts: state.wallet.accounts
   }),
   {
     fetchBalance: walletActions.fetchBalance,
-    fetchAccounts: walletActions.fetchAccounts,
-    fetchContracts: contractActions.fetchContracts,
-    fetchVersion: walletActions.fetchVersion
+    fetchContracts: contractActions.fetchContracts
   }
 )(Home)
