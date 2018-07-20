@@ -1,9 +1,6 @@
 import { createActions } from 'lessdux'
 
 // Actions
-export const FETCH_GETDISPUTE = 'FETCH_GETDISPUTE'
-export const CREATE_DISPUTE = 'CREATE_DISPUTE'
-export const RECEIVE_DISPUTE = 'RECEIVE_DISPUTE'
 export const CREATE_APPEAL = 'CREATE_APPEAL'
 export const RECEIVE_APPEAL = 'RECEIVE_APPEAL'
 export const CREATE_PAY = 'CREATE_PAY'
@@ -18,23 +15,7 @@ export const FETCH_ARBITRATOR = 'FETCH_ARBITRATOR'
 export const RECEIVE_ARBITRATOR = 'RECEIVE_ARBITRATOR'
 
 // Action Creators
-export const fetchGetDispute = (contractAddress, disputeId) => ({
-  type: FETCH_GETDISPUTE,
-  payload: { contractAddress, disputeId }
-})
-export const createDispute = contractAddress => ({
-  type: CREATE_DISPUTE,
-  payload: { contractAddress }
-})
-/*
-  the dispute param can be a hash if it's a new dispute
-  or an object if the dispute exists
-  maybe use RECEIVE_CREATED_
-*/
-export const receiveDispute = dispute => ({
-  type: RECEIVE_DISPUTE,
-  payload: { dispute }
-})
+
 export const createAppeal = contractAddress => ({
   type: CREATE_APPEAL,
   payload: { contractAddress }
@@ -101,12 +82,29 @@ export const contract = {
   })
 }
 
-export const createContract = contract => ({
+export const createContract = contractReceived => ({
   type: contract.CREATE,
-  payload: { contract }
+  payload: { contractReceived }
 })
 
 export const fetchContract = contractAddress => ({
   type: contract.FETCH,
+  payload: { contractAddress }
+})
+
+// Dispute
+export const dispute = {
+  ...createActions('DISPUTE', {
+    withCreate: true
+  })
+}
+
+export const fetchDispute = disputeId => ({
+  type: dispute.FETCH,
+  payload: { disputeId }
+})
+
+export const createDispute = contractAddress => ({
+  type: dispute.FETCH,
   payload: { contractAddress }
 })

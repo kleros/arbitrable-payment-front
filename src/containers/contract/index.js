@@ -409,7 +409,6 @@ export default connect(
   }),
   {
     fetchContract: contractActions.fetchContract,
-    fetchGetDispute: contractActions.fetchGetDispute,
     createDispute: contractActions.createDispute,
     createAppeal: contractActions.createAppeal,
     createPay: contractActions.createPay,

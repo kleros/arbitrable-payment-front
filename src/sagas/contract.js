@@ -16,9 +16,9 @@ const toastrOptions = {
 
 /**
  * Creates a new contract.
- * @param {object} { payload: contract } - The contract to create.
+ * @param {object} { payload: contractReceived } - The contract to create.
  */
-function* createContract({ type, payload: { contract } }) {
+function* createContract({ type, payload: { contractReceived } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
@@ -30,19 +30,20 @@ function* createContract({ type, payload: { contract } }) {
     newContract = yield call(
       kleros.arbitrable.deploy,
       accounts[0].toLowerCase(),
-      unit.toWei(contract.payment, 'ether'),
-      web3.utils.keccak256(contract.description),
+      unit.toWei(contractReceived.payment, 'ether'),
+      web3.utils.keccak256(contractReceived.description),
       ARBITRATOR_ADDRESS,
       process.env.REACT_APP_ARBITRATOR_TIMEOUT,
-      contract.partyB.toLowerCase(),
+      contractReceived.partyB.toLowerCase(),
       process.env.REACT_APP_ARBITRATOR_EXTRADATA,
-      contract.email,
-      contract.title,
-      contract.description
+      contractReceived.email,
+      contractReceived.title,
+      contractReceived.description
     )
   } catch (err) {
     console.log(err)
   }
+
   return yield call(fetchContract, {
     payload: { contractAddress: newContract.address }
   })
@@ -200,14 +201,14 @@ function* createReimburse({ type, payload: { contractAddress } }) {
  * Raises dispute.
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
-function* createDispute({ type, payload: { contractAddress } }) {
+function* createDispute({ payload: contractAddress }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   // Set contract instance
   yield call(kleros.arbitrable.setContractInstance, contractAddress)
 
-  let contract, disputeTx
+  let contract, disputeTx, dispute, disputeId
 
   try {
     contract = yield call(kleros.arbitrable.getData, accounts[0].toLowerCase())
@@ -229,12 +230,19 @@ function* createDispute({ type, payload: { contractAddress } }) {
         accounts[0],
         cost
       )
+
+      dispute = yield call(web3.eth.getTransactionReceipt, disputeTx)
+
+      yield call(console.log, 'dispute', dispute)
     } else if (accounts[0] === contract.partyB) {
       disputeTx = yield call(
         kleros.arbitrable.payArbitrationFeeByPartyB,
         accounts[0],
         cost
       )
+
+      dispute = yield call(web3.eth.getTransactionReceipt, disputeTx)
+      yield call(console.log, 'dispute', dispute)
     }
   } catch (err) {
     console.log(err)
@@ -244,7 +252,10 @@ function* createDispute({ type, payload: { contractAddress } }) {
 
   yield put(push('/'))
   yield call(toastr.success, 'Dispute creation successful', toastrOptions)
-  yield put(contractActions.receiveDispute(disputeTx))
+  yield call(console.log, 'dispute', disputeId)
+  // return yield call(fetchDispute, {
+  //   payload: { disputeId }
+  // })
 }
 
 /**
@@ -369,11 +380,13 @@ function* createEvidence({ type, payload: { evidence } }) {
  * Fetches dispute details.
  * @param {object} { payload: contractAddress, disouteId } - The address of the contract and the dispute id to fetch details for.
  */
-function* fetchDispute({ payload: { contractAddress, disputeId } }) {
+function* fetchDispute({ payload: { disputeId } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   let dispute = null
+
+  console.log(disputeId)
 
   try {
     dispute = yield call(kleros.arbitrator.getDispute, disputeId)
@@ -381,7 +394,7 @@ function* fetchDispute({ payload: { contractAddress, disputeId } }) {
     console.log(err)
   }
 
-  yield put(contractActions.receiveDispute(dispute))
+  return dispute
 }
 
 /**
@@ -412,9 +425,28 @@ export default function* walletSaga() {
     contractActions.contracts,
     fetchContracts
   )
-  yield takeLatest(contractActions.CREATE_DISPUTE, createDispute)
+  yield takeLatest(
+    contractActions.contract.FETCH,
+    lessduxSaga,
+    'fetch',
+    contractActions.contract,
+    fetchContract
+  )
+  yield takeLatest(
+    contractActions.dispute.CREATE,
+    lessduxSaga,
+    'create',
+    contractActions.dispute,
+    createDispute
+  )
+  yield takeLatest(
+    contractActions.dispute.FETCH,
+    lessduxSaga,
+    'fetch',
+    contractActions.dispute,
+    fetchDispute
+  )
   yield takeLatest(contractActions.CREATE_APPEAL, createAppeal)
-  yield takeLatest(contractActions.FETCH_GETDISPUTE, fetchDispute)
   yield takeLatest(contractActions.CREATE_PAY, createPay)
   yield takeLatest(contractActions.CREATE_REIMBURSE, createReimburse)
   yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence)
