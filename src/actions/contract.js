@@ -105,6 +105,6 @@ export const fetchDispute = disputeId => ({
 })
 
 export const createDispute = contractAddress => ({
-  type: dispute.FETCH,
+  type: dispute.CREATE,
   payload: { contractAddress }
 })
