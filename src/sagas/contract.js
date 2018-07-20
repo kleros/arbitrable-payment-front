@@ -252,7 +252,6 @@ function* createDispute({ payload: contractAddress }) {
 
   yield put(push('/'))
   yield call(toastr.success, 'Dispute creation successful', toastrOptions)
-  yield call(console.log, 'dispute', disputeId)
   // return yield call(fetchDispute, {
   //   payload: { disputeId }
   // })
@@ -385,8 +384,6 @@ function* fetchDispute({ payload: { disputeId } }) {
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   let dispute = null
-
-  console.log(disputeId)
 
   try {
     dispute = yield call(kleros.arbitrator.getDispute, disputeId)
