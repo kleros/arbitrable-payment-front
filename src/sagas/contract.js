@@ -134,7 +134,7 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
   let payTx = null
 
   try {
-    if (partyA !== accounts[0]) throw new Error('The caller must be the partyA')
+    if (partyA !== accounts[0].toLowerCase()) throw new Error('The caller must be the partyA')
 
     const contract = yield call(kleros.arbitrable.loadContract)
 
@@ -214,8 +214,8 @@ function* createDispute({ payload: contractAddress }) {
     contract = yield call(kleros.arbitrable.getData, accounts[0].toLowerCase())
 
     let fee
-    if (contract.partyA === accounts[0]) fee = contract.partyAFee
-    if (contract.partyB === accounts[0]) fee = contract.partyBFee
+    if (contract.partyA === accounts[0].toLowerCase()) fee = contract.partyAFee
+    if (contract.partyB === accounts[0].toLowerCase()) fee = contract.partyBFee
 
     const arbitrationCost = yield call(
       kleros.arbitrator.getArbitrationCost,
@@ -224,20 +224,20 @@ function* createDispute({ payload: contractAddress }) {
 
     const cost = arbitrationCost - fee
 
-    if (accounts[0] === contract.partyA) {
+    if (accounts[0].toLowerCase() === contract.partyA) {
       disputeTx = yield call(
         kleros.arbitrable.payArbitrationFeeByPartyA,
-        accounts[0],
+        accounts[0].toLowerCase(),
         cost
       )
 
       dispute = yield call(web3.eth.getTransactionReceipt, disputeTx)
 
       yield call(console.log, 'dispute', dispute)
-    } else if (accounts[0] === contract.partyB) {
+    } else if (accounts[0].toLowerCase() === contract.partyB) {
       disputeTx = yield call(
         kleros.arbitrable.payArbitrationFeeByPartyB,
-        accounts[0],
+        accounts[0].toLowerCase(),
         cost
       )
 
@@ -324,11 +324,11 @@ function* createTimeout({
     if (amount.toNumber() === 0)
       throw new Error('The dispute is already finished')
 
-    if (partyA === accounts[0]) {
+    if (partyA === accounts[0].toLowerCase()) {
       timeoutTx = yield call(contract.timeOutByPartyA, {
         from: accounts[0]
       })
-    } else if (partyB === accounts[0]) {
+    } else if (partyB === accounts[0].toLowerCase()) {
       timeoutTx = yield call(contract.timeOutByPartyB, {
         from: accounts[0]
       })
@@ -358,7 +358,7 @@ function* createEvidence({ type, payload: { evidence } }) {
   try {
     evidenceTx = yield call(
       kleros.arbitrable.submitEvidence,
-      accounts[0],
+      accounts[0].toLowerCase(),
       evidence.name,
       evidence.description,
       evidence.url
