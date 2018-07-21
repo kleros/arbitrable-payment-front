@@ -155,7 +155,8 @@ function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
 
   yield put(push('/'))
   yield call(toastr.success, 'Payment successful', toastrOptions)
-  yield put(contractActions.receivePay(payTx))
+
+  return payTx
 }
 
 /**
@@ -194,7 +195,8 @@ function* createReimburse({ type, payload: { contractAddress } }) {
 
   yield put(push('/'))
   yield call(toastr.success, 'Successful refund', toastrOptions)
-  yield put(contractActions.receiveReimburse(reimburseTx))
+
+  return reimburseTx
 }
 
 /**
@@ -247,6 +249,8 @@ function* createDispute({ payload: { contractAddress } }) {
 
   yield put(push('/'))
   yield call(toastr.success, 'Dispute creation successful', toastrOptions)
+
+  return disputeTx
 }
 
 /**
@@ -289,7 +293,8 @@ function* createAppeal({ type, payload: { contractAddress, disputeId } }) {
 
   yield put(push('/'))
   yield call(toastr.success, 'Appeal creation successful', toastrOptions)
-  yield put(contractActions.receiveAppeal(raiseAppealByPartyATxObj))
+
+  return raiseAppealByPartyATxObj
 }
 
 /**
@@ -332,7 +337,8 @@ function* createTimeout({
   }
 
   yield call(toastr.success, 'Timeout successful', toastrOptions)
-  yield put(contractActions.receiveTimeout(timeoutTx))
+
+  return timeoutTx
 }
 
 /**
@@ -364,7 +370,8 @@ function* createEvidence({ type, payload: { evidence } }) {
   }
 
   yield call(toastr.success, 'Evidence creation successful', toastrOptions)
-  yield put(contractActions.receiveEvidence(evidenceTx))
+
+  return evidenceTx
 }
 
 /**
@@ -392,7 +399,7 @@ function* fetchDispute({ payload: { disputeId } }) {
 export function* fetchArbitratorData() {
   const arbitratorData = yield call(kleros.arbitrator.getData)
 
-  yield put(contractActions.receiveArbitrator(arbitratorData))
+  return arbitratorData
 }
 
 /**
@@ -400,6 +407,13 @@ export function* fetchArbitratorData() {
  * @export default walletSaga
  */
 export default function* walletSaga() {
+  yield takeLatest(
+    contractActions.arbitrator.FETCH,
+    lessduxSaga,
+    'fetch',
+    contractActions.arbitrator,
+    fetchArbitratorData
+  )
   yield takeLatest(
     contractActions.contract.CREATE,
     lessduxSaga,
@@ -435,10 +449,39 @@ export default function* walletSaga() {
     contractActions.dispute,
     fetchDispute
   )
-  yield takeLatest(contractActions.CREATE_APPEAL, createAppeal)
-  yield takeLatest(contractActions.CREATE_PAY, createPay)
-  yield takeLatest(contractActions.CREATE_REIMBURSE, createReimburse)
-  yield takeLatest(contractActions.CREATE_EVIDENCE, createEvidence)
-  yield takeLatest(contractActions.CREATE_TIMEOUT, createTimeout)
-  yield takeLatest(contractActions.FETCH_ARBITRATOR, fetchArbitratorData)
+  yield takeLatest(
+    contractActions.appeal.CREATE,
+    lessduxSaga,
+    'create',
+    contractActions.appeal,
+    createAppeal
+  )
+  yield takeLatest(
+    contractActions.pay.CREATE,
+    lessduxSaga,
+    'create',
+    contractActions.pay,
+    createPay
+  )
+  yield takeLatest(
+    contractActions.reimburse.CREATE,
+    lessduxSaga,
+    'create',
+    contractActions.reimburse,
+    createReimburse
+  )
+  yield takeLatest(
+    contractActions.evidence.CREATE,
+    lessduxSaga,
+    'create',
+    contractActions.evidence,
+    createEvidence
+  )
+  yield takeLatest(
+    contractActions.timeout.CREATE,
+    lessduxSaga,
+    'create',
+    contractActions.timeout,
+    createTimeout
+  )
 }
