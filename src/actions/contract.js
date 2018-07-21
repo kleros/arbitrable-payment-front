@@ -1,79 +1,12 @@
 import { createActions } from 'lessdux'
 
-// Actions
-export const CREATE_APPEAL = 'CREATE_APPEAL'
-export const RECEIVE_APPEAL = 'RECEIVE_APPEAL'
-export const CREATE_PAY = 'CREATE_PAY'
-export const RECEIVE_PAY = 'RECEIVE_PAY'
-export const CREATE_REIMBURSE = 'CREATE_REIMBURSE'
-export const RECEIVE_REIMBURSE = 'RECEIVE_REIMBURSE'
-export const CREATE_EVIDENCE = 'CREATE_EVIDENCE'
-export const RECEIVE_EVIDENCE = 'RECEIVE_EVIDENCE'
-export const CREATE_TIMEOUT = 'CREATE_TIMEOUT'
-export const RECEIVE_TIMEOUT = 'RECEIVE_TIMEOUT'
-export const FETCH_ARBITRATOR = 'FETCH_ARBITRATOR'
-export const RECEIVE_ARBITRATOR = 'RECEIVE_ARBITRATOR'
-
-// Action Creators
-
-export const createAppeal = contractAddress => ({
-  type: CREATE_APPEAL,
-  payload: { contractAddress }
-})
-export const receiveAppeal = appealTx => ({
-  type: RECEIVE_APPEAL,
-  payload: { appealTx }
-})
-
-export const createPay = (contractAddress, partyA, partyB) => ({
-  type: CREATE_PAY,
-  payload: { contractAddress, partyA, partyB }
-})
-export const receivePay = disputeTx => ({
-  type: RECEIVE_PAY,
-  payload: { disputeTx }
-})
-export const createReimburse = (contractAddress, partyA, partyB) => ({
-  type: CREATE_REIMBURSE,
-  payload: { contractAddress, partyA, partyB }
-})
-export const receiveReimburse = reimburse => ({
-  type: RECEIVE_REIMBURSE,
-  payload: { reimburse }
-})
-export const createEvidence = evidence => ({
-  type: CREATE_EVIDENCE,
-  payload: { evidence }
-})
-export const receiveEvidence = evidence => ({
-  type: RECEIVE_EVIDENCE,
-  payload: { evidence }
-})
-export const createTimeout = (contractAddress, partyA, partyB) => ({
-  type: CREATE_TIMEOUT,
-  payload: { contractAddress, partyA, partyB }
-})
-export const receiveTimeout = timeout => ({
-  type: RECEIVE_TIMEOUT,
-  payload: { timeout }
-})
-export const fetchArbitrator = () => ({
-  type: FETCH_ARBITRATOR
-})
-export const receiveArbitrator = arbitrator => ({
-  type: RECEIVE_ARBITRATOR,
-  payload: { arbitrator }
-})
-
 /* Actions */
+
+// Arbitrator
+export const arbitrator = createActions('ARBITRATOR')
 
 // Contracts
 export const contracts = createActions('CONTRACTS')
-
-/* Action Creators */
-
-// Contracts
-export const fetchContracts = () => ({ type: contracts.FETCH })
 
 // Contract
 export const contract = {
@@ -82,6 +15,59 @@ export const contract = {
   })
 }
 
+// Dispute
+export const dispute = {
+  ...createActions('DISPUTE', {
+    withCreate: true
+  })
+}
+
+// Pay
+export const pay = {
+  ...createActions('PAY', {
+    withCreate: true
+  })
+}
+
+// Reimburse
+export const reimburse = {
+  ...createActions('REIMBURSE', {
+    withCreate: true
+  })
+}
+
+// Tiemout
+export const timeout = {
+  ...createActions('TIMEOUT', {
+    withCreate: true
+  })
+}
+
+// Evidence
+export const evidence = {
+  ...createActions('EVIDENCE', {
+    withCreate: true
+  })
+}
+
+// Appeal
+export const appeal = {
+  ...createActions('APPEAL', {
+    withCreate: true
+  })
+}
+
+/* Action Creators */
+
+// Arbitrator
+export const fetchArbitrator = () => ({
+  type: arbitrator.FETCH
+})
+
+// Contracts
+export const fetchContracts = () => ({ type: contracts.FETCH })
+
+// Contract
 export const createContract = contractReceived => ({
   type: contract.CREATE,
   payload: { contractReceived }
@@ -93,12 +79,6 @@ export const fetchContract = contractAddress => ({
 })
 
 // Dispute
-export const dispute = {
-  ...createActions('DISPUTE', {
-    withCreate: true
-  })
-}
-
 export const fetchDispute = disputeId => ({
   type: dispute.FETCH,
   payload: { disputeId }
@@ -106,5 +86,35 @@ export const fetchDispute = disputeId => ({
 
 export const createDispute = contractAddress => ({
   type: dispute.CREATE,
+  payload: { contractAddress }
+})
+
+// Pay
+export const createPay = (contractAddress, partyA, partyB) => ({
+  type: pay.CREATE,
+  payload: { contractAddress, partyA, partyB }
+})
+
+// Reimburse
+export const createReimburse = (contractAddress, partyA, partyB) => ({
+  type: reimburse.CREATE,
+  payload: { contractAddress, partyA, partyB }
+})
+
+// Tiemout
+export const createTimeout = (contractAddress, partyA, partyB) => ({
+  type: timeout.CREATE,
+  payload: { contractAddress, partyA, partyB }
+})
+
+// Evidence
+export const createEvidence = evidence => ({
+  type: evidence.CREATE,
+  payload: { evidence }
+})
+
+// Appeal
+export const createAppeal = contractAddress => ({
+  type: appeal.CREATE,
   payload: { contractAddress }
 })
