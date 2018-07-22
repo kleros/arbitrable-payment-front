@@ -1,10 +1,11 @@
+import _ from 'lodash'
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import Blockies from 'react-blockies'
 import { ClipLoader } from 'react-spinners'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { connect } from 'react-redux'
-import _ from 'lodash'
+import Modal from 'react-responsive-modal'
 
 import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
@@ -19,7 +20,8 @@ import './contract.css'
 class Contract extends PureComponent {
   state = {
     party: '',
-    partyOther: ''
+    partyOther: '',
+    open: false
   }
   static propTypes = {
     contract: contractSelectors.contractShape.isRequired,
@@ -117,6 +119,12 @@ class Contract extends PureComponent {
 
   toUrl = url => () => window.location.replace(url)
 
+  onOpenModal = () => {
+    this.setState({ open: true }) 
+    console.log('i')}
+
+  onCloseModal = () => {this.setState({ open: false })}
+
   render() {
     const {
       contract,
@@ -129,7 +137,7 @@ class Contract extends PureComponent {
       evidence,
       history
     } = this.props
-    const { partyOther, party } = this.state
+    const { partyOther, party, open } = this.state
     const ruling = ['no ruling', 'partyA', 'partyB']
     return (
       <div>
@@ -194,10 +202,31 @@ class Contract extends PureComponent {
                   </div>
 
                   <div className="Contract-content-item Contract-content-item-mail">
-                    {contract.data.email}
+                    <a
+                      href={`mailto:${contract.data.email}`}
+                      className="Contract-content-item-mail"
+                    >
+                      {contract.data.email}
+                    </a>
                   </div>
-                  <div className="description Contract-content-item">
-                    {contract.data.description}
+                  <div>
+                    <div
+                      className={`Contract-content-actions-button`}
+                      onClick={this.onOpenModal}
+                    >
+                      Open contract
+                    </div>
+                    <Modal
+                      open={open}
+                      onClose={this.onCloseModal}
+                      center
+                      classNames={{
+                        modal: 'Contract-content-item-description-modal'
+                      }}
+                    >
+                      <h2>Contract</h2>
+                      {contract.data.description}
+                    </Modal>
                   </div>
                   {contract.data.status !== DISPUTE_RESOLVED &&
                   !contract.data.partyAFee &&
