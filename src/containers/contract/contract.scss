@@ -32,10 +32,15 @@
     margin: 10vh 0;
     &-item {
       margin: 10px 0;
-    }
-    &-item-mail {
-      font-weight: bold;
-      color: rgba(255, 255, 255, 0.8);
+      &-mail {
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      &-description-modal {
+        font-family: 'Open Sans Condensed', sans-serif;
+        min-width: 70vw;
+        min-height: 70vh;
+      }
     }
     &-address {
       display: flex;
@@ -85,11 +90,13 @@
         }
       }
       &-waiting {
+        margin-top: 1em;
         padding: 1em 2em;
         background: #ffcc99;
         font-weight: bold;
       }
       &-ruling {
+        margin-top: 1em;
         color: #fff;
         padding: 1em 2em;
         background: #66ccff;

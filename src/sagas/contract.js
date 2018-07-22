@@ -206,7 +206,7 @@ function* createReimburse({ type, payload: { contractAddress } }) {
 function* createDispute({ payload: { contractAddress } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
-  console.log(contractAddress)
+
   // Set contract instance
   yield call(kleros.arbitrable.setContractInstance, contractAddress)
 
@@ -223,8 +223,6 @@ function* createDispute({ payload: { contractAddress } }) {
       kleros.arbitrator.getArbitrationCost,
       contract.arbitratorExtraData
     )
-
-    console.log(arbitrationCost)
 
     const cost = arbitrationCost - fee
 
