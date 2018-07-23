@@ -1,10 +1,11 @@
+import _ from 'lodash'
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import Blockies from 'react-blockies'
 import { ClipLoader } from 'react-spinners'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { connect } from 'react-redux'
-import _ from 'lodash'
+import Modal from 'react-responsive-modal'
 
 import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
@@ -19,7 +20,8 @@ import './contract.css'
 class Contract extends PureComponent {
   state = {
     party: '',
-    partyOther: ''
+    partyOther: '',
+    open: false
   }
   static propTypes = {
     contract: contractSelectors.contractShape.isRequired,
@@ -117,9 +119,25 @@ class Contract extends PureComponent {
 
   toUrl = url => () => window.location.replace(url)
 
+  onOpenModal = () => {
+    this.setState({ open: true }) 
+    console.log('i')}
+
+  onCloseModal = () => {this.setState({ open: false })}
+
   render() {
-    const { contract, accounts, arbitrator, history } = this.props
-    const { partyOther, party } = this.state
+    const {
+      contract,
+      accounts,
+      arbitrator,
+      dispute,
+      reimburse,
+      pay,
+      appeal,
+      evidence,
+      history
+    } = this.props
+    const { partyOther, party, open } = this.state
     const ruling = ['no ruling', 'partyA', 'partyB']
     return (
       <div>
@@ -150,7 +168,7 @@ class Contract extends PureComponent {
                         bgColor="#f5f5f5"
                       />
                     </div>
-                    <div className="Contract-content-address-address short">
+                    <div className="Contract-content-address-address">
                       {contract.data.title}
                     </div>
                   </div>
@@ -184,10 +202,31 @@ class Contract extends PureComponent {
                   </div>
 
                   <div className="Contract-content-item Contract-content-item-mail">
-                    {contract.data.email}
+                    <a
+                      href={`mailto:${contract.data.email}`}
+                      className="Contract-content-item-mail"
+                    >
+                      {contract.data.email}
+                    </a>
                   </div>
-                  <div className="description Contract-content-item">
-                    {contract.data.description}
+                  <div>
+                    <div
+                      className={`Contract-content-actions-button`}
+                      onClick={this.onOpenModal}
+                    >
+                      Open contract
+                    </div>
+                    <Modal
+                      open={open}
+                      onClose={this.onCloseModal}
+                      center
+                      classNames={{
+                        modal: 'Contract-content-item-description-modal'
+                      }}
+                    >
+                      <h2>Contract</h2>
+                      {contract.data.description}
+                    </Modal>
                   </div>
                   {contract.data.status !== DISPUTE_RESOLVED &&
                   !contract.data.partyAFee &&
@@ -195,24 +234,36 @@ class Contract extends PureComponent {
                     <div className="Contract-content-actions">
                       <div
                         style={this.hideEmptyContractEl(contract)}
-                        className="Contract-content-actions-button Contract-actions-button-left"
+                        className={`Contract-content-actions-button Contract-content-actions-button-left ${
+                          dispute.creating
+                            ? 'Contract-content-actions-button-is-loading'
+                            : ''
+                        }`}
                         onClick={this.createDispute}
                       >
                         Create dispute
                       </div>
-                      {contract.data.partyA === accounts.data[0] && (
+                      {contract.data.partyA === accounts.data[0].toLowerCase() && (
                         <div
                           style={this.hideEmptyContractEl(contract)}
-                          className="Contract-content-actions-button Contract-content-actions-button-right"
+                          className={`Contract-content-actions-button Contract-content-actions-button-right ${
+                            pay.creating
+                              ? 'Contract-content-actions-button-is-loading'
+                              : ''
+                          }`}
                           onClick={this.createPay}
                         >
                           Pay
                         </div>
                       )}
-                      {contract.data.partyB === accounts.data[0] && (
+                      {contract.data.partyB === accounts.data[0].toLowerCase() && (
                         <div
                           style={this.hideEmptyContractEl(contract)}
-                          className="Contract-content-actions-button Contract-content-actions-button-right"
+                          className={`Contract-content-actions-button Contract-content-actions-button-right ${
+                            reimburse.creating
+                              ? 'Contract-content-actions-button-is-loading'
+                              : ''
+                          }`}
                           onClick={this.createReimburse}
                         >
                           Reimburse
@@ -234,7 +285,11 @@ class Contract extends PureComponent {
                       </div>
                       <div className="Contract-content-actions">
                         <div
-                          className="Contract-content-actions-button"
+                          className={`Contract-content-actions-button ${
+                            dispute.creating
+                              ? 'Contract-content-actions-button-is-loading'
+                              : ''
+                          }`}
                           onClick={this.createDispute}
                         >
                           Pay the fee
@@ -296,7 +351,11 @@ class Contract extends PureComponent {
                   contract.data.canAppeal ? (
                     <div className="Contract-content-actions">
                       <button
-                        className="Contract-content-actions-button"
+                        className={`Contract-content-actions-button ${
+                          appeal.creating
+                            ? 'Contract-content-actions-button-is-loading'
+                            : ''
+                        }`}
                         onClick={this.createAppeal}
                       >
                         Raise appeal
@@ -310,7 +369,11 @@ class Contract extends PureComponent {
                   contract.data.partyBFee ? (
                     <div className="Contract-content-actions">
                       <div
-                        className="Contract-content-actions-button"
+                        className={`Contract-content-actions-button ${
+                          evidence.creating
+                            ? 'Contract-content-actions-button-is-loading'
+                            : ''
+                        }`}
                         onClick={redirect('/evidences/new', history)}
                       >
                         Send Evidence
@@ -368,12 +431,13 @@ export default connect(
     arbitrator: state.contract.arbitrator,
     pay: state.contract.pay,
     reimburse: state.contract.reimburse,
+    appeal: state.contract.appeal,
+    evidence: state.contract.evidence,
     timeout: state.contract.timeout,
     accounts: state.wallet.accounts
   }),
   {
     fetchContract: contractActions.fetchContract,
-    fetchGetDispute: contractActions.fetchGetDispute,
     createDispute: contractActions.createDispute,
     createAppeal: contractActions.createAppeal,
     createPay: contractActions.createPay,

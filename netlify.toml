@@ -2,24 +2,25 @@
   publish = "build/"
   command = "yarn build"
 
+  # Develop Branch Deploy context: All deploys that are not in
+  # an active Deploy Preview will inherit these settings.
+[context.develop]
+  [context.develop.environment]
+  NODE_VERSION = "9.4.0"
+  REACT_APP_PROD_KOVAN_ARBITRATOR_ADDRESS = "0x7a5a9d8235a7bd3cd75adc8f1089c51da113b2cc"
+  REACT_APP_PROD_RINKEBY_ARBITRATOR_ADDRESS = "0x27a836a66a16d10a4d5a400dd89417e4e9a8961f"
+  REACT_APP_ARBITRATOR_EXTRADATA = "0"
+  REACT_APP_ARBITRATOR_TIMEOUT = "172800"
+  REACT_APP_PROD_STORE_PROVIDER = "https://develop.kleros.in"
+  YARN_FLAGS = "--no-ignore-optional"
 # Production context: All deploys to the main
 # repository branch will inherit these settings.
 [context.production]
   [context.production.environment]
     NODE_VERSION = "9.4.0"
-    REACT_APP_PROD_ARBITRATOR_ADDRESS = "0x6183694b0f853dff99cde9ad322973ac580b2127"
+    REACT_APP_PROD_KOVAN_ARBITRATOR_ADDRESS = "0x6183694b0f853dff99cde9ad322973ac580b2127"
+    REACT_APP_PROD_RINKEBY_ARBITRATOR_ADDRESS = "0xcafa054b1b054581faf65adce667bf1c684b6ef0"
     REACT_APP_ARBITRATOR_EXTRADATA = "0"
     REACT_APP_ARBITRATOR_TIMEOUT = "172800"
-    REACT_APP_STORE_PROVIDER = "https://kleros.in"
-    YARN_FLAGS = "--no-ignore-optional"
-
-# Develop Branch Deploy context: All deploys that are not in
-# an active Deploy Preview will inherit these settings.
-[context.develop]
-  [context.develop.environment]
-    NODE_VERSION = "9.4.0"
-    REACT_APP_PROD_ARBITRATOR_ADDRESS = "0x7a5a9d8235a7bd3cd75adc8f1089c51da113b2cc"
-    REACT_APP_ARBITRATOR_EXTRADATA = "0"
-    REACT_APP_ARBITRATOR_TIMEOUT = "172800"
-    REACT_APP_STORE_PROVIDER = "https://develop.kleros.in"
+    REACT_APP_PROD_STORE_PROVIDER = "https://kleros.in"
     YARN_FLAGS = "--no-ignore-optional"

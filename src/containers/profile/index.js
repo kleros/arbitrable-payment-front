@@ -9,7 +9,6 @@ import * as walletSelectors from '../../reducers/wallet'
 import * as contractSelectors from '../../reducers/contract'
 import { renderIf } from '../../utils/react-redux'
 import { shortAddress } from '../../utils/contract'
-import { NavHeader } from '../../components/nav-header'
 import * as arbitratorConstants from '../../constants/arbitrator'
 
 import './profile.css'
@@ -39,9 +38,7 @@ class Profile extends PureComponent {
     fetchContracts: PropTypes.func.isRequired,
     fetchArbitrator: PropTypes.func.isRequired,
     balance: walletSelectors.balanceShape.isRequired,
-    version: walletSelectors.versionShape.isRequired,
-    fetchBalance: PropTypes.func.isRequired,
-    fetchVersion: PropTypes.func.isRequired
+    fetchBalance: PropTypes.func.isRequired
   }
 
   static defaultProps = {
@@ -78,10 +75,8 @@ class Profile extends PureComponent {
           loading: <span>loading</span>,
           done: contracts.data && (
             <div className="flex-container-main" key={contract._id}>
-              <NavHeader history={history} />
               <div className="flex-container">
-                <div className="flex-item wide grow">
-                  <div className="type">Profile</div>
+                <div className="flex-item wide">
                   <Blockies seed="Jeremy" size={10} scale={14} bgColor="#fff" />
                   <div className="content">
                     <div className="address">
@@ -116,14 +111,12 @@ export default connect(
     contract: state.contract.contract,
     contracts: state.contract.contracts,
     arbitrator: state.contract.arbitrator,
-    accounts: state.wallet.accounts,
-    version: state.wallet.version
+    accounts: state.wallet.accounts
   }),
   {
     fetchBalance: walletActions.fetchBalance,
     fetchAccounts: walletActions.fetchAccounts,
     fetchContracts: contractActions.fetchContracts,
-    fetchArbitrator: contractActions.fetchArbitrator,
-    fetchVersion: walletActions.fetchVersion
+    fetchArbitrator: contractActions.fetchArbitrator
   }
 )(Profile)

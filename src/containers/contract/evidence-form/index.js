@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import Stepper from 'flex-react-stepper'
 
 import * as walletSelectors from '../../../reducers/wallet'
 import * as walletActions from '../../../actions/wallet'
@@ -11,7 +12,6 @@ import {
   getCreateEvidenceFormIsInvalid,
   submitCreateEvidenceForm
 } from '../../../forms/evidence'
-import Stepper from '../../../components/stepper'
 
 import './new-evidence.css'
 

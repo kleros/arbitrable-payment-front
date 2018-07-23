@@ -11,6 +11,7 @@ import NewEvidence from '../containers/contract/evidence-form'
 import Contract from '../containers/contract'
 import Profile from '../containers/profile'
 import PageNotFound from '../components/page-not-found'
+import { NavHeader } from '../components/nav-header'
 import { KlerosFooter } from '../components/kleros-footer'
 
 import Initializer from './initializer'
@@ -26,6 +27,7 @@ const App = ({ store, history, testElement }) => (
           <Helmet>
             <title>Kleros Dapp</title>
           </Helmet>
+          <NavHeader history={history} />
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/profile" component={Profile} />

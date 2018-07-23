@@ -4,7 +4,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background: url('./back_kleros.png') #f5f5f5;
+  background: url('./back_kleros.png') #1A1B23;
   background-repeat: no-repeat;
   background-size: 70%;
   background-attachment: fixed;
@@ -13,36 +13,40 @@
 /* @define Contract */
 .Contract {
   display: flex;
-  min-height: calc(100vh - 50px);
+  min-height: calc(100vh - 100px);
   flex-direction: row;
   justify-content: center;
-  align-items: center;
+  align-content: center;
   font-family: 'Open Sans Condensed', sans-serif;
-  background: url('./back_kleros.png') #f5f5f5;
+  background: url('./back_kleros.png') #1A1B23;
   background-repeat: no-repeat;
   background-size: 70%;
   background-attachment: fixed;
+  color: #fff;
   &-content {
     display: flex;
     flex-direction: column;
-    position: relative;
-    width: 430px;
-    top: -5vh;
+    width: 55vw;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 50px 40px;
+    margin: 10vh 0;
     &-item {
       margin: 10px 0;
-    }
-    &-item-mail {
-      font-weight: bold;
-      color: gray;
-    }
-    .identicon {
-      border-top-left-radius: 0px;
-      border-bottom-left-radius: 0px;
+      &-mail {
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      &-description-modal {
+        font-family: 'Open Sans Condensed', sans-serif;
+        min-width: 70vw;
+        min-height: 70vh;
+      }
     }
     &-address {
       display: flex;
       flex-direction: row;
       align-items: center;
+      color: #fff;
       .identicon {
         border-radius: 3px;
       }
@@ -59,31 +63,40 @@
       width: 100%;
       &-button {
         flex: 1;
-        background: #f5f5f5;
+        background: #1a1b23;
         padding: 10px;
         margin-top: 20px;
         text-align: center;
         cursor: pointer;
         font-weight: bold;
-        color: gray;
+        color: #fff;
         border-radius: 3px;
+        &-is-loading {
+          background: linear-gradient(to right, #ff9933 50%, #444 50%);
+          background-size: 200% 100%;
+          background-position: right bottom;
+          animation: progressFill 16s -.1s ease-in-out forwards;
+     
+          @keyframes progressFill {
+            from { background-position: right bottom;}
+            to   { background-position: left bottom;}
+          }
+        }
         &-left {
           margin-right: 2px;
         }
-
         &-right {
           margin-left: 2px;
         }
-        &:hover {
-          color: #000;
-        }
       }
       &-waiting {
+        margin-top: 1em;
         padding: 1em 2em;
         background: #ffcc99;
         font-weight: bold;
       }
       &-ruling {
+        margin-top: 1em;
         color: #fff;
         padding: 1em 2em;
         background: #66ccff;
@@ -95,6 +108,7 @@
       flex-direction: row;
       box-sizing: border-box;
       padding-top: 10px;
+      color: #000;
       .identicon {
         border-top-left-radius: 3px;
         border-bottom-left-radius: 3px;
@@ -115,6 +129,7 @@
       border: 1px solid lightgray;
       padding: 10px;
       border-radius: 3px;
+      background: rgba(255, 255, 255, 0.15);
       cursor: pointer;
       .description {
         max-width: 300px;

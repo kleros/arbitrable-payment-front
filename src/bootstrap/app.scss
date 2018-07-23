@@ -15,11 +15,14 @@ body,
 }
 
 #router-root {
-  background: $background;
   display: flex;
   flex-direction: column;
   font-family: sans-serif;
   min-height: 100vh;
+  background: url('./back_kleros.png') #1A1B23;
+  background-repeat: no-repeat;
+  background-size: 70%;
+  background-attachment: fixed;
 }
 
 fieldset {
@@ -87,4 +90,18 @@ textarea, input, button {
   overflow: hidden;              /* "overflow" value must be different from  visible"*/
   -o-text-overflow: ellipsis;    /* Opera < 11*/
   text-overflow:    ellipsis;    /* IE, Safari (WebKit), Opera >= 11, FF > 6 */
+}
+
+.flex-container-main-footer {
+  background: rgba(0, 0, 0, 0.246);
+  color: rgba(128, 128, 128, 0.767);
+  text-align: center;
+  line-height: 50px;
+  font-size: 12px;
+}
+
+.Stepper {
+  position: relative;
+  top: 4vh;
+  padding: 0 12vw;
 }

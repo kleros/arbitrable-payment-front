@@ -2,8 +2,9 @@ import { eventChannel } from 'redux-saga'
 
 import { fork, call, take } from 'redux-saga/effects'
 
-import { kleros, eth } from '../bootstrap/dapp-api'
+import { kleros, web3 } from '../bootstrap/dapp-api'
 import * as authActions from '../actions/auth'
+import * as errorConstants from '../constants/errors'
 
 /**
  * Listens for push notifications.
@@ -11,19 +12,21 @@ import * as authActions from '../actions/auth'
 function* pushNotificationsListener() {
   // Start after fetching all notifications
   while (yield take(authActions.FETCH_NEW_TOKEN)) {
-    const accounts = yield call(eth.accounts) // Current account
+    const accounts = yield call(web3.eth.getAccounts)
+    if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
+
     const account = accounts[0]
 
     // Set up event channel with subscriber
     const channel = eventChannel(emitter => {
-      kleros.watchForEvents(account, notification => emitter(notification))
+      kleros.watchForEvents(accounts[0], notification => emitter(notification))
 
       return kleros.stopWatchingForEvents // Unsubscribe function
     })
 
     // Keep listening while on the same account
     // NOTE add notification handler here
-    while (account === (yield call(eth.accounts))[0]) {}
+    while (account === (yield call(web3.eth.getAccounts))[0]) {}
 
     // We changed accounts, so close the channel. This calls unsubscribe under the hood which clears handlers for the old account
     channel.close()

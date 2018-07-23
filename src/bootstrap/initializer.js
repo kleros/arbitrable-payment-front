@@ -1,41 +1,47 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { RenderIf } from 'lessdux'
+import { ClipLoader } from 'react-spinners'
 
-import * as walletActions from '../actions/wallet'
 import * as walletSelectors from '../reducers/wallet'
-import { renderIf } from '../utils/react-redux'
-import RequiresMetaMask from '../components/requires-meta-mask'
+import * as walletActions from '../actions/wallet'
+import RequiresMetaMaskPage from '../containers/requires-meta-mask-page'
 
-import { eth } from './dapp-api'
+import { web3, initializeKleros } from './dapp-api'
 
 class Initializer extends PureComponent {
   static propTypes = {
+    // Redux State
     accounts: walletSelectors.accountsShape.isRequired,
+
+    // Action Dispatchers
     fetchAccounts: PropTypes.func.isRequired,
-    children: PropTypes.element.isRequired
+
+    // State
+    children: PropTypes.oneOfType([
+      PropTypes.element,
+      PropTypes.arrayOf(PropTypes.element.isRequired)
+    ]).isRequired
   }
 
-  state = { isWeb3Loaded: eth.accounts !== undefined }
-
-  componentDidMount() {
+  async componentDidMount() {
     const { fetchAccounts } = this.props
+    await initializeKleros()
     fetchAccounts()
   }
 
   render() {
-    const { isWeb3Loaded } = this.state
     const { accounts, children } = this.props
-
-    return renderIf(
-      [accounts.loading],
-      [accounts.data && accounts.data[0]],
-      [!isWeb3Loaded, accounts.failedLoading],
-      {
-        loading: 'Loading accounts...',
-        done: children,
-        failed: <RequiresMetaMask needsUnlock={isWeb3Loaded} />
-      }
+    return (
+      <RenderIf
+        resource={accounts}
+        loading={<ClipLoader color="#3d464d" />}
+        done={children}
+        failedLoading={<RequiresMetaMaskPage needsUnlock={Boolean(web3.eth)} />}
+        extraValues={[accounts.data && accounts.data[0]]}
+        extraFailedValues={[!web3.eth]}
+      />
     )
   }
 }
