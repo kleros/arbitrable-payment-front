@@ -26,10 +26,10 @@ function* createContract({ type, payload: { contractReceived } }) {
 
   const metaEvidence = createMetaEvidence(
     accounts[0],
-    contract.partyB,
-    contract.title,
-    contract.description,
-    contract.fileURI
+    contractReceived.partyB,
+    contractReceived.title,
+    contractReceived.description,
+    contractReceived.fileURI
   )
 
   yield put(push('/'))
@@ -40,7 +40,7 @@ function* createContract({ type, payload: { contractReceived } }) {
     newContract = yield call(
       kleros.arbitrable.deploy,
       accounts[0].toLowerCase(),
-      unit.toWei(contract.payment, 'ether'),
+      unit.toWei(contractReceived.payment, 'ether'),
       ARBITRATOR_ADDRESS,
       process.env.REACT_APP_ARBITRATOR_TIMEOUT,
       contractReceived.partyB.toLowerCase(),

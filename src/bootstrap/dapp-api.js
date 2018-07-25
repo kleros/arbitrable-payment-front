@@ -38,8 +38,7 @@ const initializeKleros = async () => {
   ARBITRATOR_ADDRESS =
     process.env[`REACT_APP_${env}_${await network}_ARBITRATOR_ADDRESS`]
 
-  const accounts = await eth.accounts()
-  kleros = new Kleros(eth.currentProvider, STORE_PROVIDER, ARBITRATOR_ADDRESS)
+  kleros = new Kleros(web3.currentProvider, STORE_PROVIDER, ARBITRATOR_ADDRESS)
 }
 
 const ETHAddressRegExpCaptureGroup = '(0x[a-fA-F0-9]{40})'
