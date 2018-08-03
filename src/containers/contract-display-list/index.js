@@ -31,10 +31,8 @@ export const ContractDisplayList = ({
 
     {contract.data &&
       contract.data.address &&
-      contract.data.title &&
-      !contracts.data.some(
-        c => c.address === contract.data.address
-      ) && (
+      contract.data.metaEvidence.title &&
+      !contracts.data.some(c => c.address === contract.data.address) && (
         <div
           className="flex-item2"
           onClick={redirect(`/contracts/${contract.data.address}`, history)}
@@ -42,7 +40,7 @@ export const ContractDisplayList = ({
           <div className="type">Owner</div>
 
           <div className="content">
-            <div className="address">{contract.data.title}</div>
+            <div className="address">{contract.data.metaEvidence.title}</div>
           </div>
 
           <div className="status">
@@ -63,7 +61,7 @@ export const ContractDisplayList = ({
           <div />
         )}
         <div className="content">
-          <div className="address">{contract.title}</div>
+          <div className="address">{contract.metaEvidence.title}</div>
         </div>
         <div className="status">
           {statusContract(contract, accounts.data[0]).status}

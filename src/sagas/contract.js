@@ -8,6 +8,8 @@ import { kleros, web3, ARBITRATOR_ADDRESS } from '../bootstrap/dapp-api'
 import * as contractActions from '../actions/contract'
 import * as errorConstants from '../constants/errors'
 import { lessduxSaga } from '../utils/saga'
+import { ETH_NO_ACCOUNTS } from '../constants/errors'
+import { createMetaEvidence } from '../utils/contract'
 
 const toastrOptions = {
   timeOut: 3000,
@@ -22,6 +24,14 @@ function* createContract({ type, payload: { contractReceived } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
+  const metaEvidence = createMetaEvidence(
+    accounts[0],
+    contractReceived.partyB,
+    contractReceived.title,
+    contractReceived.description,
+    contractReceived.fileURI
+  )
+
   yield put(push('/'))
 
   let newContract = null
@@ -31,14 +41,12 @@ function* createContract({ type, payload: { contractReceived } }) {
       kleros.arbitrable.deploy,
       accounts[0].toLowerCase(),
       unit.toWei(contractReceived.payment, 'ether'),
-      web3.utils.keccak256(contractReceived.description),
       ARBITRATOR_ADDRESS,
       process.env.REACT_APP_ARBITRATOR_TIMEOUT,
       contractReceived.partyB.toLowerCase(),
       process.env.REACT_APP_ARBITRATOR_EXTRADATA,
       contractReceived.email,
-      contractReceived.title,
-      contractReceived.description
+      metaEvidence
     )
   } catch (err) {
     console.log(err)

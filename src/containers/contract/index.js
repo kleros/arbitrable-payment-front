@@ -120,7 +120,7 @@ class Contract extends PureComponent {
   toUrl = url => () => window.location.replace(url)
 
   onOpenModal = () => {
-    this.setState({ open: true }) 
+    this.setState({ open: true })
     console.log('i')}
 
   onCloseModal = () => {this.setState({ open: false })}
@@ -169,7 +169,7 @@ class Contract extends PureComponent {
                       />
                     </div>
                     <div className="Contract-content-address-address">
-                      {contract.data.title}
+                      {contract.data.metaEvidence.title}
                     </div>
                   </div>
                   <div className="Contract-content-partyB">
@@ -200,15 +200,6 @@ class Contract extends PureComponent {
                       {shortAddress(contract.data.partyB)}
                     </div>
                   </div>
-
-                  <div className="Contract-content-item Contract-content-item-mail">
-                    <a
-                      href={`mailto:${contract.data.email}`}
-                      className="Contract-content-item-mail"
-                    >
-                      {contract.data.email}
-                    </a>
-                  </div>
                   <div>
                     <div
                       className={`Contract-content-actions-button`}
@@ -228,6 +219,23 @@ class Contract extends PureComponent {
                       {contract.data.description}
                     </Modal>
                   </div>
+                  <div className="description Contract-content-item">
+                    {contract.data.metaEvidence.category}
+                  </div>
+                  {contract.data.metaEvidence.fileURI ?
+                    (
+                      <div className="description Contract-content-item">
+                        {`Contract: ${contract.data.metaEvidence.fileURI}`}
+                      </div>
+                    ) : <div />
+                  }
+                  {contract.data.metaEvidence.description ?
+                    (
+                      <div className="description Contract-content-item">
+                        {`Description: ${contract.data.metaEvidence.description}`}
+                      </div>
+                    ) : <div />
+                  }
                   {contract.data.status !== DISPUTE_RESOLVED &&
                   !contract.data.partyAFee &&
                   !contract.data.partyBFee ? (
@@ -401,15 +409,28 @@ class Contract extends PureComponent {
                   {contract.data.evidence.map((evidence, i) => (
                     <div
                       className="Contract-content-evidenceCard"
-                      onClick={this.toUrl(evidence.url)}
+                      onClick={this.toUrl(evidence.URI)}
                       key={i}
                     >
+                      <div className="Contract-content-partyB">
+                        <div className="Contract-content-partyB-identicon">
+                          <Blockies
+                            seed={evidence.submittedBy}
+                            size={5}
+                            scale={4}
+                            bgColor="#f5f5f5"
+                          />
+                        </div>
+                        <div className="Contract-content-partyB-content">
+                          {shortAddress(evidence.submittedBy)}
+                        </div>
+                      </div>
                       <div className="Contract-content-evidenceCard-name short">
                         {evidence.name}
                       </div>
                       <div className="description">{evidence.description}</div>
                       <div className="Contract-content-evidenceCard-url short">
-                        {evidence.url}
+                        {evidence.URI}
                       </div>
                     </div>
                   ))}
