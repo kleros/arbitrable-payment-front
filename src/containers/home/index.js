@@ -8,6 +8,7 @@ import * as walletSelectors from '../../reducers/wallet'
 import * as contractSelectors from '../../reducers/contract'
 import { ContractDisplayList } from '../contract-display-list'
 import { renderIf } from '../../utils/react-redux'
+import { kleros, web3, ARBITRATOR_ADDRESS } from '../../bootstrap/dapp-api'
 
 import './home.css'
 
@@ -44,6 +45,8 @@ class Home extends PureComponent {
     const { balance, contract, contracts, accounts, history } = this.props
 
     const { randomSeed } = this.state
+
+    console.log(kleros)
 
     return (
       <div className="container">

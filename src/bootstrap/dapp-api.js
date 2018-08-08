@@ -13,6 +13,7 @@ else if (window.web3 && window.web3.currentProvider)
 else web3 = new Web3(new Web3.providers.HttpProvider(ETHEREUM_PROVIDER))
 
 let ARBITRATOR_ADDRESS
+let ARBITRABLE_ADDRESS
 let kleros
 const initializeKleros = async () => {
   const network =
@@ -38,7 +39,15 @@ const initializeKleros = async () => {
   ARBITRATOR_ADDRESS =
     process.env[`REACT_APP_${env}_${await network}_ARBITRATOR_ADDRESS`]
 
-  kleros = new Kleros(web3.currentProvider, STORE_PROVIDER, ARBITRATOR_ADDRESS)
+  ARBITRABLE_ADDRESS =
+    process.env[`REACT_APP_${env}_${await network}_ARBITRABLE_ADDRESS`]
+
+  kleros = new Kleros(
+    web3.currentProvider,
+    STORE_PROVIDER,
+    ARBITRATOR_ADDRESS,
+    ARBITRABLE_ADDRESS
+  )
 }
 
 const ETHAddressRegExpCaptureGroup = '(0x[a-fA-F0-9]{40})'
@@ -48,6 +57,7 @@ const strictETHAddressRegExp = /^0x[a-fA-F0-9]{40}$/
 export {
   web3,
   ARBITRATOR_ADDRESS,
+  ARBITRABLE_ADDRESS,
   kleros,
   initializeKleros,
   ETHAddressRegExpCaptureGroup,
@@ -60,6 +70,8 @@ setTimeout(
     console.log(
       'Arbitrator Address: ',
       ARBITRATOR_ADDRESS,
+      'Arbitrable Address: ',
+      ARBITRABLE_ADDRESS,
       'Kleros: ',
       kleros,
       'Web3: ',

@@ -4,11 +4,15 @@ import { toastr } from 'react-redux-toastr'
 
 import { call, put, takeLatest } from 'redux-saga/effects'
 
-import { kleros, web3, ARBITRATOR_ADDRESS } from '../bootstrap/dapp-api'
+import {
+  kleros,
+  web3,
+  ARBITRATOR_ADDRESS,
+  ARBITRABLE_ADDRESS
+} from '../bootstrap/dapp-api'
 import * as contractActions from '../actions/contract'
 import * as errorConstants from '../constants/errors'
 import { lessduxSaga } from '../utils/saga'
-import { ETH_NO_ACCOUNTS } from '../constants/errors'
 import { createMetaEvidence } from '../utils/contract'
 
 const toastrOptions = {
@@ -24,6 +28,9 @@ function* createContract({ type, payload: { contractReceived } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
+  // Set contract instance
+  yield call(kleros.arbitrable.setContractInstance, ARBITRABLE_ADDRESS)
+
   const metaEvidence = createMetaEvidence(
     accounts[0],
     contractReceived.partyB,
@@ -34,26 +41,25 @@ function* createContract({ type, payload: { contractReceived } }) {
 
   yield put(push('/'))
 
-  let newContract = null
+  // FIXME transaction hash return 
+  let transactionHash = null
   try {
     // static method
-    newContract = yield call(
-      kleros.arbitrable.deploy,
+    transactionHash = yield call(
+      kleros.arbitrable.createArbitrableTransaction,
       accounts[0].toLowerCase(),
-      unit.toWei(contractReceived.payment, 'ether'),
       ARBITRATOR_ADDRESS,
-      process.env.REACT_APP_ARBITRATOR_TIMEOUT,
       contractReceived.partyB.toLowerCase(),
+      unit.toWei(contractReceived.payment, 'ether'),
       process.env.REACT_APP_ARBITRATOR_EXTRADATA,
-      contractReceived.email,
-      metaEvidence
+      contractReceived.fileURI // FIXME test
     )
   } catch (err) {
     console.log(err)
   }
 
   return yield call(fetchContract, {
-    payload: { contractAddress: newContract.address }
+    payload: { contractAddress: transactionHash } // FIXME test
   })
 }
 
