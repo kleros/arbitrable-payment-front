@@ -33,26 +33,19 @@ function* createContract({ type, payload: { contractReceived } }) {
   // Set contract instance
   yield call(kleros.arbitrable.setContractInstance, ARBITRABLE_ADDRESS)
 
-  const metaEvidence = createMetaEvidence(
-    accounts[0],
-    contractReceived.partyB,
-    contractReceived.title,
-    contractReceived.description,
-    contractReceived.fileURI
-  )
-
   yield put(push('/'))
 
   // FIXME transaction hash return
-  let transactionHash = null
+  let arbitrableTransactionId = null
   try {
     // static method
-    transactionHash = yield call(
+    yield call(
       kleros.arbitrable.createArbitrableTransaction,
-      accounts[0].toLowerCase(),
+      accounts[0],
       ARBITRATOR_ADDRESS,
-      contractReceived.partyB.toLowerCase(),
+      contractReceived.partyB,
       unit.toWei(contractReceived.payment, 'ether'),
+      undefined,
       process.env.REACT_APP_ARBITRATOR_EXTRADATA,
       contractReceived.fileURI // FIXME test
     )
@@ -60,8 +53,15 @@ function* createContract({ type, payload: { contractReceived } }) {
     console.log(err)
   }
 
+  yield call(toastr.success, 'Arbitrable transaction created', toastrOptions)
+
+  // arbitrableTransactionId, the last arbitrable transaction
+  arbitrableTransactionId = yield call(
+    multipleArbitrableTransactionEth.methods.getCountTransactions().call
+  )
+
   return yield call(fetchContract, {
-    payload: { contractAddress: transactionHash } // FIXME test
+    payload: { arbitrableTransactionId } // FIXME test
   })
 }
 
@@ -96,14 +96,11 @@ function* fetchContracts() {
 
 /**
  * Fetches contract details.
- * @param {object} { payload: contractAddress } - The address of the contract to fetch details for.
+ * @param {object} { payload: arbitrableTransactionId } - The address of the contract to fetch details for.
  */
-function* fetchContract({ payload: { contractAddress } }) {
+function* fetchContract({ payload: { arbitrableTransactionId } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
-
-  // Set contract instance
-  yield call(kleros.arbitrable.setContractInstance, contractAddress)
 
   let contract = null
   let rulingData = null
@@ -111,9 +108,16 @@ function* fetchContract({ payload: { contractAddress } }) {
   let disputeData = null
 
   try {
-    contract = yield call(kleros.arbitrable.getData, accounts[0].toLowerCase())
+    const arbitrableTransaction = yield call(
+      multipleArbitrableTransactionEth.methods.transactions(
+        arbitrableTransactionId
+      ).call
+    )
 
-    disputeData = yield call(kleros.arbitrator.getDispute, contract.disputeId)
+    disputeData = yield call(
+      kleros.arbitrator.getDispute,
+      arbitrableTransaction.disputeId
+    )
 
     if (contract.status === 4)
       rulingData = yield call(

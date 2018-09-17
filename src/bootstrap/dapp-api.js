@@ -55,6 +55,8 @@ const initializeKleros = async () => {
     multipleArbitrableTransaction,
     ARBITRABLE_ADDRESS
   )
+
+  await kleros.arbitrable.setContractInstance(ARBITRABLE_ADDRESS)
 }
 
 const ETHAddressRegExpCaptureGroup = '(0x[a-fA-F0-9]{40})'
