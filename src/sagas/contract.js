@@ -2,13 +2,15 @@ import unit from 'ethjs-unit'
 import { push } from 'react-router-redux'
 import { toastr } from 'react-redux-toastr'
 
-import { call, put, takeLatest } from 'redux-saga/effects'
+import { call, put, takeLatest, select } from 'redux-saga/effects'
 
+import * as walletSelectors from '../reducers/wallet'
 import {
   kleros,
   web3,
   ARBITRATOR_ADDRESS,
-  ARBITRABLE_ADDRESS
+  ARBITRABLE_ADDRESS,
+  multipleArbitrableTransactionEth
 } from '../bootstrap/dapp-api'
 import * as contractActions from '../actions/contract'
 import * as errorConstants from '../constants/errors'
@@ -41,7 +43,7 @@ function* createContract({ type, payload: { contractReceived } }) {
 
   yield put(push('/'))
 
-  // FIXME transaction hash return 
+  // FIXME transaction hash return
   let transactionHash = null
   try {
     // static method
@@ -70,25 +72,26 @@ function* fetchContracts() {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
-  let contracts = []
-
-  contracts = yield call(
-    kleros.arbitrable.getContractsForUser,
-    accounts[0].toLowerCase()
+  const arbitrableTransactionIds = yield call(
+    multipleArbitrableTransactionEth.methods.getTransactionIDsByAddress(
+      accounts[0]
+    ).call
   )
 
-  const contractsData = []
-  for (let contract of contracts) {
-    yield call(kleros.arbitrable.setContractInstance, contract.address)
-    const data = yield call(
-      kleros.arbitrable.getData,
-      accounts[0].toLowerCase()
+  let arbitrableTransactions = []
+  for (let arbitrableTransactionId of arbitrableTransactionIds) {
+    const arbitrableTransaction = yield call(
+      multipleArbitrableTransactionEth.methods.transactions(
+        arbitrableTransactionId
+      ).call
     )
 
-    if (data.arbitrator === ARBITRATOR_ADDRESS) contractsData.push(data)
+    arbitrableTransaction.arbitrableTransactionId = arbitrableTransactionId
+
+    arbitrableTransactions.push(arbitrableTransaction)
   }
 
-  return contractsData.reverse()
+  return arbitrableTransactions.reverse()
 }
 
 /**

@@ -1,5 +1,6 @@
 import Web3 from 'web3'
 import { Kleros } from 'kleros-api'
+import multipleArbitrableTransaction from '../assets/contracts/multiple-arbitrable-transaction'
 
 const env = process.env.NODE_ENV === 'production' ? 'PROD' : 'DEV'
 const ETHEREUM_PROVIDER = process.env[`REACT_APP_${env}_ETHEREUM_PROVIDER`]
@@ -15,6 +16,7 @@ else web3 = new Web3(new Web3.providers.HttpProvider(ETHEREUM_PROVIDER))
 let ARBITRATOR_ADDRESS
 let ARBITRABLE_ADDRESS
 let kleros
+let multipleArbitrableTransactionEth
 const initializeKleros = async () => {
   const network =
     web3.eth &&
@@ -48,6 +50,11 @@ const initializeKleros = async () => {
     ARBITRATOR_ADDRESS,
     ARBITRABLE_ADDRESS
   )
+
+  multipleArbitrableTransactionEth = new web3.eth.Contract(
+    multipleArbitrableTransaction,
+    ARBITRABLE_ADDRESS
+  )
 }
 
 const ETHAddressRegExpCaptureGroup = '(0x[a-fA-F0-9]{40})'
@@ -62,7 +69,8 @@ export {
   initializeKleros,
   ETHAddressRegExpCaptureGroup,
   ETHAddressRegExp,
-  strictETHAddressRegExp
+  strictETHAddressRegExp,
+  multipleArbitrableTransactionEth
 }
 
 setTimeout(
@@ -75,7 +83,9 @@ setTimeout(
       'Kleros: ',
       kleros,
       'Web3: ',
-      window.web3
+      window.web3,
+      'ARBITRBLE CONTRACT',
+      multipleArbitrableTransactionEth
     ),
   1000
 )

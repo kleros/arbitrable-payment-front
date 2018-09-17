@@ -53,15 +53,18 @@ export const ContractDisplayList = ({
       <div
         className={`flex-item2`}
         key={i}
-        onClick={redirect(`/contracts/${contract.address}`, history)}
+        onClick={redirect(
+          `/contracts/${contract.arbitrableTransactionId}`,
+          history
+        )}
       >
-        {contract.partyA === accounts.data[0].toLowerCase() ? (
+        {contract.buyer === accounts.data[0] ? (
           <div className="type">Owner</div>
         ) : (
           <div />
         )}
         <div className="content">
-          <div className="address">{contract.metaEvidence.title}</div>
+          <div className="address">Id {contract.arbitrableTransactionId}</div>
         </div>
         <div className="status">
           {statusContract(contract, accounts.data[0]).status}

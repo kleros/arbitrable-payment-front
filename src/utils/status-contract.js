@@ -5,7 +5,7 @@
  * @return object
  */
 export default function statusContract(contract, accountAddress) {
-  if (contract.partyBFee > 0 && contract.partyBFee > 0) {
+  if (contract.sellerFee > 0 && contract.buyerFee > 0) {
     return {
       color: '#66ccff',
       status: 'dispute active',
@@ -13,35 +13,35 @@ export default function statusContract(contract, accountAddress) {
     }
   }
   if (
-    contract.partyB === accountAddress &&
-    contract.partyAFee > 0 &&
-    contract.partyBFee === 0
+    contract.sellerFee === accountAddress &&
+    contract.buyerFee > 0 &&
+    contract.sellerFee === 0
   ) {
     return {
       color: '#ff9933',
-      status: 'pay fee',
+      status: 'pay fee (seller)',
       class: 'payFee'
     }
   }
   if (
-    contract.partyA === accountAddress &&
-    contract.partyBFee > 0 &&
-    contract.partyAFee === 0
+    contract.buyer === accountAddress &&
+    contract.sellerFee > 0 &&
+    contract.buyerFee === 0
   ) {
     return {
       color: '#ff9933',
-      status: 'pay fee',
+      status: 'pay fee (buyer)',
       class: 'payFee'
     }
   }
-  if (contract.partyB === accountAddress && contract.partyBFee > 0) {
+  if (contract.seller === accountAddress && contract.sellerFee > 0) {
     return {
       color: '#ffcc66',
       status: 'wait fee',
       class: 'waitFee'
     }
   }
-  if (contract.partyA === accountAddress && contract.partyAFee > 0) {
+  if (contract.buyer === accountAddress && contract.buyerFee > 0) {
     return {
       color: '#ffcc66',
       status: 'wait fee',
@@ -50,7 +50,7 @@ export default function statusContract(contract, accountAddress) {
   }
   return {
     color: '#fff',
-    status: '',
+    status: 'ongoing transaction',
     class: ''
   }
 }

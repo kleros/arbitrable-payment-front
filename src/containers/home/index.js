@@ -31,22 +31,13 @@ class Home extends PureComponent {
   }
 
   componentDidMount() {
-    const { fetchBalance, fetchContracts, fetchAccounts } = this.props
+    const { fetchBalance, fetchContracts } = this.props
     fetchBalance()
     fetchContracts()
   }
 
-  getTotalContracts = totalContracts => {
-    this.setState({ totalContracts })
-    return totalContracts
-  }
-
   render() {
     const { balance, contract, contracts, accounts, history } = this.props
-
-    const { randomSeed } = this.state
-
-    console.log(kleros)
 
     return (
       <div className="container">
