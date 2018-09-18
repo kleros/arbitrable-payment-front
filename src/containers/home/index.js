@@ -44,7 +44,7 @@ class Home extends PureComponent {
         {renderIf([balance.loading], [balance.data], [balance.failedLoading], {
           loading: <span>loading</span>,
           done: contracts.data && (
-            <div className="flex-container-main" key={contract._id}>
+            <div className="flex-container-main">
               <ContractDisplayList
                 contracts={contracts}
                 contract={contract}

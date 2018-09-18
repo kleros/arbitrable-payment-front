@@ -29,25 +29,22 @@ export const ContractDisplayList = ({
       </div>
     )}
 
-    {contract.data &&
-      contract.data.address &&
-      contract.data.metaEvidence.title &&
-      !contracts.data.some(c => c.address === contract.data.address) && (
-        <div
-          className="flex-item2"
-          onClick={redirect(`/contracts/${contract.data.address}`, history)}
-        >
-          <div className="type">Owner</div>
+    {contract.data && (
+      <div
+        className="flex-item2"
+        onClick={redirect(`/contracts/${contract.data.arbitrableTransactionId}`, history)}
+      >
+        <div className="type">Owner</div>
 
-          <div className="content">
-            <div className="address">{contract.data.metaEvidence.title}</div>
-          </div>
-
-          <div className="status">
-            {statusContract(contract, accounts.data[0]).status}
-          </div>
+        <div className="content">
+          <div className="address">Id {contract.data.arbitrableTransactionId}</div>
         </div>
-      )}
+
+        <div className="status">
+          {statusContract(contract, accounts.data[0]).status}
+        </div>
+      </div>
+    )}
 
     {contracts.data.map((contract, i) => (
       <div

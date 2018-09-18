@@ -35,8 +35,9 @@ function* createContract({ type, payload: { contractReceived } }) {
 
   yield put(push('/'))
 
+  let arbitrableTransactionCount
+
   // FIXME transaction hash return
-  let arbitrableTransactionId = null
   try {
     // static method
     yield call(
@@ -49,19 +50,18 @@ function* createContract({ type, payload: { contractReceived } }) {
       process.env.REACT_APP_ARBITRATOR_EXTRADATA,
       contractReceived.fileURI // FIXME test
     )
+
+    arbitrableTransactionCount = yield call(
+      multipleArbitrableTransactionEth.methods.getCountTransactions().call
+    )
   } catch (err) {
     console.log(err)
   }
 
   yield call(toastr.success, 'Arbitrable transaction created', toastrOptions)
 
-  // arbitrableTransactionId, the last arbitrable transaction
-  arbitrableTransactionId = yield call(
-    multipleArbitrableTransactionEth.methods.getCountTransactions().call
-  )
-
   return yield call(fetchContract, {
-    payload: { arbitrableTransactionId } // FIXME test
+    payload: { arbitrableTransactionId: arbitrableTransactionCount - 1 }
   })
 }
 
@@ -102,42 +102,46 @@ function* fetchContract({ payload: { arbitrableTransactionId } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
-  let contract = null
+  let arbitrableTransaction
   let rulingData = null
   let currentSession = null
   let disputeData = null
 
   try {
-    const arbitrableTransaction = yield call(
+    arbitrableTransaction = yield call(
       multipleArbitrableTransactionEth.methods.transactions(
         arbitrableTransactionId
       ).call
     )
 
-    disputeData = yield call(
-      kleros.arbitrator.getDispute,
-      arbitrableTransaction.disputeId
-    )
+    arbitrableTransaction.arbitrableTransactionId = arbitrableTransactionId
 
-    if (contract.status === 4)
-      rulingData = yield call(
-        kleros.arbitrator.currentRulingForDispute,
-        contract.disputeId,
-        disputeData.numberOfAppeals
-      )
+    console.log('arbitrableTransaction',arbitrableTransaction)
 
-    currentSession = yield call(kleros.arbitrator.getSession)
+    // disputeData = yield call(
+    //   kleros.arbitrator.getDispute,
+    //   arbitrableTransaction.disputeId
+    // )
+
+    // if (arbitrableTransaction.status === 4)
+    //   rulingData = yield call(
+    //     kleros.arbitrator.currentRulingForDispute,
+    //     arbitrableTransaction.disputeId,
+    //     disputeData.numberOfAppeals
+    //   )
+
+    // currentSession = yield call(kleros.arbitrator.getSession)
   } catch (err) {
     console.log(err)
   }
 
   return {
-    ruling: rulingData,
-    canAppeal:
-      disputeData.firstSession + disputeData.numberOfAppeals ===
-        currentSession || false,
-    ...disputeData,
-    ...contract
+    // ruling: rulingData,
+    // canAppeal:
+    //   disputeData.firstSession + disputeData.numberOfAppeals ===
+    //     currentSession || false,
+    // ...disputeData,
+    ...arbitrableTransaction
   }
 }
 
