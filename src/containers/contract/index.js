@@ -52,16 +52,16 @@ class Contract extends PureComponent {
     if (prevContract !== contract) {
       if (
         contract.data &&
-        contract.data.partyA.toLowerCase() === accounts.data[0].toLowerCase()
+        contract.data.buyer === accounts.data[0]
       ) {
-        this.setState({ party: 'partyA' })
-        this.setState({ partyOther: 'partyB' })
+        this.setState({ party: 'buyer' })
+        this.setState({ partyOther: 'seller' })
       } else if (
         contract.data &&
-        contract.data.partyB.toLowerCase() === accounts.data[0].toLowerCase()
+        contract.data.seller === accounts.data[0]
       ) {
-        this.setState({ party: 'partyB' })
-        this.setState({ partyOther: 'partyA' })
+        this.setState({ party: 'seller' })
+        this.setState({ partyOther: 'buyer' })
       }
     }
   }
@@ -119,11 +119,9 @@ class Contract extends PureComponent {
 
   toUrl = url => () => window.location.replace(url)
 
-  onOpenModal = () => {
-    this.setState({ open: true })
-    console.log('i')}
+  onOpenModal = () => this.setState({ open: true })
 
-  onCloseModal = () => {this.setState({ open: false })}
+  onCloseModal = () => this.setState({ open: false })
 
   render() {
     const {
@@ -145,7 +143,6 @@ class Contract extends PureComponent {
           [contract.loading],
           [
             contract.data &&
-              contract.data.partyAFee &&
               accounts.data &&
               accounts.data[0]
           ],
@@ -161,35 +158,36 @@ class Contract extends PureComponent {
                 <div className="Contract-content">
                   <div className="Contract-content-address">
                     <div>
-                      <Blockies
+                      {/*<Blockies
                         seed={contract.data.address}
                         size={6}
                         scale={10}
                         bgColor="#f5f5f5"
                       />
+                      */}
                     </div>
                     <div className="Contract-content-address-address">
-                      {contract.data.metaEvidence.title}
+                      {/*contract.data.metaEvidence.title*/}
                     </div>
                   </div>
                   <div className="Contract-content-partyB">
                     <div className="Contract-content-partyB-identicon">
                       <Blockies
-                        seed={contract.data.partyA}
+                        seed={contract.data.buyer}
                         size={5}
                         scale={4}
                         bgColor="#f5f5f5"
                       />
                     </div>
                     <div className="Contract-content-partyB-content">
-                      {shortAddress(contract.data.partyA)}
+                      {shortAddress(contract.data.buyer)}
                     </div>
 
                     <div>&nbsp;&nbsp;</div>
 
                     <div className="Contract-content-partyB-identicon">
                       <Blockies
-                        seed={contract.data.partyB}
+                        seed={contract.data.seller}
                         size={5}
                         scale={4}
                         bgColor="#f5f5f5"
@@ -197,7 +195,7 @@ class Contract extends PureComponent {
                     </div>
 
                     <div className="Contract-content-partyB-content">
-                      {shortAddress(contract.data.partyB)}
+                      {shortAddress(contract.data.seller)}
                     </div>
                   </div>
                   <div>
@@ -216,29 +214,29 @@ class Contract extends PureComponent {
                       }}
                     >
                       <h2>Contract</h2>
-                      {contract.data.description}
+                      {/*contract.data.description*/}
                     </Modal>
                   </div>
                   <div className="description Contract-content-item">
-                    {contract.data.metaEvidence.category}
+                    {/*contract.data.metaEvidence.category*/}
                   </div>
-                  {contract.data.metaEvidence.fileURI ?
+                  {/*contract.data.metaEvidence.fileURI ?
                     (
                       <div className="description Contract-content-item">
                         {`Contract: ${contract.data.metaEvidence.fileURI}`}
                       </div>
                     ) : <div />
-                  }
-                  {contract.data.metaEvidence.description ?
+                  */}
+                  {/*contract.data.metaEvidence.description ?
                     (
                       <div className="description Contract-content-item">
                         {`Description: ${contract.data.metaEvidence.description}`}
                       </div>
                     ) : <div />
-                  }
+                  */}
                   {contract.data.status !== DISPUTE_RESOLVED &&
-                  !contract.data.partyAFee &&
-                  !contract.data.partyBFee ? (
+                  !contract.data.buyerFee &&
+                  !contract.data.sellerBFee ? (
                     <div className="Contract-content-actions">
                       <div
                         style={this.hideEmptyContractEl(contract)}
@@ -251,7 +249,7 @@ class Contract extends PureComponent {
                       >
                         Create dispute
                       </div>
-                      {contract.data.partyA === accounts.data[0].toLowerCase() && (
+                      {contract.data.buyer === accounts.data[0] && (
                         <div
                           style={this.hideEmptyContractEl(contract)}
                           className={`Contract-content-actions-button Contract-content-actions-button-right ${
@@ -264,7 +262,7 @@ class Contract extends PureComponent {
                           Pay
                         </div>
                       )}
-                      {contract.data.partyB === accounts.data[0].toLowerCase() && (
+                      {contract.data.seller === accounts.data[0] && (
                         <div
                           style={this.hideEmptyContractEl(contract)}
                           className={`Contract-content-actions-button Contract-content-actions-button-right ${
@@ -373,8 +371,8 @@ class Contract extends PureComponent {
                     <div />
                   )}
                   {contract.data.status !== DISPUTE_RESOLVED &&
-                  contract.data.partyAFee &&
-                  contract.data.partyBFee ? (
+                  contract.data.buyerFee &&
+                  contract.data.sellerFee ? (
                     <div className="Contract-content-actions">
                       <div
                         className={`Contract-content-actions-button ${
@@ -406,7 +404,7 @@ class Contract extends PureComponent {
                   ) : (
                     <div />
                   )}
-                  {contract.data.evidence.map((evidence, i) => (
+                  {/*contract.data.evidence.map((evidence, i) => (
                     <div
                       className="Contract-content-evidenceCard"
                       onClick={this.toUrl(evidence.URI)}
@@ -433,7 +431,7 @@ class Contract extends PureComponent {
                         {evidence.URI}
                       </div>
                     </div>
-                  ))}
+                  ))*/}
                 </div>
               </div>
             ),

@@ -73,9 +73,9 @@ export const createContract = contractReceived => ({
   payload: { contractReceived }
 })
 
-export const fetchContract = contractAddress => ({
+export const fetchContract = arbitrableTransactionId => ({
   type: contract.FETCH,
-  payload: { contractAddress }
+  payload: { arbitrableTransactionId }
 })
 
 // Dispute
