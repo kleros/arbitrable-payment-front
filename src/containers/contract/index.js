@@ -196,7 +196,8 @@ class Contract extends PureComponent {
                     <div>&nbsp;&nbsp;</div>
 
                     <div className="Contract-content-amount">
-                    <FA name="th-large" /> {web3.utils.fromWei(contract.data.amount, 'ether')} ETH
+                      <FA name="th-large" />&nbsp;
+                      {web3.utils.fromWei(contract.data.amount, 'ether')} ETH
                     </div>
                   </div>
 
