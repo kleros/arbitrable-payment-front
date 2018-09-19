@@ -6,6 +6,8 @@ import { ClipLoader } from 'react-spinners'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { connect } from 'react-redux'
 import Modal from 'react-responsive-modal'
+import web3 from 'web3'
+import FA from 'react-fontawesome'
 
 import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
@@ -157,15 +159,7 @@ class Contract extends PureComponent {
               <div className="Contract">
                 <div className="Contract-content">
                   <div className="Contract-content-address">
-                    <div>
-                      {/*<Blockies
-                        seed={contract.data.address}
-                        size={6}
-                        scale={10}
-                        bgColor="#f5f5f5"
-                      />
-                      */}
-                    </div>
+                    <div>Arbitrable transaction Id: {contract.data.arbitrableTransactionId}</div>
                     <div className="Contract-content-address-address">
                       {/*contract.data.metaEvidence.title*/}
                     </div>
@@ -179,6 +173,7 @@ class Contract extends PureComponent {
                         bgColor="#f5f5f5"
                       />
                     </div>
+
                     <div className="Contract-content-partyB-content">
                       {shortAddress(contract.data.buyer)}
                     </div>
@@ -197,7 +192,14 @@ class Contract extends PureComponent {
                     <div className="Contract-content-partyB-content">
                       {shortAddress(contract.data.seller)}
                     </div>
+
+                    <div>&nbsp;&nbsp;</div>
+
+                    <div className="Contract-content-amount">
+                    <FA name="th-large" /> {web3.utils.fromWei(contract.data.amount, 'ether')} ETH
+                    </div>
                   </div>
+
                   <div>
                     <div
                       className={`Contract-content-actions-button`}
