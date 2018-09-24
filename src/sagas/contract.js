@@ -48,7 +48,7 @@ function* createContract({ type, payload: { contractReceived } }) {
     body: JSON.stringify({
       payload: {
         fileName: `${metaEvidenceHash}.json`,
-        base64EncodedData: metaEvidence
+        base64EncodedData: btoa(metaEvidence)
       }
     })
   })
