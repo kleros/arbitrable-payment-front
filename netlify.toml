@@ -12,6 +12,7 @@
   REACT_APP_ARBITRATOR_EXTRADATA = "0"
   REACT_APP_ARBITRATOR_TIMEOUT = "172800"
   REACT_APP_PROD_STORE_PROVIDER = "https://develop.kleros.in"
+  REACT_APP_DEV_STORE_AWS_PROVIDER = "https://8aoprv935h.execute-api.us-east-2.amazonaws.com/staging/cfs"
   YARN_FLAGS = "--no-ignore-optional"
 # Production context: All deploys to the main
 # repository branch will inherit these settings.
@@ -23,4 +24,5 @@
     REACT_APP_ARBITRATOR_EXTRADATA = "0"
     REACT_APP_ARBITRATOR_TIMEOUT = "172800"
     REACT_APP_PROD_STORE_PROVIDER = "https://kleros.in"
+    REACT_APP_DEV_STORE_AWS_PROVIDER = "https://hgyxlve79a.execute-api.us-east-2.amazonaws.com/production/cfs"
     YARN_FLAGS = "--no-ignore-optional"
