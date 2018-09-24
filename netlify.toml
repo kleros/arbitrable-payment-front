@@ -24,5 +24,5 @@
     REACT_APP_ARBITRATOR_EXTRADATA = "0"
     REACT_APP_ARBITRATOR_TIMEOUT = "172800"
     REACT_APP_PROD_STORE_PROVIDER = "https://kleros.in"
-    REACT_APP_DEV_STORE_AWS_PROVIDER = "https://hgyxlve79a.execute-api.us-east-2.amazonaws.com/production/cfs"
+    REACT_APP_PROD_STORE_AWS_PROVIDER = "https://hgyxlve79a.execute-api.us-east-2.amazonaws.com/production/cfs"
     YARN_FLAGS = "--no-ignore-optional"
