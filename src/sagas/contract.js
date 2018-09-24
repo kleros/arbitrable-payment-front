@@ -10,7 +10,8 @@ import {
   web3,
   ARBITRATOR_ADDRESS,
   ARBITRABLE_ADDRESS,
-  multipleArbitrableTransactionEth
+  multipleArbitrableTransactionEth,
+  STORE_AWS_PROVIDER
 } from '../bootstrap/dapp-api'
 import * as contractActions from '../actions/contract'
 import * as errorConstants from '../constants/errors'
@@ -30,6 +31,30 @@ function* createContract({ type, payload: { contractReceived } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
+  const metaEvidence = createMetaEvidence(
+    accounts[0],
+    contractReceived.partyB,
+    contractReceived.title,
+    contractReceived.description,
+    contractReceived.fileURI
+  )
+
+  const metaEvidenceHash = web3.utils.sha3(`${metaEvidence}`)
+
+  // Upload meta-evidence
+  const metaEvidenceUrl = yield call(fetch, STORE_AWS_PROVIDER, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      payload: {
+        fileName: `${metaEvidenceHash}.json`,
+        base64EncodedData: metaEvidence
+      }
+    })
+  })
+
+  console.log('metaEvidenceUrl', metaEvidenceUrl)
+
   // Set contract instance
   yield call(kleros.arbitrable.setContractInstance, ARBITRABLE_ADDRESS)
 
@@ -48,7 +73,7 @@ function* createContract({ type, payload: { contractReceived } }) {
       unit.toWei(contractReceived.payment, 'ether'),
       undefined,
       process.env.REACT_APP_ARBITRATOR_EXTRADATA,
-      contractReceived.fileURI // FIXME test
+      metaEvidenceUrl.payload.fileURL
     )
 
     arbitrableTransactionCount = yield call(

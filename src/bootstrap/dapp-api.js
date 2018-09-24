@@ -5,6 +5,7 @@ import multipleArbitrableTransaction from '../assets/contracts/multiple-arbitrab
 const env = process.env.NODE_ENV === 'production' ? 'PROD' : 'DEV'
 const ETHEREUM_PROVIDER = process.env[`REACT_APP_${env}_ETHEREUM_PROVIDER`]
 const STORE_PROVIDER = process.env[`REACT_APP_${env}_STORE_PROVIDER`]
+const STORE_AWS_PROVIDER = process.env[`REACT_APP_${env}_STORE_AWS_PROVIDER`]
 
 let web3
 if (process.env.NODE_ENV === 'test')
@@ -72,7 +73,8 @@ export {
   ETHAddressRegExpCaptureGroup,
   ETHAddressRegExp,
   strictETHAddressRegExp,
-  multipleArbitrableTransactionEth
+  multipleArbitrableTransactionEth,
+  STORE_AWS_PROVIDER
 }
 
 setTimeout(
@@ -87,7 +89,9 @@ setTimeout(
       'Web3: ',
       window.web3,
       'ARBITRBLE CONTRACT',
-      multipleArbitrableTransactionEth
+      multipleArbitrableTransactionEth,
+      'STORE AWS PROVIDER',
+      STORE_AWS_PROVIDER
     ),
   1000
 )
