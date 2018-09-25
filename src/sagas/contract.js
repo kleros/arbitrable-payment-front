@@ -2,21 +2,21 @@ import unit from 'ethjs-unit'
 import { push } from 'react-router-redux'
 import { toastr } from 'react-redux-toastr'
 
-import { call, put, takeLatest, select } from 'redux-saga/effects'
+import { call, put, takeLatest } from 'redux-saga/effects'
 
-import * as walletSelectors from '../reducers/wallet'
 import {
   kleros,
   web3,
   ARBITRATOR_ADDRESS,
   ARBITRABLE_ADDRESS,
-  multipleArbitrableTransactionEth,
-  STORE_AWS_PROVIDER
+  multipleArbitrableTransactionEth
 } from '../bootstrap/dapp-api'
 import * as contractActions from '../actions/contract'
 import * as errorConstants from '../constants/errors'
 import { lessduxSaga } from '../utils/saga'
 import { createMetaEvidence } from '../utils/contract'
+
+import storeApi from './api/store'
 
 const toastrOptions = {
   timeOut: 3000,
@@ -39,31 +39,17 @@ function* createContract({ type, payload: { contractReceived } }) {
     contractReceived.fileURI
   )
 
-  const metaEvidenceHash = web3.utils.sha3(`${metaEvidence}`)
-
-  // Upload meta-evidence
-  const metaEvidenceUrl = yield call(fetch, STORE_AWS_PROVIDER, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      payload: {
-        fileName: `${metaEvidenceHash}.json`,
-        base64EncodedData: btoa(metaEvidence)
-      }
-    })
-  })
-
-  console.log('metaEvidenceUrl', metaEvidenceUrl)
-
-  // Set contract instance
-  yield call(kleros.arbitrable.setContractInstance, ARBITRABLE_ADDRESS)
-
   yield put(push('/'))
 
   let arbitrableTransactionCount
 
-  // FIXME transaction hash return
   try {
+    // Upload the meta-evidence then return an url
+    const file = yield call(storeApi.postFile, JSON.stringify(metaEvidence))
+
+    // Set contract instance
+    yield call(kleros.arbitrable.setContractInstance, ARBITRABLE_ADDRESS)
+
     // static method
     yield call(
       kleros.arbitrable.createArbitrableTransaction,
@@ -73,7 +59,7 @@ function* createContract({ type, payload: { contractReceived } }) {
       unit.toWei(contractReceived.payment, 'ether'),
       undefined,
       process.env.REACT_APP_ARBITRATOR_EXTRADATA,
-      metaEvidenceUrl.payload.fileURL
+      file.payload.fileURL.toString()
     )
 
     arbitrableTransactionCount = yield call(

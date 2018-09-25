@@ -8,7 +8,6 @@ import * as walletSelectors from '../../reducers/wallet'
 import * as contractSelectors from '../../reducers/contract'
 import { ContractDisplayList } from '../contract-display-list'
 import { renderIf } from '../../utils/react-redux'
-import { kleros, web3, ARBITRATOR_ADDRESS } from '../../bootstrap/dapp-api'
 
 import './home.css'
 
