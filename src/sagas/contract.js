@@ -50,7 +50,6 @@ function* createContract({ type, payload: { contractReceived } }) {
     // Set contract instance
     yield call(kleros.arbitrable.setContractInstance, ARBITRABLE_ADDRESS)
 
-    // static method
     yield call(
       kleros.arbitrable.createArbitrableTransaction,
       accounts[0],
@@ -59,7 +58,7 @@ function* createContract({ type, payload: { contractReceived } }) {
       unit.toWei(contractReceived.payment, 'ether'),
       undefined,
       process.env.REACT_APP_ARBITRATOR_EXTRADATA,
-      file.payload.fileURL.toString()
+      file.payload.fileURL
     )
 
     arbitrableTransactionCount = yield call(
@@ -90,11 +89,14 @@ function* fetchContracts() {
   )
 
   let arbitrableTransactions = []
+
+  // Set contract instance
+  yield call(kleros.arbitrable.setContractInstance, ARBITRABLE_ADDRESS)
+
   for (let arbitrableTransactionId of arbitrableTransactionIds) {
     const arbitrableTransaction = yield call(
-      multipleArbitrableTransactionEth.methods.transactions(
-        arbitrableTransactionId
-      ).call
+      kleros.arbitrable.getData,
+      arbitrableTransactionId
     )
 
     arbitrableTransaction.arbitrableTransactionId = arbitrableTransactionId
