@@ -52,16 +52,10 @@ class Contract extends PureComponent {
     const { contract: prevContract } = this.props
     const { contract, accounts = [] } = nextProps
     if (prevContract !== contract) {
-      if (
-        contract.data &&
-        contract.data.buyer === accounts.data[0]
-      ) {
+      if (contract.data && contract.data.buyer === accounts.data[0]) {
         this.setState({ party: 'buyer' })
         this.setState({ partyOther: 'seller' })
-      } else if (
-        contract.data &&
-        contract.data.seller === accounts.data[0]
-      ) {
+      } else if (contract.data && contract.data.seller === accounts.data[0]) {
         this.setState({ party: 'seller' })
         this.setState({ partyOther: 'buyer' })
       }
@@ -81,9 +75,8 @@ class Contract extends PureComponent {
   createPay = () => {
     const { contract, createPay, match } = this.props
     createPay(
-      match.params.contractAddress,
-      contract.data.partyA,
-      contract.data.partyB
+      match.params.contractAddress, // use arbitrableTransactionId
+      contract.data.buyer
     )
   }
 
@@ -143,11 +136,7 @@ class Contract extends PureComponent {
       <div>
         {renderIf(
           [contract.loading],
-          [
-            contract.data &&
-              accounts.data &&
-              accounts.data[0]
-          ],
+          [contract.data && accounts.data && accounts.data[0]],
           [contract.failedLoading || accounts.failedLoading],
           {
             loading: (
@@ -159,13 +148,12 @@ class Contract extends PureComponent {
               <div className="Contract">
                 <div className="Contract-content">
                   <div className="Contract-content-address">
-                    <div>Arbitrable transaction Id: {contract.data.arbitrableTransactionId}</div>
-                    <div className="Contract-content-address-address">
-                      {/*contract.data.metaEvidence.title*/}
+                    <div className="Contract-content-title">
+                      {contract.data.metaEvidence.title}
                     </div>
                   </div>
-                  <div className="Contract-content-partyB">
-                    <div className="Contract-content-partyB-identicon">
+                  <div className="Contract-content-parties">
+                    <div className="Contract-content-parties-identicon">
                       <Blockies
                         seed={contract.data.buyer}
                         size={5}
@@ -174,13 +162,13 @@ class Contract extends PureComponent {
                       />
                     </div>
 
-                    <div className="Contract-content-partyB-content">
+                    <div className="Contract-content-parties-content">
                       {shortAddress(contract.data.buyer)}
                     </div>
 
                     <div>&nbsp;&nbsp;</div>
 
-                    <div className="Contract-content-partyB-identicon">
+                    <div className="Contract-content-parties-identicon">
                       <Blockies
                         seed={contract.data.seller}
                         size={5}
@@ -189,7 +177,7 @@ class Contract extends PureComponent {
                       />
                     </div>
 
-                    <div className="Contract-content-partyB-content">
+                    <div className="Contract-content-parties-content">
                       {shortAddress(contract.data.seller)}
                     </div>
 
@@ -197,46 +185,33 @@ class Contract extends PureComponent {
 
                     <div className="Contract-content-amount">
                       <FA name="th-large" />&nbsp;
-                      {web3.utils.fromWei(contract.data.amount, 'ether')} ETH
+                      {web3.utils.fromWei(
+                        contract.data.amount.toString(),
+                        'ether'
+                      )}{' '}
+                      ETH
                     </div>
+                    {contract.data.metaEvidence.fileURI ? (
+                      <div className="Contract-content-fileUri">
+                        &nbsp;&nbsp;&nbsp;<a
+                          href={`${contract.data.metaEvidence.fileURI}`}
+                          className="Contract-content-fileUri-a"
+                        >
+                          <FA name="external-link" />
+                        </a>
+                      </div>
+                    ) : (
+                      <div />
+                    )}
                   </div>
 
-                  <div>
-                    <div
-                      className={`Contract-content-actions-button`}
-                      onClick={this.onOpenModal}
-                    >
-                      Open contract
+                  {contract.data.metaEvidence.description ? (
+                    <div className="Contract-content-description">
+                      {contract.data.metaEvidence.description}
                     </div>
-                    <Modal
-                      open={open}
-                      onClose={this.onCloseModal}
-                      center
-                      classNames={{
-                        modal: 'Contract-content-item-description-modal'
-                      }}
-                    >
-                      <h2>Contract</h2>
-                      {/*contract.data.description*/}
-                    </Modal>
-                  </div>
-                  <div className="description Contract-content-item">
-                    {/*contract.data.metaEvidence.category*/}
-                  </div>
-                  {/*contract.data.metaEvidence.fileURI ?
-                    (
-                      <div className="description Contract-content-item">
-                        {`Contract: ${contract.data.metaEvidence.fileURI}`}
-                      </div>
-                    ) : <div />
-                  */}
-                  {/*contract.data.metaEvidence.description ?
-                    (
-                      <div className="description Contract-content-item">
-                        {`Description: ${contract.data.metaEvidence.description}`}
-                      </div>
-                    ) : <div />
-                  */}
+                  ) : (
+                    <div />
+                  )}
                   {contract.data.status !== DISPUTE_RESOLVED &&
                   !contract.data.buyerFee &&
                   !contract.data.sellerBFee ? (
@@ -250,9 +225,10 @@ class Contract extends PureComponent {
                         }`}
                         onClick={this.createDispute}
                       >
-                        Create dispute
+                        Create dispute&nbsp;&nbsp;&nbsp;<FA name="bolt" />
                       </div>
-                      {contract.data.buyer === accounts.data[0] && (
+                      {contract.data.buyer ===
+                        accounts.data[0].toLowerCase() && (
                         <div
                           style={this.hideEmptyContractEl(contract)}
                           className={`Contract-content-actions-button Contract-content-actions-button-right ${
@@ -262,10 +238,11 @@ class Contract extends PureComponent {
                           }`}
                           onClick={this.createPay}
                         >
-                          Pay
+                          Pay&nbsp;&nbsp;&nbsp;<FA name="arrow-right" />
                         </div>
                       )}
-                      {contract.data.seller === accounts.data[0] && (
+                      {contract.data.seller ===
+                        accounts.data[0].toLowerCase() && (
                         <div
                           style={this.hideEmptyContractEl(contract)}
                           className={`Contract-content-actions-button Contract-content-actions-button-right ${
@@ -275,7 +252,7 @@ class Contract extends PureComponent {
                           }`}
                           onClick={this.createReimburse}
                         >
-                          Reimburse
+                          Reimburse&nbsp;&nbsp;&nbsp;<FA name="arrow-right" />
                         </div>
                       )}
                     </div>

@@ -90,9 +90,9 @@ export const createDispute = contractAddress => ({
 })
 
 // Pay
-export const createPay = (contractAddress, partyA, partyB) => ({
+export const createPay = (arbitrableTransactionId, partyA) => ({
   type: pay.CREATE,
-  payload: { contractAddress, partyA, partyB }
+  payload: { arbitrableTransactionId, partyA }
 })
 
 // Reimburse

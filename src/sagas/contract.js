@@ -122,12 +122,9 @@ function* fetchContract({ payload: { arbitrableTransactionId } }) {
 
   try {
     arbitrableTransaction = yield call(
-      multipleArbitrableTransactionEth.methods.transactions(
-        arbitrableTransactionId
-      ).call
+      kleros.arbitrable.getData,
+      arbitrableTransactionId
     )
-
-    arbitrableTransaction.arbitrableTransactionId = arbitrableTransactionId
 
     // disputeData = yield call(
     //   kleros.arbitrator.getDispute,
@@ -160,29 +157,34 @@ function* fetchContract({ payload: { arbitrableTransactionId } }) {
  * Pay the party B. To be called when the good is delivered or the service rendered.
  * @param {object} { payload: contractAddress, partyA, partyB } - The address of the contract.
  */
-function* createPay({ type, payload: { contractAddress, partyA, partyB } }) {
+function* createPay({ type, payload: { arbitrableTransactionId, partyA } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   // Set contract instance
-  yield call(kleros.arbitrable.setContractInstance, contractAddress)
+  yield call(kleros.arbitrable.setContractInstance, ARBITRABLE_ADDRESS)
 
   let payTx = null
 
   try {
-    if (partyA !== accounts[0].toLowerCase()) throw new Error('The caller must be the partyA')
+    if (partyA !== accounts[0].toLowerCase())
+      throw new Error('The caller must be the partyA')
 
-    const contract = yield call(kleros.arbitrable.loadContract)
+    const arbitrableTransaction = yield call(
+      kleros.arbitrable.getData,
+      arbitrableTransactionId
+    )
 
-    // TODO get the amount from the api
-    const amount = yield call(contract.amount.call)
+    const amount = arbitrableTransaction.amount
 
-    if (amount.toNumber() === 0)
-      throw new Error('The dispute is already finished')
+    if (amount === 0) throw new Error('The dispute is already finished')
 
-    payTx = yield call(contract.pay, {
-      from: accounts[0]
-    })
+    payTx = yield call(
+      kleros.arbitrable.pay,
+      accounts[0],
+      arbitrableTransactionId,
+      amount
+    )
   } catch (err) {
     console.log(err)
     toastr.error('Pay transaction failed', toastrOptions)

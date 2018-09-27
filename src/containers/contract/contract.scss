@@ -28,10 +28,9 @@
     flex-direction: column;
     width: 55vw;
     background: rgba(255, 255, 255, 0.15);
-    padding: 50px 40px;
+    padding: 40px 40px;
     margin: 10vh 0;
     &-item {
-      margin: 10px 0;
       &-mail {
         font-weight: bold;
         color: rgba(255, 255, 255, 0.8);
@@ -42,35 +41,26 @@
         min-height: 70vh;
       }
     }
-    &-address {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      color: #fff;
-      .identicon {
-        border-radius: 3px;
-      }
-      &-address {
-        padding-left: 20px;
-        font-size: 60px;
-      }
+    &-title {
+      font-size: 60px;
+      text-align: center;
+      padding-bottom: 15px;
     }
 
     &-actions {
       display: flex;
       flex-direction: row;
-      align-items: stretch;
+      justify-content: space-between;
       width: 100%;
       &-button {
-        flex: 1;
-        background: #1a1b23;
-        padding: 10px;
+        padding: 20px 34px;
         margin-top: 20px;
         text-align: center;
         cursor: pointer;
         font-weight: bold;
         color: #fff;
-        border-radius: 3px;
+        border-radius: 30px;
+        min-width: 130px;
         &-is-loading {
           background: linear-gradient(to right, #ff9933 50%, #444 50%);
           background-size: 200% 100%;
@@ -83,10 +73,14 @@
           }
         }
         &-left {
-          margin-right: 2px;
+          background: #200122;
+          background: -webkit-linear-gradient(to left, #6f0000, #200122);
+          background: linear-gradient(to left, #6f0000, #200122);
         }
         &-right {
-          margin-left: 2px;
+          background: #000428;
+          background: -webkit-linear-gradient(to left, #004e92, #000428);
+          background: linear-gradient(to left, #004e92, #000428);
         }
       }
       &-waiting {
@@ -103,7 +97,14 @@
       }
     }
 
-    &-partyB {
+    &-description {
+      margin: 20px 3px 20px 0;
+      padding: 20px 14px;
+      font-size: 16px;
+      background: #1a1b23;
+    }
+
+    &-parties {
       display: flex;
       flex-direction: row;
       box-sizing: border-box;
@@ -127,6 +128,19 @@
     &-amount {
       color: #fff;
       font-weight: bold;
+      font-size: 17px;
+      line-height: 22px;
+    }
+
+    &-fileUri {
+      text-align: right;
+      color: #fff;
+      font-weight: bold;
+      font-size: 17px;
+      line-height: 22px;
+      &-a {
+        color: #fff;
+      }
     }
 
     &-evidenceCard {
