@@ -57,6 +57,7 @@
     "ganache-cli": "^6.1.6",
     "history": "^4.7.2",
     "lessdux": "^0.7.3",
+    "kleros-api": "^0.18.4",
     "lodash": "^4.17.4",
     "normalize.css": "^8.0.0",
     "react": "^16.2.0",

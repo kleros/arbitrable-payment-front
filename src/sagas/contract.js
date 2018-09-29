@@ -68,6 +68,12 @@ function* createContract({ type, payload: { contractReceived } }) {
     console.log(err)
   }
 
+  localStorage.setItem(
+    'arbitrableTransactionId',
+    arbitrableTransactionCount - 1
+  )
+  localStorage.setItem('arbitrableTransactionTitle', contractReceived.title)
+
   yield call(toastr.success, 'Arbitrable transaction created', toastrOptions)
 
   return yield call(fetchContract, {
@@ -125,6 +131,8 @@ function* fetchContract({ payload: { arbitrableTransactionId } }) {
       kleros.arbitrable.getData,
       arbitrableTransactionId
     )
+
+    arbitrableTransaction.arbitrableTransactionId = arbitrableTransactionId
 
     // disputeData = yield call(
     //   kleros.arbitrator.getDispute,

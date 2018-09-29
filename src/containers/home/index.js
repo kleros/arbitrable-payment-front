@@ -13,7 +13,7 @@ import './home.css'
 
 class Home extends PureComponent {
   state = {
-    totalContracts: 0
+    contracts: []
   }
 
   static propTypes = {
@@ -36,7 +36,7 @@ class Home extends PureComponent {
   }
 
   render() {
-    const { balance, contract, contracts, accounts, history } = this.props
+    const { balance, contract, accounts, contracts, history } = this.props
 
     return (
       <div className="container">
@@ -45,7 +45,7 @@ class Home extends PureComponent {
           done: contracts.data && (
             <div className="flex-container-main">
               <ContractDisplayList
-                contracts={contracts}
+                contracts={contracts.data}
                 contract={contract}
                 history={history}
                 accounts={accounts}
@@ -53,7 +53,7 @@ class Home extends PureComponent {
               <div className="flex-container-main-flex-grow" />
             </div>
           ),
-          failed: contract.failedLoading && 'failedLoading'
+          failed: contracts.failedLoading && 'failedLoading'
         })}
       </div>
     )

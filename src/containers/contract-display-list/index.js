@@ -29,15 +29,15 @@ export const ContractDisplayList = ({
       </div>
     )}
 
-    {contract.data && (
+    {contract.data && !contracts.some(obj => obj.arbitrableTransactionId === contract.data.arbitrableTransactionId) && (
       <div
         className="flex-item2"
-        onClick={redirect(`/contracts/${contract.data.arbitrableTransactionId}`, history)}
+        onClick={redirect(`/contracts/${localStorage.getItem('arbitrableTransactionId')}`, history)}
       >
         <div className="type">Owner</div>
 
         <div className="content">
-          <div className="address">{contract.data.metaEvidence.title}</div>
+          <div className="address">{localStorage.getItem('arbitrableTransactionTitle')}</div>
         </div>
 
         <div className="status">
@@ -46,30 +46,30 @@ export const ContractDisplayList = ({
       </div>
     )}
 
-    {contracts.data.map((contract, i) => (
+    {contracts.map((contractArr, i) => (
       <div
         className={`flex-item2`}
         key={i}
         onClick={redirect(
-          `/contracts/${contract.arbitrableTransactionId}`,
+          `/contracts/${contractArr.arbitrableTransactionId}`,
           history
         )}
       >
-        {contract.buyer === accounts.data[0] ? (
+        {contractArr.buyer === accounts.data[0] ? (
           <div className="type">Owner</div>
         ) : (
           <div />
         )}
         <div className="content">
-          <div className="address">{contract.metaEvidence.title}</div>
+          <div className="address">{contractArr.metaEvidence.title}</div>
         </div>
         <div className="status">
-          {statusContract(contract, accounts.data[0]).status}
+          {statusContract(contractArr, accounts.data[0]).status}
         </div>
       </div>
     ))}
 
-    {contracts.data.length === 0 &&
+    {contracts.length === 0 &&
       !(contract.data && contract.data.address) &&
       !contract.creating && (
         <div

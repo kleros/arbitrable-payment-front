@@ -213,6 +213,7 @@ class Contract extends PureComponent {
                     <div />
                   )}
                   {contract.data.status !== DISPUTE_RESOLVED &&
+                  contract.data.amount != 0 &&
                   !contract.data.buyerFee &&
                   !contract.data.sellerBFee ? (
                     <div className="Contract-content-actions">
@@ -228,7 +229,8 @@ class Contract extends PureComponent {
                         Create dispute&nbsp;&nbsp;&nbsp;<FA name="bolt" />
                       </div>
                       {contract.data.buyer ===
-                        accounts.data[0].toLowerCase() && (
+                        accounts.data[0].toLowerCase() &&
+                        contract.data.amount != 0 && (
                         <div
                           style={this.hideEmptyContractEl(contract)}
                           className={`Contract-content-actions-button Contract-content-actions-button-right ${
@@ -242,7 +244,8 @@ class Contract extends PureComponent {
                         </div>
                       )}
                       {contract.data.seller ===
-                        accounts.data[0].toLowerCase() && (
+                        accounts.data[0].toLowerCase() && 
+                        contract.data.amount != 0 && (
                         <div
                           style={this.hideEmptyContractEl(contract)}
                           className={`Contract-content-actions-button Contract-content-actions-button-right ${
