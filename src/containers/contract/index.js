@@ -75,17 +75,14 @@ class Contract extends PureComponent {
   createPay = () => {
     const { contract, createPay, match } = this.props
     createPay(
-      match.params.contractAddress, // use arbitrableTransactionId
-      contract.data.buyer
+      match.params.contractAddress // use arbitrableTransactionId
     )
   }
 
   createReimburse = () => {
     const { contract, createReimburse, match } = this.props
     createReimburse(
-      match.params.contractAddress,
-      contract.data.partyA,
-      contract.data.partyB
+      match.params.contractAddress
     )
   }
 
@@ -93,8 +90,8 @@ class Contract extends PureComponent {
     const { contract, createTimeout, match } = this.props
     createTimeout(
       match.params.contractAddress,
-      contract.data.partyA,
-      contract.data.partyB
+      contract.data.buyer,
+      contract.data.seller
     )
   }
 
@@ -262,6 +259,14 @@ class Contract extends PureComponent {
                     <div />
                   )}
                   {contract.data.status !== DISPUTE_RESOLVED &&
+                  contract.data.amount === 0 && (
+                    <div>
+                      <div className="Contract-content-actions-completed">
+                        Transaction completed
+                      </div>
+                    </div>
+                  )}
+                  {contract.data.status !== DISPUTE_RESOLVED &&
                   contract.data.amount !== 0 &&
                   !contract.data[`${party}Fee`] &&
                   contract.data[`${partyOther}Fee`] ? (
@@ -335,10 +340,10 @@ class Contract extends PureComponent {
                   !contract.data[`${partyOther}Fee`] ? (
                     <div className="Contract-content-actions">
                       <div
-                        className="Contract-content-actions-button"
+                        className="Contract-content-actions-button Contract-content-actions-button-right"
                         onClick={this.timeout}
                       >
-                        {`Timeout ${partyOther}`}
+                        {`Timeout ${partyOther}`}&nbsp;&nbsp;&nbsp;<FA name="arrow-right" />
                       </div>
                     </div>
                   ) : (
@@ -368,7 +373,7 @@ class Contract extends PureComponent {
                   contract.data.canAppeal ? (
                     <div className="Contract-content-actions">
                       <button
-                        className={`Contract-content-actions-button ${
+                        className={`Contract-content-actions-button Contract-content-actions-button-right ${
                           appeal.creating
                             ? 'Contract-content-actions-button-is-loading'
                             : ''
@@ -386,7 +391,7 @@ class Contract extends PureComponent {
                   contract.data.sellerFee ? (
                     <div className="Contract-content-actions">
                       <div
-                        className={`Contract-content-actions-button ${
+                        className={`Contract-content-actions-button Contract-content-actions-button-right ${
                           evidence.creating
                             ? 'Contract-content-actions-button-is-loading'
                             : ''
@@ -415,7 +420,7 @@ class Contract extends PureComponent {
                   ) : (
                     <div />
                   )}
-                  {/*contract.data.evidence.map((evidence, i) => (
+                  {contract.data.evidence && contract.data.evidence.map((evidence, i) => (
                     <div
                       className="Contract-content-evidenceCard"
                       onClick={this.toUrl(evidence.URI)}
@@ -442,7 +447,7 @@ class Contract extends PureComponent {
                         {evidence.URI}
                       </div>
                     </div>
-                  ))*/}
+                  ))}
                 </div>
               </div>
             ),

@@ -165,7 +165,7 @@ function* fetchContract({ payload: { arbitrableTransactionId } }) {
  * Pay the party B. To be called when the good is delivered or the service rendered.
  * @param {object} { payload: contractAddress, partyA, partyB } - The address of the contract.
  */
-function* createPay({ type, payload: { arbitrableTransactionId, partyA } }) {
+function* createPay({ type, payload: { arbitrableTransactionId } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
@@ -175,9 +175,6 @@ function* createPay({ type, payload: { arbitrableTransactionId, partyA } }) {
   let payTx = null
 
   try {
-    if (partyA !== accounts[0].toLowerCase())
-      throw new Error('The caller must be the partyA')
-
     const arbitrableTransaction = yield call(
       kleros.arbitrable.getData,
       arbitrableTransactionId
@@ -309,32 +306,34 @@ function* createDispute({ payload: { arbitrableTransactionId } }) {
  * Raises an appeal.
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
-function* createAppeal({ type, payload: { contractAddress, disputeId } }) {
+function* createAppeal({ type, payload: { arbitrableTransactionId, disputeId } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
+
+  // Set contract instance
+  yield call(kleros.arbitrable.setContractInstance, ARBITRABLE_ADDRESS)
 
   let raiseAppealByPartyATxObj
 
   try {
     // Set contract instance
-    yield call(kleros.arbitrable.setContractInstance, contractAddress)
-
-    const contract = yield call(
+    const arbitrableTransaction = yield call(
       kleros.arbitrable.getData,
-      accounts[0].toLowerCase()
+      arbitrableTransactionId
     )
 
     const appealCost = yield call(
       kleros.arbitrator.getAppealCost,
-      0,
-      contract.arbitratorExtraData
+      disputeId,
+      arbitrableTransactionId.arbitratorExtraData
     )
 
     // raise appeal party A
     raiseAppealByPartyATxObj = yield call(
       kleros.arbitrable.appeal,
-      accounts[0].toLowerCase(),
-      contract.arbitratorExtraData,
+      accounts[0],
+      arbitrableTransactionId,
+      arbitrableTransaction.arbitratorExtraData,
       appealCost
     )
   } catch (err) {
@@ -355,32 +354,40 @@ function* createAppeal({ type, payload: { contractAddress, disputeId } }) {
  */
 function* createTimeout({
   type,
-  payload: { contractAddress, partyA, partyB }
+  payload: { arbitrableTransactionId, buyer, seller }
 }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
+
+  // Set contract instance
+  yield call(kleros.arbitrable.setContractInstance, ARBITRABLE_ADDRESS)
 
   yield put(push('/'))
 
   let timeoutTx = null
 
   try {
-    const contract = yield call(kleros.arbitrable.loadContract)
+    // Set contract instance
+    const arbitrableTransaction = yield call(
+      kleros.arbitrable.getData,
+      arbitrableTransactionId
+    )
 
-    // TODO get the amount from the api
-    const amount = yield call(contract.amount.call)
-
-    if (amount.toNumber() === 0)
+    if (arbitrableTransaction.amount === 0)
       throw new Error('The dispute is already finished')
 
-    if (partyA === accounts[0].toLowerCase()) {
-      timeoutTx = yield call(contract.timeOutByPartyA, {
-        from: accounts[0]
-      })
-    } else if (partyB === accounts[0].toLowerCase()) {
-      timeoutTx = yield call(contract.timeOutByPartyB, {
-        from: accounts[0]
-      })
+    if (buyer === accounts[0].toLowerCase()) {
+      timeoutTx = yield call(
+        kleros.arbitrable.callTimeOutBuyer,
+        accounts[0],
+        arbitrableTransactionId
+      )
+    } else if (seller === accounts[0].toLowerCase()) {
+      timeoutTx = yield call(
+        kleros.arbitrable.callTimeOutSeller,
+        accounts[0],
+        arbitrableTransactionId
+      )
     }
   } catch (err) {
     console.log(err)
@@ -406,15 +413,22 @@ function* createEvidence({ type, payload: { evidence } }) {
   let evidenceTx = null
 
   try {
-    evidenceTx = yield call(
-      kleros.arbitrable.submitEvidence,
-      accounts[0].toLowerCase(),
-      evidence.name,
-      evidence.description,
-      evidence.url
+    // Upload the evidence then return an url
+    const file = yield call(
+      storeApi.postFile,
+      JSON.stringify({
+        name: evidence.name,
+        description: evidence.description,
+        url: evidence.url
+      })
     )
 
-    // notification send evidence in waiting
+    evidenceTx = yield call(
+      kleros.arbitrable.submitEvidence,
+      accounts[0],
+      evidence.arbitrableTransactionId,
+      file.payload.fileURL
+    )
   } catch (err) {
     console.log(err)
     toastr.error('Evidence creation failed', toastrOptions)

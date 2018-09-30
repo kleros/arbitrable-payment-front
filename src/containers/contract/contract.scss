@@ -83,6 +83,12 @@
           background: linear-gradient(to left, #004e92, #000428);
         }
       }
+      &-completed {
+        margin-top: 1em;
+        padding: 1em 2em;
+        background: #32B232;
+        font-weight: bold;
+      }
       &-waiting {
         margin-top: 1em;
         padding: 1em 2em;
@@ -161,13 +167,6 @@
         padding-top: 10px;
         text-decoration: underline;
       }
-    }
-
-    &-waiting {
-      width: 100%;
-      font-weight: bold;
-      text-align: center;
-      color: gray;
     }
   }
 }

@@ -121,7 +121,9 @@ class NewEvidence extends PureComponent {
                 backHandlerRef={this.getBackHandlerRef}
                 onPageChange={this.handlePageChange}
                 onSubmit={createEvidence}
-                initialValues={{ addressContract: contract.data.address }}
+                initialValues={{
+                  arbitrableTransactionId: contract.data.arbitrableTransactionId
+                }}
               />
               {step === FINAL_STEP &&
                 this.isFieldOk(step) && (

@@ -90,9 +90,9 @@ export const createDispute = arbitrableTransactionId => ({
 })
 
 // Pay
-export const createPay = (arbitrableTransactionId, partyA) => ({
+export const createPay = arbitrableTransactionId => ({
   type: pay.CREATE,
-  payload: { arbitrableTransactionId, partyA }
+  payload: { arbitrableTransactionId }
 })
 
 // Reimburse
@@ -102,9 +102,9 @@ export const createReimburse = arbitrableTransactionId => ({
 })
 
 // Tiemout
-export const createTimeout = (arbitrableTransactionId, partyA, partyB) => ({
+export const createTimeout = (arbitrableTransactionId, buyer, seller) => ({
   type: timeout.CREATE,
-  payload: { arbitrableTransactionId, partyA, partyB }
+  payload: { arbitrableTransactionId, buyer, seller }
 })
 
 // Evidence
@@ -114,7 +114,7 @@ export const createEvidence = evidence => ({
 })
 
 // Appeal
-export const createAppeal = arbitrableTransactionId => ({
+export const createAppeal = (arbitrableTransactionId, disputeId) => ({
   type: appeal.CREATE,
-  payload: { arbitrableTransactionId }
+  payload: { arbitrableTransactionId, disputeId }
 })

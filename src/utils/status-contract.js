@@ -5,6 +5,13 @@
  * @return object
  */
 export default function statusContract(contract, accountAddress) {
+  if (contract.amount === 0) {
+    return {
+      color: '#fff',
+      status: 'transaction completed',
+      class: 'transactionCompleted'
+    }
+  }
   if (contract.sellerFee > 0 && contract.buyerFee > 0) {
     return {
       color: '#66ccff',
