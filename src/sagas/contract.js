@@ -134,29 +134,29 @@ function* fetchContract({ payload: { arbitrableTransactionId } }) {
 
     arbitrableTransaction.arbitrableTransactionId = arbitrableTransactionId
 
-    // disputeData = yield call(
-    //   kleros.arbitrator.getDispute,
-    //   arbitrableTransaction.disputeId
-    // )
+    disputeData = yield call(
+      kleros.arbitrator.getDispute,
+      arbitrableTransaction.disputeId
+    )
 
-    // if (arbitrableTransaction.status === 4)
-    //   rulingData = yield call(
-    //     kleros.arbitrator.currentRulingForDispute,
-    //     arbitrableTransaction.disputeId,
-    //     disputeData.numberOfAppeals
-    //   )
+    if (arbitrableTransaction.status === 4)
+      rulingData = yield call(
+        kleros.arbitrator.currentRulingForDispute,
+        arbitrableTransaction.disputeId,
+        disputeData.numberOfAppeals
+      )
 
-    // currentSession = yield call(kleros.arbitrator.getSession)
+    currentSession = yield call(kleros.arbitrator.getSession)
   } catch (err) {
     console.log(err)
   }
 
   return {
-    // ruling: rulingData,
-    // canAppeal:
-    //   disputeData.firstSession + disputeData.numberOfAppeals ===
-    //     currentSession || false,
-    // ...disputeData,
+    ruling: rulingData,
+    canAppeal:
+      disputeData.firstSession + disputeData.numberOfAppeals ===
+        currentSession || false,
+    ...disputeData,
     ...arbitrableTransaction
   }
 }
@@ -209,30 +209,31 @@ function* createPay({ type, payload: { arbitrableTransactionId, partyA } }) {
  * Reimburse party A. To be called if the good or service can't be fully provided.
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
-function* createReimburse({ type, payload: { contractAddress } }) {
+function* createReimburse({ type, payload: { arbitrableTransactionId } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   // Set contract instance
-  yield call(kleros.arbitrable.setContractInstance, contractAddress)
+  yield call(kleros.arbitrable.setContractInstance, ARBITRABLE_ADDRESS)
 
-  let reimburseTx = null
+  let reimburseTx = ''
 
   try {
-    const contract = yield call(kleros.arbitrable.loadContract)
+    const arbitrableTransaction = yield call(
+      kleros.arbitrable.getData,
+      arbitrableTransactionId
+    )
 
-    // TODO get the amount from the api
-    const amount = yield call(contract.amount.call)
+    const amount = arbitrableTransaction.amount
 
-    if (amount.toNumber() === 0)
-      throw new Error('The dispute is already finished')
+    if (amount === 0) throw new Error('The dispute is already finished')
 
-    // TODO add fn reimburse in the api
-    /**
-    const reimburseTx = yield call(contract.reimburse, amount.Number(), {
-      from: accounts[0]
-    })
-     */
+    reimburseTx = yield call(
+      kleros.arbitrable.reimburse,
+      accounts[0],
+      arbitrableTransactionId,
+      amount
+    )
   } catch (err) {
     console.log(err)
     toastr.error('Reimburse failed', toastrOptions)
@@ -249,39 +250,46 @@ function* createReimburse({ type, payload: { contractAddress } }) {
  * Raises dispute.
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
-function* createDispute({ payload: { contractAddress } }) {
+function* createDispute({ payload: { arbitrableTransactionId } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   // Set contract instance
-  yield call(kleros.arbitrable.setContractInstance, contractAddress)
+  yield call(kleros.arbitrable.setContractInstance, ARBITRABLE_ADDRESS)
 
-  let contract, disputeTx
+  let disputeTx = ''
 
   try {
-    contract = yield call(kleros.arbitrable.getData, accounts[0].toLowerCase())
+    const arbitrableTransaction = yield call(
+      kleros.arbitrable.getData,
+      arbitrableTransactionId
+    )
 
     let fee
-    if (contract.partyA === accounts[0].toLowerCase()) fee = contract.partyAFee
-    if (contract.partyB === accounts[0].toLowerCase()) fee = contract.partyBFee
+    if (arbitrableTransaction.buyer === accounts[0].toLowerCase())
+      fee = arbitrableTransaction.buyerFee
+    if (arbitrableTransaction.seller === accounts[0].toLowerCase())
+      fee = arbitrableTransaction.sellerFee
 
     const arbitrationCost = yield call(
       kleros.arbitrator.getArbitrationCost,
-      contract.arbitratorExtraData
+      arbitrableTransaction.arbitratorExtraData
     )
 
     const cost = arbitrationCost - fee
 
-    if (accounts[0].toLowerCase() === contract.partyA) {
+    if (accounts[0].toLowerCase() === arbitrableTransaction.buyer) {
       disputeTx = yield call(
-        kleros.arbitrable.payArbitrationFeeByPartyA,
+        kleros.arbitrable.payArbitrationFeeByBuyer,
         accounts[0],
+        arbitrableTransactionId,
         cost
       )
-    } else if (accounts[0].toLowerCase() === contract.partyB) {
+    } else if (accounts[0].toLowerCase() === arbitrableTransaction.seller) {
       disputeTx = yield call(
-        kleros.arbitrable.payArbitrationFeeByPartyB,
+        kleros.arbitrable.payArbitrationFeeBySeller,
         accounts[0],
+        arbitrableTransactionId,
         cost
       )
     }

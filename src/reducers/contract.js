@@ -7,7 +7,7 @@ export const _contractShape = PropTypes.shape({
   arbitrator: PropTypes.string,
   title: PropTypes.string,
   description: PropTypes.string,
-  disputeId: PropTypes.string,
+  disputeId: PropTypes.number,
   email: PropTypes.string,
   evidencePartyA: PropTypes.string,
   evidencePartyB: PropTypes.string,
@@ -15,7 +15,7 @@ export const _contractShape = PropTypes.shape({
     PropTypes.shape({ _id: PropTypes.string, url: PropTypes.string })
   ),
   partyB: PropTypes.string,
-  timeout: PropTypes.string,
+  timeout: PropTypes.number,
   _id: PropTypes.string
 })
 export const _contractsShape = PropTypes.arrayOf(_contractShape.isRequired)
