@@ -127,7 +127,7 @@ class Contract extends PureComponent {
       evidence,
       history
     } = this.props
-    const { partyOther, party, open } = this.state
+    const { partyOther, party } = this.state
     const ruling = ['no ruling', 'partyA', 'partyB']
     return (
       <div>
