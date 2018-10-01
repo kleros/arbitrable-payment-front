@@ -55,7 +55,7 @@ export const ContractDisplayList = ({
           history
         )}
       >
-        {contractArr.buyer === accounts.data[0] ? (
+        {contractArr.buyer === accounts.data[0].toLowerCase() ? (
           <div className="type">Owner</div>
         ) : (
           <div />

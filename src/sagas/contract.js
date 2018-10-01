@@ -73,6 +73,10 @@ function* createContract({ type, payload: { contractReceived } }) {
     arbitrableTransactionCount - 1
   )
   localStorage.setItem('arbitrableTransactionTitle', contractReceived.title)
+  localStorage.setItem(
+    'arbitrableTransactionDescription',
+    contractReceived.description
+  )
 
   yield call(toastr.success, 'Arbitrable transaction created', toastrOptions)
 
@@ -122,9 +126,10 @@ function* fetchContract({ payload: { arbitrableTransactionId } }) {
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   let arbitrableTransaction
-  let rulingData = null
+  let ruling = null
   let currentSession = null
   let disputeData = null
+  let canAppeal = null
 
   try {
     arbitrableTransaction = yield call(
@@ -140,7 +145,7 @@ function* fetchContract({ payload: { arbitrableTransactionId } }) {
     )
 
     if (arbitrableTransaction.status === 4)
-      rulingData = yield call(
+      ruling = yield call(
         kleros.arbitrator.currentRulingForDispute,
         arbitrableTransaction.disputeId,
         disputeData.numberOfAppeals
@@ -151,11 +156,16 @@ function* fetchContract({ payload: { arbitrableTransactionId } }) {
     console.log(err)
   }
 
+  if (disputeData) {
+    canAppeal =
+      disputeData.firstSession + disputeData.numberOfAppeals === currentSession
+  } else {
+    canAppeal = false
+  }
+
   return {
-    ruling: rulingData,
-    canAppeal:
-      disputeData.firstSession + disputeData.numberOfAppeals ===
-        currentSession || false,
+    ruling,
+    canAppeal,
     ...disputeData,
     ...arbitrableTransaction
   }

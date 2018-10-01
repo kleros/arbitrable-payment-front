@@ -146,7 +146,7 @@ class Contract extends PureComponent {
                 <div className="Contract-content">
                   <div className="Contract-content-address">
                     <div className="Contract-content-title">
-                      {contract.data.metaEvidence.title}
+                      {contract.data.metaEvidence.title || localStorage.getItem('arbitrableTransactionTitle')}
                     </div>
                   </div>
                   <div className="Contract-content-parties">
@@ -204,7 +204,7 @@ class Contract extends PureComponent {
 
                   {contract.data.metaEvidence.description ? (
                     <div className="Contract-content-description">
-                      {contract.data.metaEvidence.description}
+                      {contract.data.metaEvidence.description || localStorage.getItem('arbitrableTransactionDescription')}
                     </div>
                   ) : (
                     <div />
