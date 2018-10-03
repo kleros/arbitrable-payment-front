@@ -41,7 +41,7 @@ export const ContractDisplayList = ({
         </div>
 
         <div className="status">
-          {statusContract(contract, accounts.data[0]).status}
+          {statusContract(contract, accounts.data[0].toLowerCase()).status}
         </div>
       </div>
     )}
@@ -64,7 +64,7 @@ export const ContractDisplayList = ({
           <div className="address">{contractArr.metaEvidence.title}</div>
         </div>
         <div className="status">
-          {statusContract(contractArr, accounts.data[0]).status}
+          {statusContract(contractArr, accounts.data[0].toLowerCase()).status}
         </div>
       </div>
     ))}
