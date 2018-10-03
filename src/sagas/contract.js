@@ -440,7 +440,7 @@ function* createEvidence({ type, payload: { evidenceReceived } }) {
     evidenceTx = yield call(
       multipleArbitrableTransactionEth.methods.submitEvidence(
         evidenceReceived.arbitrableTransactionId,
-        file.payload.fileURI
+        file.payload.fileURL
       ).send,
       {
         from: accounts[0],
