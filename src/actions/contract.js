@@ -108,9 +108,9 @@ export const createTimeout = (arbitrableTransactionId, buyer, seller) => ({
 })
 
 // Evidence
-export const createEvidence = evidence => ({
+export const createEvidence = evidenceReceived => ({
   type: evidence.CREATE,
-  payload: { evidence }
+  payload: { evidenceReceived }
 })
 
 // Appeal

@@ -3,6 +3,7 @@ import { push } from 'react-router-redux'
 import { toastr } from 'react-redux-toastr'
 
 import { call, put, takeLatest } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
 
 import {
   kleros,
@@ -414,7 +415,7 @@ function* createTimeout({
  * Send evidence
  * @param {object} { payload: evidence } - Evidence.
  */
-function* createEvidence({ type, payload: { evidence } }) {
+function* createEvidence({ type, payload: { evidenceReceived } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
@@ -427,23 +428,30 @@ function* createEvidence({ type, payload: { evidence } }) {
     const file = yield call(
       storeApi.postFile,
       JSON.stringify({
-        name: evidence.name,
-        description: evidence.description,
-        url: evidence.url
+        name: evidenceReceived.name,
+        description: evidenceReceived.description,
+        url: evidenceReceived.url
       })
     )
 
+    // Set contract instance
+    yield call(kleros.arbitrable.setContractInstance, ARBITRABLE_ADDRESS)
+
     evidenceTx = yield call(
-      kleros.arbitrable.submitEvidence,
-      accounts[0],
-      evidence.arbitrableTransactionId,
-      file.payload.fileURL
+      multipleArbitrableTransactionEth.methods.submitEvidence(
+        evidenceReceived.arbitrableTransactionId,
+        file.payload.fileURI
+      ).send,
+      {
+        from: accounts[0],
+        value: 0
+      }
     )
   } catch (err) {
     console.log(err)
-    toastr.error('Evidence creation failed', toastrOptions)
     throw new Error('Error evidence creation failed')
   }
+
 
   yield call(toastr.success, 'Evidence creation successful', toastrOptions)
 
