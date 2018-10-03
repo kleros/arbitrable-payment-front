@@ -413,7 +413,7 @@ function* createTimeout({
 
 /**
  * Send evidence
- * @param {object} { payload: evidence } - Evidence.
+ * @param {object} { type, payload: evidenceReceived } - Evidence.
  */
 function* createEvidence({ type, payload: { evidenceReceived } }) {
   const accounts = yield call(web3.eth.getAccounts)
@@ -451,7 +451,6 @@ function* createEvidence({ type, payload: { evidenceReceived } }) {
     console.log(err)
     throw new Error('Error evidence creation failed')
   }
-
 
   yield call(toastr.success, 'Evidence creation successful', toastrOptions)
 
