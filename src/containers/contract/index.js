@@ -420,34 +420,24 @@ class Contract extends PureComponent {
                   ) : (
                     <div />
                   )}
-                  {contract.data.evidence && contract.data.evidence.map((evidence, i) => (
-                    <div
-                      className="Contract-content-evidenceCard"
-                      onClick={this.toUrl(evidence.URI)}
-                      key={i}
-                    >
-                      <div className="Contract-content-partyB">
-                        <div className="Contract-content-partyB-identicon">
-                          <Blockies
-                            seed={evidence.submittedBy}
-                            size={5}
-                            scale={4}
-                            bgColor="#f5f5f5"
-                          />
+                  {contract.data.evidence &&
+                    contract.data.evidence.map((evidence, i) => (
+                      <div
+                        className="Contract-content-evidenceCard"
+                        onClick={this.toUrl(evidence.url)}
+                        key={i}
+                      >
+                        <div className="Contract-content-evidenceCard-name short">
+                          {evidence.name}
                         </div>
-                        <div className="Contract-content-partyB-content">
-                          {shortAddress(evidence.submittedBy)}
+                        <div className="description">
+                          {evidence.description}
+                        </div>
+                        <div className="Contract-content-evidenceCard-url short">
+                          {evidence.URI}
                         </div>
                       </div>
-                      <div className="Contract-content-evidenceCard-name short">
-                        {evidence.name}
-                      </div>
-                      <div className="description">{evidence.description}</div>
-                      <div className="Contract-content-evidenceCard-url short">
-                        {evidence.URI}
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </div>
             ),

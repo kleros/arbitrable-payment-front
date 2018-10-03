@@ -105,14 +105,7 @@ class NewEvidence extends PureComponent {
     return (
       <div className="container">
         <div>
-          <Stepper
-            steps={[
-              'Name',
-              'Description',
-              'Url'
-            ]}
-            activeStep={step}
-          />
+          <Stepper steps={['Name', 'Description', 'Url']} activeStep={step} />
         </div>
         <div className="NewContract">
           <div className="NewContract-form" onKeyPress={this.handleKeyPress}>

@@ -140,6 +140,8 @@ function* fetchContract({ payload: { arbitrableTransactionId } }) {
 
     arbitrableTransaction.arbitrableTransactionId = arbitrableTransactionId
 
+    console.log('arbitrableTransaction', arbitrableTransaction)
+
     disputeData = yield call(
       kleros.arbitrator.getDispute,
       arbitrableTransaction.disputeId
