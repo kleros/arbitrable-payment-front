@@ -259,13 +259,13 @@ class Contract extends PureComponent {
                     <div />
                   )}
                   {contract.data.status !== DISPUTE_RESOLVED &&
-                  contract.data.amount === 0 && (
-                    <div>
-                      <div className="Contract-content-actions-completed">
-                        Transaction completed
+                    contract.data.amount === 0 && (
+                      <div>
+                        <div className="Contract-content-actions-completed">
+                          Transaction completed
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                   {contract.data.status !== DISPUTE_RESOLVED &&
                   contract.data.amount !== 0 &&
                   !contract.data[`${party}Fee`] &&
