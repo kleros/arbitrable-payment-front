@@ -22,12 +22,6 @@ export const NavHeader = ({ history }) => (
     <div className="flex-container-main-menu-right">
       <div
         className="flex-container-main-menu-right-item"
-        onClick={redirect('/profile', history)}
-      >
-        Profile
-      </div>
-      <div
-        className="flex-container-main-menu-right-item"
         onClick={redirect('/contracts/new', history)}
       >
         New contract
