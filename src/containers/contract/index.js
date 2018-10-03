@@ -211,8 +211,8 @@ class Contract extends PureComponent {
                   )}
                   {contract.data.status !== DISPUTE_RESOLVED &&
                   contract.data.amount !== 0 &&
-                  !contract.data.buyerFee &&
-                  !contract.data.sellerBFee ? (
+                  !contract.data[`${party}Fee`] &&
+                  contract.data[`${party}Fee`] ? (
                     <div className="Contract-content-actions">
                       <div
                         style={this.hideEmptyContractEl(contract)}
