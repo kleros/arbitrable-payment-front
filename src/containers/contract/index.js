@@ -230,7 +230,7 @@ class Contract extends PureComponent {
                     )}
                   {contract.data.status !== DISPUTE_RESOLVED &&
                   contract.data.amount !== 0 &&
-                  this.isTimeout(contract) &&
+                  !this.isTimeout(contract) &&
                   !contract.data[`${party.name}Fee`] &&
                   contract.data[`${partyOther.name}Fee`] ? (
                     <div>
@@ -247,36 +247,12 @@ class Contract extends PureComponent {
                         >
                           Pay the fee&nbsp;&nbsp;&nbsp;<FA name="bolt" />
                         </div>
-                        {contract.data.buyer ===
-                          accounts.data[0].toLowerCase() &&
-                          contract.data.amount !== 0 && (
-                            <div
-                              style={this.hideEmptyContractEl(contract)}
-                              className={`Contract-content-actions-button Contract-content-actions-button-right ${
-                                pay.creating
-                                  ? 'Contract-content-actions-button-is-loading'
-                                  : ''
-                              }`}
-                              onClick={this.createPay}
-                            >
-                              Pay&nbsp;&nbsp;&nbsp;<FA name="arrow-right" />
-                            </div>
-                          )}
-                        {contract.data.seller ===
-                          accounts.data[0].toLowerCase() &&
-                          contract.data.amount !== 0 && (
-                            <div
-                              style={this.hideEmptyContractEl(contract)}
-                              className={`Contract-content-actions-button Contract-content-actions-button-right ${
-                                reimburse.creating
-                                  ? 'Contract-content-actions-button-is-loading'
-                                  : ''
-                              }`}
-                              onClick={this.createReimburse}
-                            >
-                              Reimburse&nbsp;&nbsp;&nbsp;<FA name="arrow-right" />
-                            </div>
-                          )}
+                        <div
+                          className={`Contract-content-actions-button Contract-content-actions-button-right`}
+                          onClick={this.createPay}
+                        >
+                          {party.method}&nbsp;&nbsp;&nbsp;<FA name="arrow-right" />
+                        </div>
                       </div>
                     </div>
                   ) : (
@@ -302,7 +278,12 @@ class Contract extends PureComponent {
                   contract.data[`${party.name}Fee`] &&
                   !contract.data[`${partyOther.name}Fee`] ? (
                     <div className="Contract-content-actions">
-                      <div></div>
+                      <div
+                        className={`Contract-content-actions-button Contract-content-actions-button-right`}
+                        onClick={this.createPay}
+                      >
+                        {party.method}&nbsp;&nbsp;&nbsp;<FA name="arrow-right" />
+                      </div>
                       <div
                         className="Contract-content-actions-button Contract-content-actions-button-right"
                         onClick={this.timeout}
@@ -373,6 +354,7 @@ class Contract extends PureComponent {
                   contract.data.buyerFee &&
                   contract.data.sellerFee ? (
                     <div className="Contract-content-actions">
+                      <div></div>
                       <div
                         className={`Contract-content-actions-button Contract-content-actions-button-right ${
                           evidence.creating
