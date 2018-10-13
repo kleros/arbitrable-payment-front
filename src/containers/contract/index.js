@@ -5,7 +5,6 @@ import Blockies from 'react-blockies'
 import { ClipLoader } from 'react-spinners'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { connect } from 'react-redux'
-import Modal from 'react-responsive-modal'
 import web3 from 'web3'
 import FA from 'react-fontawesome'
 
@@ -53,11 +52,31 @@ class Contract extends PureComponent {
     const { contract, accounts = [] } = nextProps
     if (prevContract !== contract) {
       if (contract.data && contract.data.buyer === accounts.data[0].toLowerCase()) {
-        this.setState({ party: 'buyer' })
-        this.setState({ partyOther: 'seller' })
+        this.setState({
+          party: {
+            name: 'buyer',
+            method: 'Pay'
+          }
+        })
+        this.setState({
+          partyOther: {
+            name: 'seller',
+            method: 'Reimburse'
+          }
+        })
       } else if (contract.data && contract.data.seller === accounts.data[0].toLowerCase()) {
-        this.setState({ party: 'seller' })
-        this.setState({ partyOther: 'buyer' })
+        this.setState({
+          partyOther: {
+            name: 'buyer',
+            method: 'Pay'
+          }
+        })
+        this.setState({
+          party: {
+            name: 'seller',
+            method: 'Reimburse'
+          }
+        })
       }
     }
   }
@@ -73,17 +92,10 @@ class Contract extends PureComponent {
   }
 
   createPay = () => {
-    const { contract, createPay, match } = this.props
-    createPay(
-      match.params.contractAddress // use arbitrableTransactionId
-    )
-  }
-
-  createReimburse = () => {
-    const { contract, createReimburse, match } = this.props
-    createReimburse(
-      match.params.contractAddress
-    )
+    const { accounts, contract, createPay, createReimburse, match } = this.props
+    if (contract.data.buyer === accounts.data[0].toLowerCase())
+      createPay(match.params.contractAddress)
+    else createReimburse(match.params.contractAddress)
   }
 
   timeout = () => {
@@ -100,7 +112,7 @@ class Contract extends PureComponent {
 
   hideEmptyContractEl = contract => ({
     display:
-      contract.data.amount && contract.data.amount.e === 0 ? 'none' : 'block'
+      contract.data.amount === 0 ? 'none' : 'block'
   })
 
   isTimeout = contract => {
@@ -120,7 +132,6 @@ class Contract extends PureComponent {
       contract,
       accounts,
       arbitrator,
-      dispute,
       reimburse,
       pay,
       appeal,
@@ -210,53 +221,6 @@ class Contract extends PureComponent {
                     <div />
                   )}
                   {contract.data.status !== DISPUTE_RESOLVED &&
-                  contract.data.amount !== 0 ? (
-                    <div className="Contract-content-actions">
-                      <div
-                        style={this.hideEmptyContractEl(contract)}
-                        className={`Contract-content-actions-button Contract-content-actions-button-left ${
-                          dispute.creating
-                            ? 'Contract-content-actions-button-is-loading'
-                            : ''
-                        }`}
-                        onClick={this.createDispute}
-                      >
-                        Create dispute&nbsp;&nbsp;&nbsp;<FA name="bolt" />
-                      </div>
-                      {contract.data.buyer === accounts.data[0].toLowerCase() &&
-                        contract.data.amount !== 0 && (
-                          <div
-                            style={this.hideEmptyContractEl(contract)}
-                            className={`Contract-content-actions-button Contract-content-actions-button-right ${
-                              pay.creating
-                                ? 'Contract-content-actions-button-is-loading'
-                                : ''
-                            }`}
-                            onClick={this.createPay}
-                          >
-                            Pay&nbsp;&nbsp;&nbsp;<FA name="arrow-right" />
-                          </div>
-                        )}
-                      {contract.data.seller ===
-                        accounts.data[0].toLowerCase() &&
-                        contract.data.amount !== 0 && (
-                          <div
-                            style={this.hideEmptyContractEl(contract)}
-                            className={`Contract-content-actions-button Contract-content-actions-button-right ${
-                              reimburse.creating
-                                ? 'Contract-content-actions-button-is-loading'
-                                : ''
-                            }`}
-                            onClick={this.createReimburse}
-                          >
-                            Reimburse&nbsp;&nbsp;&nbsp;<FA name="arrow-right" />
-                          </div>
-                        )}
-                    </div>
-                  ) : (
-                    <div />
-                  )}
-                  {contract.data.status !== DISPUTE_RESOLVED &&
                     contract.data.amount === 0 && (
                       <div>
                         <div className="Contract-content-actions-completed">
@@ -266,8 +230,9 @@ class Contract extends PureComponent {
                     )}
                   {contract.data.status !== DISPUTE_RESOLVED &&
                   contract.data.amount !== 0 &&
-                  !contract.data[`${party}Fee`] &&
-                  contract.data[`${partyOther}Fee`] ? (
+                  this.isTimeout(contract) &&
+                  !contract.data[`${party.name}Fee`] &&
+                  contract.data[`${partyOther.name}Fee`] ? (
                     <div>
                       <div className="Contract-content-actions-waiting">
                         The other party has raised a dispute.<br />
@@ -321,11 +286,11 @@ class Contract extends PureComponent {
                   contract.data.amount !== 0 &&
                   contract.data.status !== DISPUTE_RESOLVED &&
                   !this.isTimeout(contract) &&
-                  contract.data[`${party}Fee`] &&
-                  !contract.data[`${partyOther}Fee`] ? (
+                  contract.data[`${party.name}Fee`] &&
+                  !contract.data[`${partyOther.name}Fee`] ? (
                     <div className="Contract-content-actions-waiting">
                       Waiting for other party to pay the fee.<br />
-                      ({shortAddress(contract.data[`${partyOther}`])})
+                      ({shortAddress(contract.data[`${partyOther.name}`])})
                     </div>
                   ) : (
                     <div />
@@ -334,14 +299,15 @@ class Contract extends PureComponent {
                   contract.data.amount !== 0 &&
                   contract.data.status !== DISPUTE_RESOLVED &&
                   this.isTimeout(contract) &&
-                  contract.data[`${party}Fee`] &&
-                  !contract.data[`${partyOther}Fee`] ? (
+                  contract.data[`${party.name}Fee`] &&
+                  !contract.data[`${partyOther.name}Fee`] ? (
                     <div className="Contract-content-actions">
+                      <div></div>
                       <div
                         className="Contract-content-actions-button Contract-content-actions-button-right"
                         onClick={this.timeout}
                       >
-                        {`Timeout ${partyOther}`}&nbsp;&nbsp;&nbsp;<FA name="arrow-right" />
+                        {`Timeout ${partyOther.name}`}&nbsp;&nbsp;&nbsp;<FA name="arrow-right" />
                       </div>
                     </div>
                   ) : (
@@ -384,6 +350,25 @@ class Contract extends PureComponent {
                   ) : (
                     <div />
                   )}
+                  {contract.data.status !== DISPUTE_RESOLVED &&
+                    contract.data.amount !== 0 &&
+                    !contract.data.buyerFee &&
+                    !contract.data.sellerFee && (
+                      <div className="Contract-content-actions">
+                        <div
+                          className={`Contract-content-actions-button Contract-content-actions-button-left`}
+                          onClick={this.createDispute}
+                        >
+                          Create dispute&nbsp;&nbsp;&nbsp;<FA name="bolt" />
+                        </div>
+                        <div
+                          className={`Contract-content-actions-button Contract-content-actions-button-right`}
+                          onClick={this.createPay}
+                        >
+                          {party.method}&nbsp;&nbsp;&nbsp;<FA name="arrow-right" />
+                        </div>
+                      </div>
+                    )}
                   {contract.data.status !== DISPUTE_RESOLVED &&
                   contract.data.buyerFee &&
                   contract.data.sellerFee ? (
