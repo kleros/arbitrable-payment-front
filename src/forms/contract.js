@@ -38,13 +38,5 @@ export const {
     email: {
       type: 'text'
     }
-  },
-  step6: {
-    fileURI: {
-      type: 'text',
-      props: {
-        placeholder: 'URI of Contract'
-      }
-    }
   }
 })

@@ -1,11 +1,13 @@
 import Web3 from 'web3'
-import { Kleros } from 'kleros-api'
-import multipleArbitrableTransaction from '../assets/contracts/multiple-arbitrable-transaction'
+import { Kleros } from 'kleros-api-2'
+import multipleArbitrableTransaction from 'kleros-interaction-2/build/contracts/MultipleArbitrableTransaction.json'
 
 const env = process.env.NODE_ENV === 'production' ? 'PROD' : 'DEV'
 const ETHEREUM_PROVIDER = process.env[`REACT_APP_${env}_ETHEREUM_PROVIDER`]
 const STORE_PROVIDER = process.env[`REACT_APP_${env}_STORE_PROVIDER`]
 const STORE_AWS_PROVIDER = process.env[`REACT_APP_${env}_STORE_AWS_PROVIDER`]
+
+console.log('interface', multipleArbitrableTransaction)
 
 let web3
 if (process.env.NODE_ENV === 'test')
@@ -53,7 +55,7 @@ const initializeKleros = async () => {
   )
 
   multipleArbitrableTransactionEth = new web3.eth.Contract(
-    multipleArbitrableTransaction,
+    multipleArbitrableTransaction.abi,
     ARBITRABLE_ADDRESS
   )
 

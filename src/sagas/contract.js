@@ -3,7 +3,6 @@ import { push } from 'react-router-redux'
 import { toastr } from 'react-redux-toastr'
 
 import { call, put, takeLatest } from 'redux-saga/effects'
-import { delay } from 'redux-saga'
 
 import {
   kleros,
@@ -37,7 +36,7 @@ function* createContract({ type, payload: { contractReceived } }) {
     contractReceived.partyB,
     contractReceived.title,
     contractReceived.description,
-    contractReceived.fileURI
+    ""
   )
 
   yield put(push('/'))

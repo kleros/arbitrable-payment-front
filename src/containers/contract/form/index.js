@@ -127,9 +127,7 @@ class NewContract extends PureComponent {
           form &&
           form.createContractFormKey &&
           form.createContractFormKey.values &&
-          this.isAddress(form.createContractFormKey.values.partyB) &&
-          submitCreateContractForm() &&
-          this.setState({ step: step + 1 })
+          this.isAddress(form.createContractFormKey.values.partyB)
         )
       case 3:
         return (
@@ -145,14 +143,6 @@ class NewContract extends PureComponent {
           form.createContractFormKey &&
           form.createContractFormKey.values &&
           this.isEmail(form.createContractFormKey.values.email)
-        )
-      case 5:
-        return (
-          form &&
-          form.createContractFormKey &&
-          form.createContractFormKey.values &&
-          form.createContractFormKey.values.fileURI !== '' &&
-          form.createContractFormKey.values.fileURI != null
         )
       default:
         return false
@@ -170,11 +160,10 @@ class NewContract extends PureComponent {
           <Stepper
             steps={[
               'Title',
-              'Description',
+              'Agreement',
               'Address PartyB',
               'Payment',
-              'Email',
-              'Contract URL'
+              'Email'
             ]}
             activeStep={step}
           />
