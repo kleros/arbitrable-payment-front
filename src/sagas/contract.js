@@ -28,6 +28,7 @@ const toastrOptions = {
  * @param {object} { payload: contractReceived } - The contract to create.
  */
 function* createContract({ type, payload: { contractReceived } }) {
+  if (window.ethereum) yield call(window.ethereum.enable)
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
@@ -89,6 +90,7 @@ function* createContract({ type, payload: { contractReceived } }) {
  * Fetches contracts for the current user and puts them in the store.
  */
 function* fetchContracts() {
+  if (window.ethereum) yield call(window.ethereum.enable)
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
@@ -122,6 +124,7 @@ function* fetchContracts() {
  * @param {object} { payload: arbitrableTransactionId } - The address of the contract to fetch details for.
  */
 function* fetchContract({ payload: { arbitrableTransactionId } }) {
+  if (window.ethereum) yield call(window.ethereum.enable)
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
@@ -176,6 +179,7 @@ function* fetchContract({ payload: { arbitrableTransactionId } }) {
  * @param {object} { payload: contractAddress, partyA, partyB } - The address of the contract.
  */
 function* createPay({ type, payload: { arbitrableTransactionId } }) {
+  if (window.ethereum) yield call(window.ethereum.enable)
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
@@ -217,6 +221,7 @@ function* createPay({ type, payload: { arbitrableTransactionId } }) {
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
 function* createReimburse({ type, payload: { arbitrableTransactionId } }) {
+  if (window.ethereum) yield call(window.ethereum.enable)
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
@@ -258,6 +263,7 @@ function* createReimburse({ type, payload: { arbitrableTransactionId } }) {
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
 function* createDispute({ payload: { arbitrableTransactionId } }) {
+  if (window.ethereum) yield call(window.ethereum.enable)
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
@@ -317,6 +323,7 @@ function* createDispute({ payload: { arbitrableTransactionId } }) {
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
 function* createAppeal({ type, payload: { arbitrableTransactionId, disputeId } }) {
+  if (window.ethereum) yield call(window.ethereum.enable)
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
@@ -366,6 +373,7 @@ function* createTimeout({
   type,
   payload: { arbitrableTransactionId, buyer, seller }
 }) {
+  if (window.ethereum) yield call(window.ethereum.enable)
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
@@ -415,6 +423,7 @@ function* createTimeout({
  * @param {object} { type, payload: evidenceReceived } - Evidence.
  */
 function* createEvidence({ type, payload: { evidenceReceived } }) {
+  if (window.ethereum) yield call(window.ethereum.enable)
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
@@ -461,6 +470,7 @@ function* createEvidence({ type, payload: { evidenceReceived } }) {
  * @param {object} { payload: contractAddress, disouteId } - The address of the contract and the dispute id to fetch details for.
  */
 function* fetchDispute({ payload: { disputeId } }) {
+  if (window.ethereum) yield call(window.ethereum.enable)
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
