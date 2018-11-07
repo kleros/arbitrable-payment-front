@@ -112,8 +112,7 @@ class Contract extends PureComponent {
     contract.data.amount && contract.data.amount.e === 0
 
   hideEmptyContractEl = contract => ({
-    display:
-      contract.data.amount === 0 ? 'none' : 'block'
+    display: contract.data.amount === 0 ? 'none' : 'block'
   })
 
   isTimeout = contract => {
@@ -158,7 +157,11 @@ class Contract extends PureComponent {
                 <div className="Contract-content">
                   <div className="Contract-content-address">
                     <div className="Contract-content-title">
-                      {(contract.data.metaEvidence && contract.data.metaEvidence.title) || localStorage.getItem('arbitrableTransactionMetaEvidence').title}
+                      {(!!contract.data.metaEvidence &&
+                        contract.data.metaEvidence.title) ||
+                        localStorage.getItem(
+                          'arbitrableTransactionMetaEvidence'
+                        ).title}
                     </div>
                   </div>
                   <div className="Contract-content-parties">
@@ -214,9 +217,10 @@ class Contract extends PureComponent {
                     )}
                   </div>
 
-                  {contract.data.metaEvidence.description ? (
+                  {!!contract.data.metaEvidence && contract.data.metaEvidence.description ? (
                     <div className="Contract-content-description">
-                      {(contract.data.metaEvidence && contract.data.metaEvidence.description) ||
+                      {(!!contract.data.metaEvidence &&
+                        contract.data.metaEvidence.description) ||
                         localStorage.getItem(
                           'arbitrableTransactionMetaEvidence'
                         ).description}
@@ -246,7 +250,7 @@ class Contract extends PureComponent {
                       </div>
                       <div className="Contract-content-actions">
                         <div
-                          className='Contract-content-actions-button Contract-content-actions-button-left'
+                          className="Contract-content-actions-button Contract-content-actions-button-left"
                           onClick={this.createDispute}
                         >
                           Pay the fee&nbsp;&nbsp;&nbsp;<FA name="bolt" />

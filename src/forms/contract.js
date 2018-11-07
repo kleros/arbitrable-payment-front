@@ -20,7 +20,7 @@ export const {
     partyB: {
       type: 'text',
       props: {
-        placeholder: 'Other Party address'
+        placeholder: 'Seller address'
       }
     }
   },

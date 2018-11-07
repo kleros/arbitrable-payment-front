@@ -1,7 +1,6 @@
 import unit from 'ethjs-unit'
 import { push } from 'react-router-redux'
 import { toastr } from 'react-redux-toastr'
-import awaitTx from 'await-transaction-mined'
 
 import { call, put, takeLatest } from 'redux-saga/effects'
 
@@ -16,6 +15,7 @@ import * as contractActions from '../actions/contract'
 import * as errorConstants from '../constants/errors'
 import { lessduxSaga } from '../utils/saga'
 import { createMetaEvidence } from '../utils/contract'
+import awaitTx from '../utils/await-tx'
 
 import storeApi from './api/store'
 
@@ -65,7 +65,7 @@ function* createContract({ type, payload: { contractReceived } }) {
       file.payload.fileURL
     )
 
-    const txReceipt = yield call(awaitTx.awaitTx, web3, txHash.tx)
+    const txReceipt = yield call(awaitTx, web3, txHash.tx)
 
     yield call(toastr.success, 'Arbitrable transaction created', toastrOptions)
 
@@ -198,7 +198,7 @@ function* createPay({ type, payload: { arbitrableTransactionId } }) {
       amount
     )
 
-    const txReceipt = yield call(awaitTx.awaitTx, web3, payTx.tx)
+    const txReceipt = yield call(awaitTx, web3, payTx.tx)
 
     if (txReceipt) {
       yield put(push(`/`))
@@ -244,7 +244,7 @@ function* createReimburse({ type, payload: { arbitrableTransactionId } }) {
       amount
     )
 
-    const txReceipt = yield call(awaitTx.awaitTx, web3, reimburseTx.tx)
+    const txReceipt = yield call(awaitTx, web3, reimburseTx.tx)
 
     if (txReceipt) {
       yield put(push(`/`))
