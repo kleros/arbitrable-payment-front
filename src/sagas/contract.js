@@ -69,7 +69,13 @@ function* createContract({ type, payload: { contractReceived } }) {
 
     yield call(toastr.success, 'Arbitrable transaction created', toastrOptions)
 
-    if (txReceipt) yield put(push(`/contracts/${arbitrableTransactionCount}`))
+    if (txReceipt) {
+      localStorage.setItem(
+        'arbitrableTransactionMetaEvidence',
+        metaEvidence
+      )
+      yield put(push(`/contracts/${arbitrableTransactionCount}`))
+    }
   } catch (err) {
     console.log(err)
   }
