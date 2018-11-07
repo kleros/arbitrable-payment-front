@@ -445,7 +445,7 @@ function* createEvidence({ type, payload: { evidenceReceived } }) {
       JSON.stringify({
         name: evidenceReceived.name,
         description: evidenceReceived.description,
-        url: evidenceReceived.url
+        fileURI: evidenceReceived.url
       })
     )
 
