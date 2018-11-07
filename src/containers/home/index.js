@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { ClipLoader } from 'react-spinners'
 
 import * as walletActions from '../../actions/wallet'
 import * as contractActions from '../../actions/contract'
@@ -41,8 +42,12 @@ class Home extends PureComponent {
     return (
       <div className="container">
         {renderIf([balance.loading], [balance.data], [balance.failedLoading], {
-          loading: <span>loading</span>,
-          done: contracts.data && (
+          loading: (
+            <div className="loader">
+              <ClipLoader color={'gray'} loading={1} />
+            </div>
+          ),
+          done: contracts.data ? (
             <div className="flex-container-main">
               <ContractDisplayList
                 contracts={contracts.data}
@@ -51,6 +56,10 @@ class Home extends PureComponent {
                 accounts={accounts}
               />
               <div className="flex-container-main-flex-grow" />
+            </div>
+          ) : (
+            <div className="loader">
+              <ClipLoader color={'gray'} loading={1} />
             </div>
           ),
           failed: contracts.failedLoading && 'failedLoading'

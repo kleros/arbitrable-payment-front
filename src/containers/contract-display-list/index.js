@@ -1,8 +1,7 @@
 import React from 'react'
-import { ScaleLoader } from 'react-spinners'
 import FA from 'react-fontawesome'
 
-import { redirect, shortAddress } from '../../utils/contract'
+import { redirect } from '../../utils/contract'
 import statusContract from '../../utils/status-contract'
 
 /**
@@ -20,15 +19,6 @@ export const ContractDisplayList = ({
   history
 }) => (
   <div className="flex-container">
-    {contract.creating && (
-      <div
-        className="flex-item2 loader-contract"
-        onClick={redirect(`/contracts/${contract.address}`, history)}
-      >
-        <ScaleLoader color={'white'} loading={1} />
-      </div>
-    )}
-
     {contract.data && !contracts.some(obj => obj.arbitrableTransactionId === contract.data.arbitrableTransactionId) && (
       <div
         className="flex-item2"

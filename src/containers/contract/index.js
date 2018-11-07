@@ -22,7 +22,8 @@ class Contract extends PureComponent {
   state = {
     party: '',
     partyOther: '',
-    open: false
+    open: false,
+    update: 0
   }
   static propTypes = {
     contract: contractSelectors.contractShape.isRequired,
@@ -157,7 +158,7 @@ class Contract extends PureComponent {
                 <div className="Contract-content">
                   <div className="Contract-content-address">
                     <div className="Contract-content-title">
-                      {contract.data.metaEvidence.title || localStorage.getItem('arbitrableTransactionTitle')}
+                      {(contract.data.metaEvidence && contract.data.metaEvidence.title) || localStorage.getItem('arbitrableTransactionMetaEvidence').title}
                     </div>
                   </div>
                   <div className="Contract-content-parties">
@@ -215,7 +216,10 @@ class Contract extends PureComponent {
 
                   {contract.data.metaEvidence.description ? (
                     <div className="Contract-content-description">
-                      {contract.data.metaEvidence.description || localStorage.getItem('arbitrableTransactionDescription')}
+                      {(contract.data.metaEvidence && contract.data.metaEvidence.description) ||
+                        localStorage.getItem(
+                          'arbitrableTransactionMetaEvidence'
+                        ).description}
                     </div>
                   ) : (
                     <div />

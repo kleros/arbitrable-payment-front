@@ -161,7 +161,7 @@ class NewContract extends PureComponent {
             steps={[
               'Title',
               'Agreement',
-              'Address PartyB',
+              'Seller Address',
               'Payment',
               'Email'
             ]}

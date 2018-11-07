@@ -11,7 +11,7 @@ export const NavHeader = ({ history }) => (
         className="flex-container-main-menu-left-home"
         onClick={redirect('/', history)}
       >
-        Home
+        My Transactions
       </div>
     </div>
 
@@ -24,7 +24,7 @@ export const NavHeader = ({ history }) => (
         className="flex-container-main-menu-right-item"
         onClick={redirect('/contracts/new', history)}
       >
-        New contract
+        New Transaction
       </div>
     </div>
   </div>

@@ -1,6 +1,7 @@
 import unit from 'ethjs-unit'
 import { push } from 'react-router-redux'
 import { toastr } from 'react-redux-toastr'
+import awaitTx from 'await-transaction-mined'
 
 import { call, put, takeLatest } from 'redux-saga/effects'
 
@@ -40,8 +41,6 @@ function* createContract({ type, payload: { contractReceived } }) {
     ""
   )
 
-  yield put(push('/'))
-
   let arbitrableTransactionCount
 
   try {
@@ -51,7 +50,11 @@ function* createContract({ type, payload: { contractReceived } }) {
     // Set contract instance
     yield call(kleros.arbitrable.setContractInstance, ARBITRABLE_ADDRESS)
 
-    yield call(
+    arbitrableTransactionCount = yield call(
+      multipleArbitrableTransactionEth.methods.getCountTransactions().call
+    )
+
+    const txHash = yield call(
       kleros.arbitrable.createArbitrableTransaction,
       accounts[0],
       ARBITRATOR_ADDRESS,
@@ -62,27 +65,17 @@ function* createContract({ type, payload: { contractReceived } }) {
       file.payload.fileURL
     )
 
-    arbitrableTransactionCount = yield call(
-      multipleArbitrableTransactionEth.methods.getCountTransactions().call
-    )
+    const txReceipt = yield call(awaitTx.awaitTx, web3, txHash.tx)
+
+    yield call(toastr.success, 'Arbitrable transaction created', toastrOptions)
+
+    if (txReceipt) yield put(push(`/contracts/${arbitrableTransactionCount}`))
   } catch (err) {
     console.log(err)
   }
 
-  localStorage.setItem(
-    'arbitrableTransactionId',
-    arbitrableTransactionCount - 1
-  )
-  localStorage.setItem('arbitrableTransactionTitle', contractReceived.title)
-  localStorage.setItem(
-    'arbitrableTransactionDescription',
-    contractReceived.description
-  )
-
-  yield call(toastr.success, 'Arbitrable transaction created', toastrOptions)
-
   return yield call(fetchContract, {
-    payload: { arbitrableTransactionId: arbitrableTransactionCount - 1 }
+    payload: { arbitrableTransactionId: arbitrableTransactionCount }
   })
 }
 
@@ -204,14 +197,18 @@ function* createPay({ type, payload: { arbitrableTransactionId } }) {
       arbitrableTransactionId,
       amount
     )
+
+    const txReceipt = yield call(awaitTx.awaitTx, web3, payTx.tx)
+
+    if (txReceipt) {
+      yield put(push(`/`))
+      yield call(toastr.success, 'Payment successful', toastrOptions)
+    }
   } catch (err) {
     console.log(err)
     toastr.error('Pay transaction failed', toastrOptions)
     throw new Error('Error pay transaction')
   }
-
-  yield put(push('/'))
-  yield call(toastr.success, 'Payment successful', toastrOptions)
 
   return payTx
 }
@@ -246,14 +243,18 @@ function* createReimburse({ type, payload: { arbitrableTransactionId } }) {
       arbitrableTransactionId,
       amount
     )
+
+    const txReceipt = yield call(awaitTx.awaitTx, web3, reimburseTx.tx)
+
+    if (txReceipt) {
+      yield put(push(`/`))
+      yield call(toastr.success, 'Successful refund', toastrOptions)
+    }
   } catch (err) {
     console.log(err)
     toastr.error('Reimburse failed', toastrOptions)
     throw new Error('Error reimburse failed')
   }
-
-  yield put(push('/'))
-  yield call(toastr.success, 'Successful refund', toastrOptions)
 
   return reimburseTx
 }
