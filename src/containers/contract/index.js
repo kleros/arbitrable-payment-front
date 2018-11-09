@@ -385,9 +385,9 @@ class Contract extends PureComponent {
                   {contract.data.status === DISPUTE_RESOLVED ? (
                     <div className="Contract-content-actions-ruling">
                       <b>
-                        {contract.data.ruling === 0 && 'No ruling'}
-                        {contract.data.ruling === 1 && 'Party A wins'}
-                        {contract.data.ruling === 2 && 'Party B wins'}
+                        {contract.data.ruling == 0 && 'No ruling'}
+                        {contract.data.ruling == 1 && 'Party A wins'}
+                        {contract.data.ruling == 2 && 'Party B wins'}
                       </b>
                     </div>
                   ) : (
