@@ -315,6 +315,7 @@ class Contract extends PureComponent {
                       {contract.data.ruling == 0 && 'No Ruling'}
                       {contract.data.ruling == 1 && 'Party A wins'}
                       {contract.data.ruling == 2 && 'Party B wins'}
+                      Buyer wins the dispute
                     </div>
                   ) : (
                     <div />
@@ -388,6 +389,7 @@ class Contract extends PureComponent {
                         {contract.data.ruling == 0 && 'No ruling'}
                         {contract.data.ruling == 1 && 'Party A wins'}
                         {contract.data.ruling == 2 && 'Party B wins'}
+                        Buyer wins the dispute
                       </b>
                     </div>
                   ) : (
