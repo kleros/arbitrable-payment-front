@@ -5,7 +5,6 @@ import Blockies from 'react-blockies'
 import { ClipLoader } from 'react-spinners'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { connect } from 'react-redux'
-import web3 from 'web3'
 import FA from 'react-fontawesome'
 
 import * as walletActions from '../../actions/wallet'
@@ -20,10 +19,16 @@ import './contract.css'
 
 class Contract extends PureComponent {
   state = {
-    party: '',
-    partyOther: '',
     open: false,
-    update: 0
+    party: {
+      name: 'buyer',
+      method: 'Pay'
+    },
+    partyOther: {
+      name: 'buyer',
+      method: 'Pay'
+    },
+    arbitrableTransaction: {}
   }
   static propTypes = {
     contract: contractSelectors.contractShape.isRequired,
@@ -46,13 +51,21 @@ class Contract extends PureComponent {
     const { match, fetchContract, fetchArbitrator } = this.props
     fetchContract(match.params.contractAddress)
     fetchArbitrator()
+    this.setState({
+      arbitrableTransaction: JSON.parse(
+        localStorage.getItem('arbitrableTransaction')
+      )
+    })
   }
 
   componentWillReceiveProps(nextProps) {
     const { contract: prevContract } = this.props
     const { contract, accounts = [] } = nextProps
     if (prevContract !== contract) {
-      if (contract.data && contract.data.buyer === accounts.data[0].toLowerCase()) {
+      if (
+        contract.data &&
+        contract.data.buyer === accounts.data[0].toLowerCase()
+      ) {
         this.setState({
           party: {
             name: 'buyer',
@@ -65,7 +78,10 @@ class Contract extends PureComponent {
             method: 'Reimburse'
           }
         })
-      } else if (contract.data && contract.data.seller === accounts.data[0].toLowerCase()) {
+      } else if (
+        contract.data &&
+        contract.data.seller === accounts.data[0].toLowerCase()
+      ) {
         this.setState({
           partyOther: {
             name: 'buyer',
@@ -159,9 +175,8 @@ class Contract extends PureComponent {
                     <div className="Contract-content-title">
                       {(!!contract.data.metaEvidence &&
                         contract.data.metaEvidence.title) ||
-                        localStorage.getItem(
-                          'arbitrableTransactionMetaEvidence'
-                        ).title}
+                        // eslint-disable-next-line react/destructuring-assignment
+                        this.state.arbitrableTransaction.metaEvidence.title}
                     </div>
                   </div>
                   <div className="Contract-content-parties">
@@ -175,7 +190,7 @@ class Contract extends PureComponent {
                     </div>
 
                     <div className="Contract-content-parties-content">
-                      {shortAddress(contract.data.buyer)}
+                      {shortAddress(contract.data.buyer || this.state.arbitrableTransaction.buyer.toLowerCase())}
                     </div>
 
                     <div>&nbsp;&nbsp;</div>
@@ -190,20 +205,17 @@ class Contract extends PureComponent {
                     </div>
 
                     <div className="Contract-content-parties-content">
-                      {shortAddress(contract.data.seller)}
+                      {shortAddress(contract.data.seller || this.state.arbitrableTransaction.seller.toLowerCase())}
                     </div>
 
                     <div>&nbsp;&nbsp;</div>
 
                     <div className="Contract-content-amount">
                       <FA name="th-large" />&nbsp;
-                      {web3.utils.fromWei(
-                        contract.data.amount.toString(),
-                        'ether'
-                      )}{' '}
+                      {contract.data.amount || this.state.arbitrableTransaction.amount}{' '}
                       ETH
                     </div>
-                    {contract.data.metaEvidence.fileURI ? (
+                    {contract.data.metaEvidence && contract.data.metaEvidence.fileURI ? (
                       <div className="Contract-content-fileUri">
                         &nbsp;&nbsp;&nbsp;<a
                           href={`${contract.data.metaEvidence.fileURI}`}
@@ -217,17 +229,13 @@ class Contract extends PureComponent {
                     )}
                   </div>
 
-                  {!!contract.data.metaEvidence && contract.data.metaEvidence.description ? (
-                    <div className="Contract-content-description">
-                      {(!!contract.data.metaEvidence &&
-                        contract.data.metaEvidence.description) ||
-                        localStorage.getItem(
-                          'arbitrableTransactionMetaEvidence'
-                        ).description}
-                    </div>
-                  ) : (
-                    <div />
-                  )}
+                  <div className="Contract-content-description">
+                    {(contract.data.metaEvidence &&
+                      contract.data.metaEvidence.description) ||
+                      // eslint-disable-next-line react/destructuring-assignment
+                      this.state.arbitrableTransaction.metaEvidence.description}
+                  </div>
+
                   {contract.data.status !== DISPUTE_RESOLVED &&
                     contract.data.amount === 0 && (
                       <div>
@@ -302,14 +310,16 @@ class Contract extends PureComponent {
                   ) : (
                     <div />
                   )}
-                  {contract.data.status === DISPUTE_CREATED && contract.data.canAppeal === false ? (
+                  {contract.data.status === DISPUTE_CREATED &&
+                  contract.data.canAppeal === false ? (
                     <div className="Contract-content-actions-waiting">
                       <b>Waiting the dispute resolution</b>
                     </div>
                   ) : (
                     <div />
                   )}
-                  {contract.data.status === DISPUTE_CREATED && contract.data.canAppeal === true ? (
+                  {contract.data.status === DISPUTE_CREATED &&
+                  contract.data.canAppeal === true ? (
                     <div className="Contract-content-actions-waiting">
                       {_.isNull(contract.data.ruling) && 'Dispute Active'}
                       {contract.data.ruling == 0 && 'No Ruling'}
@@ -363,7 +373,7 @@ class Contract extends PureComponent {
                   contract.data.buyerFee &&
                   contract.data.sellerFee ? (
                     <div className="Contract-content-actions">
-                      <div></div>
+                      <div />
                       <div
                         className={`Contract-content-actions-button Contract-content-actions-button-right ${
                           evidence.creating

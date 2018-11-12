@@ -56,7 +56,7 @@
     "flex-react-stepper": "^0.0.7",
     "ganache-cli": "^6.1.6",
     "history": "^4.7.2",
-    "kleros-api-2": "^0.18.8",
+    "kleros-api-2": "^0.18.10",
     "kleros-interaction-2": "^0.1.3",
     "lessdux": "^0.7.3",
     "lodash": "^4.17.4",

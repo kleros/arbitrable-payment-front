@@ -71,18 +71,20 @@ function* createContract({ type, payload: { contractReceived } }) {
 
     if (txReceipt) {
       localStorage.setItem(
-        'arbitrableTransactionMetaEvidence',
-        metaEvidence
+        'arbitrableTransaction',
+        JSON.stringify({
+          buyer: accounts[0],
+          seller: contractReceived.partyB,
+          amount: contractReceived.payment,
+          arbitrator: contractReceived.arbitrator || ARBITRATOR_ADDRESS,
+          metaEvidence
+        })
       )
       yield put(push(`/contracts/${arbitrableTransactionCount}`))
     }
   } catch (err) {
     console.log(err)
   }
-
-  return yield call(fetchContract, {
-    payload: { arbitrableTransactionId: arbitrableTransactionCount }
-  })
 }
 
 /**
