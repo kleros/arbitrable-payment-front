@@ -148,14 +148,12 @@ class Contract extends PureComponent {
       contract,
       accounts,
       arbitrator,
-      reimburse,
-      pay,
       appeal,
       evidence,
       history
     } = this.props
     const { partyOther, party } = this.state
-    const ruling = ['no ruling', 'partyA', 'partyB']
+    const ruling = ['no ruling', 'buyer', 'seller']
     return (
       <div>
         {renderIf(
@@ -190,7 +188,11 @@ class Contract extends PureComponent {
                     </div>
 
                     <div className="Contract-content-parties-content">
-                      {shortAddress(contract.data.buyer || this.state.arbitrableTransaction.buyer.toLowerCase())}
+                      {shortAddress(
+                        contract.data.buyer ||
+                          // eslint-disable-next-line react/destructuring-assignment
+                          this.state.arbitrableTransaction.buyer.toLowerCase()
+                      )}
                     </div>
 
                     <div>&nbsp;&nbsp;</div>
@@ -205,7 +207,11 @@ class Contract extends PureComponent {
                     </div>
 
                     <div className="Contract-content-parties-content">
-                      {shortAddress(contract.data.seller || this.state.arbitrableTransaction.seller.toLowerCase())}
+                      {shortAddress(
+                        contract.data.seller ||
+                          // eslint-disable-next-line react/destructuring-assignment
+                          this.state.arbitrableTransaction.seller.toLowerCase()
+                      )}
                     </div>
 
                     <div>&nbsp;&nbsp;</div>
@@ -322,9 +328,11 @@ class Contract extends PureComponent {
                   contract.data.canAppeal === true ? (
                     <div className="Contract-content-actions-waiting">
                       {_.isNull(contract.data.ruling) && 'Dispute Active'}
-                      {contract.data.ruling === "0" && 'No Ruling.'}
-                      {contract.data.ruling === "1" && 'Buyer wins the current dispute.'}
-                      {contract.data.ruling === "2" && 'Seller wins the current dispute.'}
+                      {contract.data.ruling === '0' && 'No Ruling.'}
+                      {contract.data.ruling === '1' &&
+                        'Buyer wins the current dispute.'}
+                      {contract.data.ruling === '2' &&
+                        'Seller wins the current dispute.'}
                     </div>
                   ) : (
                     <div />
@@ -395,9 +403,11 @@ class Contract extends PureComponent {
                   {contract.data.status === DISPUTE_RESOLVED ? (
                     <div className="Contract-content-actions-ruling">
                       <b>
-                        {contract.data.ruling === "0" && 'No ruling.'}
-                        {contract.data.ruling === "1" && 'Buyer wins the current dispute.'}
-                        {contract.data.ruling === "2" && 'Seller wins the current dispute.'}
+                        {contract.data.ruling === '0' && 'No ruling.'}
+                        {contract.data.ruling === '1' &&
+                          'Buyer wins the current dispute.'}
+                        {contract.data.ruling === '2' &&
+                          'Seller wins the current dispute.'}
                       </b>
                     </div>
                   ) : (
