@@ -74,7 +74,7 @@
     "react-router-dom": "^4.2.2",
     "react-router-prop-types": "^1.0.2",
     "react-router-redux": "^5.0.0-alpha.9",
-    "react-scripts": "1.1.1",
+    "react-scripts": "2.1.1",
     "react-spinners": "^0.2.6",
     "react-tooltip": "^3.4.0",
     "redux": "^3.7.2",
@@ -124,5 +124,11 @@
     "stylelint-config-standard": "^18.0.0",
     "stylelint-order": "^0.8.0",
     "stylelint-selector-bem-pattern": "^2.0.0"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
