@@ -127,9 +127,17 @@ class NewContract extends PureComponent {
           form &&
           form.createContractFormKey &&
           form.createContractFormKey.values &&
-          this.isAddress(form.createContractFormKey.values.partyB)
+          form.createContractFormKey.values.fileAgreement !== '' &&
+          form.createContractFormKey.values.fileAgreement != null
         )
       case 3:
+        return (
+          form &&
+          form.createContractFormKey &&
+          form.createContractFormKey.values &&
+          this.isAddress(form.createContractFormKey.values.partyB)
+        )
+      case 4:
         return (
           form &&
           form.createContractFormKey &&
@@ -137,7 +145,7 @@ class NewContract extends PureComponent {
           !isNaN(form.createContractFormKey.values.payment) &&
           form.createContractFormKey.values.payment > 0
         )
-      case 4:
+      case 5:
         return (
           form &&
           form.createContractFormKey &&
@@ -161,6 +169,7 @@ class NewContract extends PureComponent {
             steps={[
               'Title',
               'Agreement',
+              'Agreement File (optional)',
               'Seller Address',
               'Payment',
               'Email'

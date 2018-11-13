@@ -33,17 +33,23 @@ function* createContract({ type, payload: { contractReceived } }) {
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
-  const metaEvidence = createMetaEvidence(
-    accounts[0],
-    contractReceived.partyB,
-    contractReceived.title,
-    contractReceived.description,
-    ""
-  )
-
   let arbitrableTransactionCount
 
   try {
+    // Upload the meta-evidence then return an url
+    const fileAgreement = yield call(
+      storeApi.postFile,
+      JSON.stringify(contractReceived.fileAgreement)
+    )
+
+    const metaEvidence = createMetaEvidence(
+      accounts[0],
+      contractReceived.partyB,
+      contractReceived.title,
+      contractReceived.description,
+      fileAgreement.payload.fileURL
+    )
+
     // Upload the meta-evidence then return an url
     const file = yield call(storeApi.postFile, JSON.stringify(metaEvidence))
 
@@ -441,6 +447,8 @@ function* createEvidence({ type, payload: { evidenceReceived } }) {
   yield put(push('/'))
 
   let evidenceTx = null
+
+  // field to upload directly evidence
 
   try {
     // Upload the evidence then return an url

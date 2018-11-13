@@ -1,14 +1,21 @@
 import { web3, STORE_AWS_PROVIDER } from '../../bootstrap/dapp-api'
 import statusHelper from '../../utils/api-status-helper'
+import Archon from '@kleros/archon'
 
 const storeApi = {
+
   postFile(file) {
+    const ArchonInstance = new Archon(web3.currentProvider)
+    const fileHash = ArchonInstance.utils.multihashFile(
+      file,
+      0x1B // keccak-256
+    );
     return fetch(STORE_AWS_PROVIDER, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         payload: {
-          fileName: `${web3.utils.sha3(file)}.json`,
+          fileName: `${fileHash}.json`,
           base64EncodedData: btoa(file)
         }
       })

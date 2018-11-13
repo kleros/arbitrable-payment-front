@@ -17,6 +17,11 @@ export const {
     }
   },
   step3: {
+    fileAgreement: {
+      type: 'textarea'
+    }
+  },
+  step4: {
     partyB: {
       type: 'text',
       props: {
@@ -24,7 +29,7 @@ export const {
       }
     }
   },
-  step4: {
+  step5: {
     payment: {
       type: 'number',
       props: {
@@ -34,7 +39,7 @@ export const {
       validate: [required, number]
     }
   },
-  step5: {
+  step6: {
     email: {
       type: 'text'
     }
