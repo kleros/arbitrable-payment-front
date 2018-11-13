@@ -6,7 +6,7 @@
   # an active Deploy Preview will inherit these settings.
 [context.develop]
   [context.develop.environment]
-  NODE_VERSION = "9.4.0"
+  NODE_VERSION = "9.10.0"
   REACT_APP_PROD_KOVAN_ARBITRATOR_ADDRESS = "0x0390a40087Ce12d5603659cd1e9d78Cb715b7913"
   REACT_APP_PROD_RINKEBY_ARBITRATOR_ADDRESS = "0x27a836a66a16d10a4d5a400dd89417e4e9a8961f"
   REACT_APP_DEV_KOVAN_ARBITRABLE_ADDRESS = "0x2c95d39f7E9c2948015fA64FD51f0A518D33cEC6"
@@ -19,7 +19,7 @@
 # repository branch will inherit these settings.
 [context.production]
   [context.production.environment]
-    NODE_VERSION = "9.4.0"
+    NODE_VERSION = "9.10.0"
     REACT_APP_PROD_KOVAN_ARBITRATOR_ADDRESS = "0x6183694b0f853dff99cde9ad322973ac580b2127"
     REACT_APP_PROD_RINKEBY_ARBITRATOR_ADDRESS = "0xcafa054b1b054581faf65adce667bf1c684b6ef0"
     REACT_APP_PROD_KOVAN_ARBITRABLE_ADDRESS = "0x2c95d39f7E9c2948015fA64FD51f0A518D33cEC6"
