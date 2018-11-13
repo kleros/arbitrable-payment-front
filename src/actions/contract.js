@@ -90,15 +90,15 @@ export const createDispute = arbitrableTransactionId => ({
 })
 
 // Pay
-export const createPay = arbitrableTransactionId => ({
+export const createPay = (arbitrableTransactionId, amount) => ({
   type: pay.CREATE,
-  payload: { arbitrableTransactionId }
+  payload: { arbitrableTransactionId, amount }
 })
 
 // Reimburse
-export const createReimburse = arbitrableTransactionId => ({
+export const createReimburse = (arbitrableTransactionId, amount) => ({
   type: reimburse.CREATE,
-  payload: { arbitrableTransactionId }
+  payload: { arbitrableTransactionId, amount }
 })
 
 // Tiemout

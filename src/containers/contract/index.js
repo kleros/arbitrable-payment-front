@@ -14,6 +14,7 @@ import { renderIf } from '../../utils/react-redux'
 import { redirect, shortAddress } from '../../utils/contract'
 import { DISPUTE_CREATED, DISPUTE_RESOLVED } from '../../constants/contract'
 import * as arbitratorConstants from '../../constants/arbitrator'
+import TextInput from '../../components/text-input'
 
 import './contract.css'
 
@@ -28,7 +29,8 @@ class Contract extends PureComponent {
       name: 'buyer',
       method: 'Pay'
     },
-    arbitrableTransaction: {}
+    arbitrableTransaction: {},
+    amount: 0
   }
   static propTypes = {
     contract: contractSelectors.contractShape.isRequired,
@@ -110,9 +112,10 @@ class Contract extends PureComponent {
 
   createPay = () => {
     const { accounts, contract, createPay, createReimburse, match } = this.props
+    const { amount } = this.state
     if (contract.data.buyer === accounts.data[0].toLowerCase())
-      createPay(match.params.contractAddress)
-    else createReimburse(match.params.contractAddress)
+      createPay(match.params.contractAddress, amount)
+    else createReimburse(match.params.contractAddress, amount)
   }
 
   timeout = () => {
@@ -142,6 +145,8 @@ class Contract extends PureComponent {
   onOpenModal = () => this.setState({ open: true })
 
   onCloseModal = () => this.setState({ open: false })
+
+  onChangeAmount = e => this.setState({ amount: e.target.value })
 
   render() {
     const {
@@ -368,11 +373,15 @@ class Contract extends PureComponent {
                         >
                           Create dispute&nbsp;&nbsp;&nbsp;<FA name="bolt" />
                         </div>
-                        <div
-                          className={`Contract-content-actions-button Contract-content-actions-button-right`}
-                          onClick={this.createPay}
-                        >
-                          {party.method}&nbsp;&nbsp;&nbsp;<FA name="arrow-right" />
+                        <div className={`Contract-content-actions-partialPay`}>
+                          <TextInput input={{onChange: this.onChangeAmount}} meta={{}} placeholder={contract.data.amount || this.state.arbitrableTransaction.amount} />
+                          <div className='Contract-content-actions-partialPay-currency'>ETH</div>
+                          <div
+                            className={`Contract-content-actions-button Contract-content-actions-button-right`}
+                            onClick={this.createPay}
+                          >
+                            {party.method}&nbsp;&nbsp;&nbsp;<FA name="arrow-right" />
+                          </div>
                         </div>
                       </div>
                     )}

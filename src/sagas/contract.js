@@ -179,7 +179,7 @@ function* fetchContract({ payload: { arbitrableTransactionId } }) {
  * Pay the party B. To be called when the good is delivered or the service rendered.
  * @param {object} { payload: contractAddress, partyA, partyB } - The address of the contract.
  */
-function* createPay({ type, payload: { arbitrableTransactionId } }) {
+function* createPay({ type, payload: { arbitrableTransactionId, amount } }) {
   if (window.ethereum) yield call(window.ethereum.enable)
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
@@ -195,9 +195,12 @@ function* createPay({ type, payload: { arbitrableTransactionId } }) {
       arbitrableTransactionId
     )
 
-    const amount = arbitrableTransaction.amount
+    if (arbitrableTransaction.amount === 0)
+      throw new Error('The dispute is already finished')
 
-    if (amount === 0) throw new Error('The dispute is already finished')
+    console.log('amount', amount)
+    console.log('arbitrableTransaction.amount', arbitrableTransaction.amount)
+
 
     payTx = yield call(
       kleros.arbitrable.pay,
@@ -225,7 +228,7 @@ function* createPay({ type, payload: { arbitrableTransactionId } }) {
  * Reimburse party A. To be called if the good or service can't be fully provided.
  * @param {object} { payload: contractAddress } - The address of the contract.
  */
-function* createReimburse({ type, payload: { arbitrableTransactionId } }) {
+function* createReimburse({ type, payload: { arbitrableTransactionId, amount } }) {
   if (window.ethereum) yield call(window.ethereum.enable)
   const accounts = yield call(web3.eth.getAccounts)
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
@@ -241,9 +244,8 @@ function* createReimburse({ type, payload: { arbitrableTransactionId } }) {
       arbitrableTransactionId
     )
 
-    const amount = arbitrableTransaction.amount
-
-    if (amount === 0) throw new Error('The dispute is already finished')
+    if (arbitrableTransaction.amount === 0)
+      throw new Error('The dispute is already finished')
 
     reimburseTx = yield call(
       kleros.arbitrable.reimburse,
