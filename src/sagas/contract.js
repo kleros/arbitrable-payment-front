@@ -34,13 +34,19 @@ function* createContract({ type, payload: { contractReceived } }) {
   if (!accounts[0]) throw new Error(errorConstants.ETH_NO_ACCOUNTS)
 
   let arbitrableTransactionCount
+  let fileAgreement = {
+    payload: {
+      fileURL: ''
+    }
+  }
 
   try {
-    // Upload the meta-evidence then return an url
-    const fileAgreement = yield call(
-      storeApi.postFile,
-      JSON.stringify(contractReceived.fileAgreement)
-    )
+    if (contractReceived.fileAgreement)
+      // Upload the meta-evidence then return an url
+      fileAgreement = yield call(
+        storeApi.postFile,
+        JSON.stringify(contractReceived.fileAgreement)
+      )
 
     const metaEvidence = createMetaEvidence(
       accounts[0],
