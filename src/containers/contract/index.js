@@ -333,10 +333,10 @@ class Contract extends PureComponent {
                   contract.data.canAppeal === true ? (
                     <div className="Contract-content-actions-waiting">
                       {_.isNull(contract.data.ruling) && 'Dispute Active'}
-                      {contract.data.ruling === '0' && 'No Ruling.'}
-                      {contract.data.ruling === '1' &&
+                      {contract.data.ruling === 0 && 'No Ruling.'}
+                      {contract.data.ruling === 1 &&
                         'Buyer wins the current dispute.'}
-                      {contract.data.ruling === '2' &&
+                      {contract.data.ruling === 2 &&
                         'Seller wins the current dispute.'}
                     </div>
                   ) : (
@@ -412,10 +412,10 @@ class Contract extends PureComponent {
                   {contract.data.status === DISPUTE_RESOLVED ? (
                     <div className="Contract-content-actions-ruling">
                       <b>
-                        {contract.data.ruling === '0' && 'No ruling.'}
-                        {contract.data.ruling === '1' &&
+                        {contract.data.ruling === 0 && 'No ruling.'}
+                        {contract.data.ruling === 1 &&
                           'Buyer wins the current dispute.'}
-                        {contract.data.ruling === '2' &&
+                        {contract.data.ruling === 2 &&
                           'Seller wins the current dispute.'}
                       </b>
                     </div>

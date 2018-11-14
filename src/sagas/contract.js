@@ -164,8 +164,7 @@ function* fetchContract({ payload: { arbitrableTransactionId } }) {
     if (arbitrableTransaction.status === 4)
       ruling = yield call(
         kleros.arbitrator.currentRulingForDispute,
-        arbitrableTransaction.disputeId,
-        disputeData.numberOfAppeals
+        arbitrableTransaction.disputeId
       )
 
     currentSession = yield call(kleros.arbitrator.getSession)
