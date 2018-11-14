@@ -26,8 +26,8 @@ class Contract extends PureComponent {
       method: 'Pay'
     },
     partyOther: {
-      name: 'buyer',
-      method: 'Pay'
+      name: 'seller',
+      method: 'Reimburse'
     },
     arbitrableTransaction: {},
     amount: 0
@@ -113,9 +113,9 @@ class Contract extends PureComponent {
   createPay = () => {
     const { accounts, contract, createPay, createReimburse, match } = this.props
     const { amount } = this.state
-    if (contract.data.buyer === accounts.data[0].toLowerCase())
-      createPay(match.params.contractAddress, amount)
-    else createReimburse(match.params.contractAddress, amount)
+    if (contract.data.seller === accounts.data[0].toLowerCase())
+      createReimburse(match.params.contractAddress, amount)
+    else createPay(match.params.contractAddress, amount)
   }
 
   timeout = () => {

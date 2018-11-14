@@ -65,6 +65,7 @@ function* createContract({ type, payload: { contractReceived } }) {
       accounts[0],
       ARBITRATOR_ADDRESS,
       contractReceived.partyB,
+      // TODO use web3.utils
       unit.toWei(contractReceived.payment, 'ether'),
       undefined,
       process.env.REACT_APP_ARBITRATOR_EXTRADATA,
@@ -204,9 +205,8 @@ function* createPay({ type, payload: { arbitrableTransactionId, amount } }) {
     if (arbitrableTransaction.amount === 0)
       throw new Error('The dispute is already finished')
 
-    console.log('amount', amount)
-    console.log('arbitrableTransaction.amount', arbitrableTransaction.amount)
-
+    if (amount == 0) 
+      amount = arbitrableTransaction.amount
 
     payTx = yield call(
       kleros.arbitrable.pay,
