@@ -37,7 +37,11 @@ export default function configureStore(
     const reduxImmutableState = require('redux-immutable-state-invariant')
       .default
     const reduxUnhandledAction = require('redux-unhandled-action').default
-    middleware.push(reduxImmutableState())
+    middleware.push(
+      reduxImmutableState({
+        ignore: ['form.createContractFormKey.values.fileAgreement']
+      })
+    )
     middleware.push(
       reduxUnhandledAction(action =>
         console.error(

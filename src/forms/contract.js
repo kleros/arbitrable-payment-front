@@ -18,7 +18,7 @@ export const {
   },
   step3: {
     fileAgreement: {
-      type: 'textarea'
+      type: 'filePicker'
     }
   },
   step4: {
