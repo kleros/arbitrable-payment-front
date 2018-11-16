@@ -87,7 +87,7 @@ function* createContract({ type, payload: { contractReceived } }) {
     const txHash = yield call(
       kleros.arbitrable.createArbitrableTransaction,
       accounts[0],
-      ARBITRATOR_ADDRESS,
+      contractReceived.arbitrator || ARBITRATOR_ADDRESS,
       contractReceived.partyB,
       // TODO use web3.utils
       unit.toWei(contractReceived.payment, 'ether'),

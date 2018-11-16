@@ -22,6 +22,14 @@ export const {
     }
   },
   step4: {
+    arbitrator: {
+      type: 'text',
+      props: {
+        placeholder: 'Arbitrator address'
+      }
+    }
+  },
+  step5: {
     partyB: {
       type: 'text',
       props: {
@@ -29,7 +37,7 @@ export const {
       }
     }
   },
-  step5: {
+  step6: {
     payment: {
       type: 'number',
       props: {
@@ -39,7 +47,7 @@ export const {
       validate: [required, number]
     }
   },
-  step6: {
+  step7: {
     email: {
       type: 'text'
     }

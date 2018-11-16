@@ -16,7 +16,7 @@ import {
 
 import './new-contract.css'
 
-const FINAL_STEP = 5
+const FINAL_STEP = 6
 
 class NewContract extends PureComponent {
   static propTypes = {
@@ -47,6 +47,7 @@ class NewContract extends PureComponent {
 
   handleKeyPress = event => {
     const { step } = this.state
+
     if (event.key === 'Enter' && step !== FINAL_STEP) {
       event.preventDefault()
       const { submitCreateContractForm } = this.props
@@ -135,9 +136,16 @@ class NewContract extends PureComponent {
           form &&
           form.createContractFormKey &&
           form.createContractFormKey.values &&
-          this.isAddress(form.createContractFormKey.values.partyB)
+          this.isAddress(form.createContractFormKey.values.arbitrator)
         )
       case 4:
+        return (
+          form &&
+          form.createContractFormKey &&
+          form.createContractFormKey.values &&
+          this.isAddress(form.createContractFormKey.values.partyB)
+        )
+      case 5:
         return (
           form &&
           form.createContractFormKey &&
@@ -145,7 +153,7 @@ class NewContract extends PureComponent {
           !isNaN(form.createContractFormKey.values.payment) &&
           form.createContractFormKey.values.payment > 0
         )
-      case 5:
+      case 6:
         return (
           form &&
           form.createContractFormKey &&
@@ -170,6 +178,7 @@ class NewContract extends PureComponent {
               'Title',
               'Agreement',
               'Agreement File (optional)',
+              'Arbitrator Address',
               'Seller Address',
               'Payment',
               'Email'
