@@ -3,6 +3,7 @@ import { push } from 'react-router-redux'
 import { toastr } from 'react-redux-toastr'
 
 import { call, put, takeLatest } from 'redux-saga/effects'
+import Archon from '@kleros/archon'
 
 import {
   kleros,
@@ -15,6 +16,7 @@ import * as contractActions from '../actions/contract'
 import * as errorConstants from '../constants/errors'
 import { lessduxSaga } from '../utils/saga'
 import { createMetaEvidence } from '../utils/contract'
+import { getBase64 } from '../utils/get-base-64'
 import awaitTx from '../utils/await-tx'
 
 import storeApi from './api/store'
@@ -39,21 +41,37 @@ function* createContract({ type, payload: { contractReceived } }) {
       fileURL: ''
     }
   }
+  let fileHash = ''
 
   try {
-    if (contractReceived.fileAgreement)
+
+
+    if (contractReceived.fileAgreement) {
+      const data = yield call(
+        getBase64,
+        contractReceived.fileAgreement[0]
+      )
       // Upload the meta-evidence then return an url
       fileAgreement = yield call(
         storeApi.postFile,
-        JSON.stringify(contractReceived.fileAgreement)
+        data,
+        contractReceived.fileAgreement[0].name.split('.').pop()
       )
+      const ArchonInstance = new Archon(web3.currentProvider)
+      fileHash = ArchonInstance.utils.multihashFile(
+        data,
+        0x1B // keccak-256
+      )
+    }
 
     const metaEvidence = createMetaEvidence(
       accounts[0],
       contractReceived.partyB,
       contractReceived.title,
       contractReceived.description,
-      fileAgreement.payload.fileURL
+      fileAgreement.payload.fileURL.replace(/\.[^/.]+$/, ''),
+      contractReceived.fileAgreement[0].name.split('.').pop(),
+      fileHash
     )
 
     // Upload the meta-evidence then return an url

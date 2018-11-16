@@ -49,8 +49,8 @@ FilePicker.propTypes = {
 
 FilePicker.defaultProps = {
   // State
-  message: 'Drag file here or',
-  buttonMessage: 'Browse Image',
+  message: 'Drag agreement here or',
+  buttonMessage: 'Browse Agreement',
   imageFilePreviewURL: null
 }
 

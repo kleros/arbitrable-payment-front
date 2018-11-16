@@ -23,13 +23,15 @@ export const createMetaEvidence = (
   title,
   description,
   fileURI,
+  fileTypeExtension,
   fileHash
 ) => (
   {
-    category: 'Escrow Contract',
+    category: 'Escrow',
     title,
     description,
     fileURI,
+    fileTypeExtension,
     fileHash,
     question: 'Which party abided by terms of the contract?',
     rulingOptions: {

@@ -4,7 +4,7 @@ import Archon from '@kleros/archon'
 
 const storeApi = {
 
-  postFile(file) {
+  postFile(file, extension = 'json') {
     const ArchonInstance = new Archon(web3.currentProvider)
     const fileHash = ArchonInstance.utils.multihashFile(
       file,
@@ -15,7 +15,7 @@ const storeApi = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         payload: {
-          fileName: `${fileHash}.json`,
+          fileName: `${fileHash}.${extension}`,
           base64EncodedData: btoa(file)
         }
       })

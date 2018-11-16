@@ -226,11 +226,12 @@ class Contract extends PureComponent {
                       {contract.data.amount || this.state.arbitrableTransaction.amount}{' '}
                       ETH
                     </div>
-                    {contract.data.metaEvidence && contract.data.metaEvidence.fileURI ? (
+                    {contract.data.metaEvidence && contract.data.metaEvidence.fileURI && contract.data.metaEvidence.fileTypeExtension ? (
                       <div className="Contract-content-fileUri">
                         &nbsp;&nbsp;&nbsp;<a
-                          href={`${contract.data.metaEvidence.fileURI}`}
+                          href={`${contract.data.metaEvidence.fileURI}.${contract.data.metaEvidence.fileTypeExtension}`}
                           className="Contract-content-fileUri-a"
+                          target="_blank"
                         >
                           <FA name="external-link" />
                         </a>
